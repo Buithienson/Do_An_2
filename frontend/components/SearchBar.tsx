@@ -23,7 +23,8 @@ export default function SearchBar() {
     const fetchCities = async () => {
       setIsLoadingLocations(true);
       try {
-        const response = await fetch('http://localhost:8000/api/hotels/cities');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${apiUrl}/api/hotels/cities`);
         if (response.ok) {
           const cities = await response.json();
           setLocations(cities);
