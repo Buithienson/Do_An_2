@@ -1,0 +1,2558 @@
+{
+  "destinations": [
+    {
+      "id": "hanoi",
+      "name": "Hà Nội",
+      "description": "Thủ đô ngàn năm văn hiến với khu phố cổ nhộn nhịp, hồ Hoàn Kiếm thơ mộng và ẩm thực đường phố phong phú.",
+      "latitude": 21.0285,
+      "longitude": 105.8542,
+      "hotels": [
+        {
+          "id": "hanoi_1",
+          "name": "Sofitel Legend Metropole Hanoi",
+          "address": "15 Ngo Quyen, Hoan Kiem, Hà Nội",
+          "star_rating": 5,
+          "price": 5000000,
+          "amenities": [
+            "Spa",
+            "Pool",
+            "Gym",
+            "Fine Dining",
+            "Historic"
+          ],
+          "description": "Experience luxury and comfort at Sofitel Legend Metropole Hanoi. Located in the heart of Hà Nội, we offer world-class services including Spa, Pool, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.04810544809491,
+          "longitude": 105.84108821291233,
+          "rating": 4.7,
+          "reviews": 131
+        },
+        {
+          "id": "hanoi_2",
+          "name": "Lotte Hotel Hanoi",
+          "address": "54 Lieu Giai, Ba Dinh, Hà Nội",
+          "star_rating": 5,
+          "price": 3500000,
+          "amenities": [
+            "Sky Bar",
+            "Indoor Pool",
+            "Gym",
+            "Panorama View"
+          ],
+          "description": "Experience luxury and comfort at Lotte Hotel Hanoi. Located in the heart of Hà Nội, we offer world-class services including Sky Bar, Indoor Pool, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.024965034561482,
+          "longitude": 105.87121623567634,
+          "rating": 3.8,
+          "reviews": 1772
+        },
+        {
+          "id": "hanoi_3",
+          "name": "La Siesta Premium Hang Be",
+          "address": "27 Hang Be, Hoan Kiem, Hà Nội",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Rooftop Bar",
+            "Spa",
+            "Central Location"
+          ],
+          "description": "Experience luxury and comfort at La Siesta Premium Hang Be. Located in the heart of Hà Nội, we offer world-class services including Rooftop Bar, Spa, Central Location. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.03499436074847,
+          "longitude": 105.86376388993692,
+          "rating": 4.6,
+          "reviews": 562
+        },
+        {
+          "id": "hanoi_4",
+          "name": "The Oriental Jade Hotel",
+          "address": "92-94 Hang Trong, Hoan Kiem, Hà Nội",
+          "star_rating": 4,
+          "price": 2200000,
+          "amenities": [
+            "Pool",
+            "Spa",
+            "Restaurant"
+          ],
+          "description": "Experience luxury and comfort at The Oriental Jade Hotel. Located in the heart of Hà Nội, we offer world-class services including Pool, Spa, Restaurant. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.016110638424266,
+          "longitude": 105.87405450931935,
+          "rating": 4.0,
+          "reviews": 1683
+        },
+        {
+          "id": "hanoi_5",
+          "name": "Hanoi Daewoo Hotel",
+          "address": "360 Kim Ma, Ba Dinh, Hà Nội",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "Large Pool",
+            "Garden",
+            "Gym",
+            "Business Center"
+          ],
+          "description": "Experience luxury and comfort at Hanoi Daewoo Hotel. Located in the heart of Hà Nội, we offer world-class services including Large Pool, Garden, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.032958881335336,
+          "longitude": 105.86997584743563,
+          "rating": 3.9,
+          "reviews": 1960
+        },
+        {
+          "id": "hanoi_6",
+          "name": "Apricot Hotel",
+          "address": "136 Hang Trong, Hoan Kiem, Hà Nội",
+          "star_rating": 5,
+          "price": 4000000,
+          "amenities": [
+            "Lake View",
+            "Rooftop Pool",
+            "Art Gallery",
+            "Gym"
+          ],
+          "description": "Experience luxury and comfort at Apricot Hotel. Located in the heart of Hà Nội, we offer world-class services including Lake View, Rooftop Pool, Art Gallery. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.03005888926057,
+          "longitude": 105.83555058973954,
+          "rating": 4.2,
+          "reviews": 1187
+        },
+        {
+          "id": "hanoi_7",
+          "name": "Melia Hanoi",
+          "address": "44B Ly Thuong Kiet, Hoan Kiem, Hà Nội",
+          "star_rating": 5,
+          "price": 3000000,
+          "amenities": [
+            "Conference Center",
+            "Pool",
+            "Gym",
+            "Executive Lounge"
+          ],
+          "description": "Experience luxury and comfort at Melia Hanoi. Located in the heart of Hà Nội, we offer world-class services including Conference Center, Pool, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hanoi",
+          "latitude": 21.039686350577036,
+          "longitude": 105.84922895025646,
+          "rating": 4.3,
+          "reviews": 1600
+        }
+      ]
+    },
+    {
+      "id": "hcm",
+      "name": "TP. Hồ Chí Minh",
+      "description": "Thành phố sôi động nhất Việt Nam, trung tâm kinh tế, văn hóa với những tòa nhà chọc trời và di tích lịch sử.",
+      "latitude": 10.8231,
+      "longitude": 106.6297,
+      "hotels": [
+        {
+          "id": "hcm_1",
+          "name": "The Reverie Saigon",
+          "address": "22-36 Nguyen Hue, District 1, TP. Hồ Chí Minh",
+          "star_rating": 5,
+          "price": 6000000,
+          "amenities": [
+            "Luxury Spa",
+            "Pool",
+            "Italian Design",
+            "Butler Service"
+          ],
+          "description": "Experience luxury and comfort at The Reverie Saigon. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including Luxury Spa, Pool, Italian Design. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.808954761820543,
+          "longitude": 106.6194768293071,
+          "rating": 3.6,
+          "reviews": 65
+        },
+        {
+          "id": "hcm_2",
+          "name": "Park Hyatt Saigon",
+          "address": "2 Lam Son Square, District 1, TP. Hồ Chí Minh",
+          "star_rating": 5,
+          "price": 7500000,
+          "amenities": [
+            "French Colonial",
+            "Pool",
+            "Garden",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Park Hyatt Saigon. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including French Colonial, Pool, Garden. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.825670439480408,
+          "longitude": 106.62151821299983,
+          "rating": 3.9,
+          "reviews": 966
+        },
+        {
+          "id": "hcm_3",
+          "name": "Caravelle Saigon",
+          "address": "19-23 Lam Son Square, District 1, TP. Hồ Chí Minh",
+          "star_rating": 5,
+          "price": 4000000,
+          "amenities": [
+            "Rooftop Bar",
+            "Pool",
+            "Gym",
+            "Heritage"
+          ],
+          "description": "Experience luxury and comfort at Caravelle Saigon. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including Rooftop Bar, Pool, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.815294538303073,
+          "longitude": 106.62017017237764,
+          "rating": 5.0,
+          "reviews": 1374
+        },
+        {
+          "id": "hcm_4",
+          "name": "Hotel Majestic Saigon",
+          "address": "1 Dong Khoi, District 1, TP. Hồ Chí Minh",
+          "star_rating": 5,
+          "price": 3500000,
+          "amenities": [
+            "River View",
+            "Historic",
+            "Pool",
+            "Casino"
+          ],
+          "description": "Experience luxury and comfort at Hotel Majestic Saigon. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including River View, Historic, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.827360066001331,
+          "longitude": 106.62742930835388,
+          "rating": 3.7,
+          "reviews": 1392
+        },
+        {
+          "id": "hcm_5",
+          "name": "Liberty Central Saigon Citypoint",
+          "address": "59-61 Pasteur, District 1, TP. Hồ Chí Minh",
+          "star_rating": 4,
+          "price": 2500000,
+          "amenities": [
+            "Cinema",
+            "Rooftop Pool",
+            "Gym",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Liberty Central Saigon Citypoint. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including Cinema, Rooftop Pool, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.811916311462108,
+          "longitude": 106.62155252432954,
+          "rating": 3.9,
+          "reviews": 471
+        },
+        {
+          "id": "hcm_6",
+          "name": "Pullman Saigon Centre",
+          "address": "148 Tran Hung Dao, District 1, TP. Hồ Chí Minh",
+          "star_rating": 5,
+          "price": 3200000,
+          "amenities": [
+            "Rooftop Bar",
+            "Pool",
+            "Fit Lounge",
+            "Meeting Rooms"
+          ],
+          "description": "Experience luxury and comfort at Pullman Saigon Centre. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including Rooftop Bar, Pool, Fit Lounge. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.835654826810577,
+          "longitude": 106.63736457819519,
+          "rating": 3.6,
+          "reviews": 61
+        },
+        {
+          "id": "hcm_7",
+          "name": "New World Saigon Hotel",
+          "address": "76 Le Lai, District 1, TP. Hồ Chí Minh",
+          "star_rating": 5,
+          "price": 3800000,
+          "amenities": [
+            "Large Pool",
+            "Garden",
+            "Gym",
+            "Central Loc"
+          ],
+          "description": "Experience luxury and comfort at New World Saigon Hotel. Located in the heart of TP. Hồ Chí Minh, we offer world-class services including Large Pool, Garden, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hcm",
+          "latitude": 10.805389096038624,
+          "longitude": 106.63178770197399,
+          "rating": 3.7,
+          "reviews": 1602
+        }
+      ]
+    },
+    {
+      "id": "danang",
+      "name": "Đà Nẵng",
+      "description": "Thành phố đáng sống với bờ biển dài tuyệt đẹp, cầu Rồng độc đáo và nằm gần các di sản văn hóa.",
+      "latitude": 16.0544,
+      "longitude": 108.2022,
+      "hotels": [
+        {
+          "id": "danang_1",
+          "name": "InterContinental Danang Sun Peninsula Resort",
+          "address": "Son Tra Peninsula, Đà Nẵng",
+          "star_rating": 5,
+          "price": 12000000,
+          "amenities": [
+            "Private Beach",
+            "Luxury Spa",
+            "Michelin Dining",
+            "Nature"
+          ],
+          "description": "Experience luxury and comfort at InterContinental Danang Sun Peninsula Resort. Located in the heart of Đà Nẵng, we offer world-class services including Private Beach, Luxury Spa, Michelin Dining. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.042215678848333,
+          "longitude": 108.19684653973559,
+          "rating": 4.6,
+          "reviews": 1411
+        },
+        {
+          "id": "danang_2",
+          "name": "Furama Resort Danang",
+          "address": "105 Vo Nguyen Giap, Ngu Hanh Son, Đà Nẵng",
+          "star_rating": 5,
+          "price": 4500000,
+          "amenities": [
+            "Lagoon Pool",
+            "Beachfront",
+            "Spa",
+            "Casino"
+          ],
+          "description": "Experience luxury and comfort at Furama Resort Danang. Located in the heart of Đà Nẵng, we offer world-class services including Lagoon Pool, Beachfront, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.054712134162717,
+          "longitude": 108.20826140884294,
+          "rating": 3.6,
+          "reviews": 1963
+        },
+        {
+          "id": "danang_3",
+          "name": "Novotel Danang Premier Han River",
+          "address": "36 Bach Dang, Hai Chau, Đà Nẵng",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "River View",
+            "Sky Bar",
+            "Pool",
+            "Yoga"
+          ],
+          "description": "Experience luxury and comfort at Novotel Danang Premier Han River. Located in the heart of Đà Nẵng, we offer world-class services including River View, Sky Bar, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.050631660095267,
+          "longitude": 108.19415847115539,
+          "rating": 4.8,
+          "reviews": 887
+        },
+        {
+          "id": "danang_4",
+          "name": "A La Carte Danang Beach",
+          "address": "200 Vo Nguyen Giap, Son Tra, Đà Nẵng",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Infinity Pool",
+            "Ocean View",
+            "Kitchenette",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at A La Carte Danang Beach. Located in the heart of Đà Nẵng, we offer world-class services including Infinity Pool, Ocean View, Kitchenette. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.040039625340892,
+          "longitude": 108.21214222679153,
+          "rating": 4.4,
+          "reviews": 800
+        },
+        {
+          "id": "danang_5",
+          "name": "Sala Danang Beach Hotel",
+          "address": "36-38 Lam Hoanh, Son Tra, Đà Nẵng",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Pool",
+            "Gym",
+            "Near Beach",
+            "Free Breakfast"
+          ],
+          "description": "Experience luxury and comfort at Sala Danang Beach Hotel. Located in the heart of Đà Nẵng, we offer world-class services including Pool, Gym, Near Beach. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.072055613573404,
+          "longitude": 108.20080578859614,
+          "rating": 4.7,
+          "reviews": 1673
+        },
+        {
+          "id": "danang_6",
+          "name": "Hyatt Regency Danang Resort and Spa",
+          "address": "5 Truong Sa, Ngu Hanh Son, Đà Nẵng",
+          "star_rating": 5,
+          "price": 5500000,
+          "amenities": [
+            "Beachfront",
+            "Multiple Pools",
+            "Kid Club",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Hyatt Regency Danang Resort and Spa. Located in the heart of Đà Nẵng, we offer world-class services including Beachfront, Multiple Pools, Kid Club. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.06642272914953,
+          "longitude": 108.20192691833917,
+          "rating": 4.0,
+          "reviews": 1662
+        },
+        {
+          "id": "danang_7",
+          "name": "Haian Beach Hotel & Spa",
+          "address": "278 Vo Nguyen Giap, Ngu Hanh Son, Đà Nẵng",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Infinity Pool",
+            "Sea View",
+            "Afternoon Tea"
+          ],
+          "description": "Experience luxury and comfort at Haian Beach Hotel & Spa. Located in the heart of Đà Nẵng, we offer world-class services including Infinity Pool, Sea View, Afternoon Tea. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,danang",
+          "latitude": 16.041197968970035,
+          "longitude": 108.20423961257328,
+          "rating": 4.7,
+          "reviews": 1776
+        }
+      ]
+    },
+    {
+      "id": "hoian",
+      "name": "Hội An",
+      "description": "Phố cổ yên bình với những ngôi nhà vàng cổ kính, đèn lồng rực rỡ và ẩm thực đặc sắc.",
+      "latitude": 15.8801,
+      "longitude": 108.338,
+      "hotels": [
+        {
+          "id": "hoian_1",
+          "name": "Four Seasons Resort The Nam Hai",
+          "address": "Ha My Beach, Dien Ban, Hội An",
+          "star_rating": 5,
+          "price": 15000000,
+          "amenities": [
+            "Private Villa",
+            "Beachfront",
+            "Luxury Spa",
+            "Cooking Class"
+          ],
+          "description": "Experience luxury and comfort at Four Seasons Resort The Nam Hai. Located in the heart of Hội An, we offer world-class services including Private Villa, Beachfront, Luxury Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.874324357910293,
+          "longitude": 108.35511198414227,
+          "rating": 4.4,
+          "reviews": 1888
+        },
+        {
+          "id": "hoian_2",
+          "name": "Anantara Hoi An Resort",
+          "address": "1 Pham Hong Thai, Hội An",
+          "star_rating": 5,
+          "price": 4000000,
+          "amenities": [
+            "River View",
+            "Colonial Style",
+            "Pool",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Anantara Hoi An Resort. Located in the heart of Hội An, we offer world-class services including River View, Colonial Style, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.899218398134524,
+          "longitude": 108.34072110089853,
+          "rating": 4.5,
+          "reviews": 987
+        },
+        {
+          "id": "hoian_3",
+          "name": "La Siesta Hoi An Resort & Spa",
+          "address": "132 Hung Vuong, Hội An",
+          "star_rating": 5,
+          "price": 2500000,
+          "amenities": [
+            "Saltwater Pool",
+            "Rice Field View",
+            "Spa",
+            "Shuttle Bus"
+          ],
+          "description": "Experience luxury and comfort at La Siesta Hoi An Resort & Spa. Located in the heart of Hội An, we offer world-class services including Saltwater Pool, Rice Field View, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.863577539497046,
+          "longitude": 108.35573328597212,
+          "rating": 4.8,
+          "reviews": 1481
+        },
+        {
+          "id": "hoian_4",
+          "name": "Little Riverside Hoi An",
+          "address": "09 Phan Boi Chau, Hội An",
+          "star_rating": 5,
+          "price": 2200000,
+          "amenities": [
+            "River View",
+            "Rooftop Pool",
+            "Spa",
+            "Bicycles"
+          ],
+          "description": "Experience luxury and comfort at Little Riverside Hoi An. Located in the heart of Hội An, we offer world-class services including River View, Rooftop Pool, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.890079758578603,
+          "longitude": 108.32587711591084,
+          "rating": 3.8,
+          "reviews": 1930
+        },
+        {
+          "id": "hoian_5",
+          "name": "Allegro Hoi An",
+          "address": "86 Tran Hung Dao, Hội An",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Near Old Town",
+            "Pool",
+            "Gym",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Allegro Hoi An. Located in the heart of Hội An, we offer world-class services including Near Old Town, Pool, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.897032189014997,
+          "longitude": 108.35498529856855,
+          "rating": 4.0,
+          "reviews": 1542
+        },
+        {
+          "id": "hoian_6",
+          "name": "Hoi An Central Boutique Hotel",
+          "address": "91 Hung Vuong, Hội An",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Private Beach Area",
+            "Pool",
+            "Central",
+            "Bar"
+          ],
+          "description": "Experience luxury and comfort at Hoi An Central Boutique Hotel. Located in the heart of Hội An, we offer world-class services including Private Beach Area, Pool, Central. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.872149807799326,
+          "longitude": 108.33678689693608,
+          "rating": 4.3,
+          "reviews": 1705
+        },
+        {
+          "id": "hoian_7",
+          "name": "Silk Sense Hoi An River Resort",
+          "address": "Tan Thinh, Cam An, Hội An",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "River Garden",
+            "Pool",
+            "E-Car",
+            "Organic Garden"
+          ],
+          "description": "Experience luxury and comfort at Silk Sense Hoi An River Resort. Located in the heart of Hội An, we offer world-class services including River Garden, Pool, E-Car. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hoian",
+          "latitude": 15.88118661043417,
+          "longitude": 108.3542555360426,
+          "rating": 4.8,
+          "reviews": 1907
+        }
+      ]
+    },
+    {
+      "id": "nhatrang",
+      "name": "Nha Trang",
+      "description": "Thiên đường biển đảo với vịnh biển đẹp nhất thế giới, hải sản tươi ngon và VinWonders sôi động.",
+      "latitude": 12.2388,
+      "longitude": 109.1967,
+      "hotels": [
+        {
+          "id": "nhatrang_1",
+          "name": "Six Senses Ninh Van Bay",
+          "address": "Ninh Van Bay, Nha Trang",
+          "star_rating": 5,
+          "price": 18000000,
+          "amenities": [
+            "Private Villa",
+            "Secluded",
+            "Spa",
+            "Water Sports"
+          ],
+          "description": "Experience luxury and comfort at Six Senses Ninh Van Bay. Located in the heart of Nha Trang, we offer world-class services including Private Villa, Secluded, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.231983736250235,
+          "longitude": 109.20959699880922,
+          "rating": 4.2,
+          "reviews": 1680
+        },
+        {
+          "id": "nhatrang_2",
+          "name": "InterContinental Nha Trang",
+          "address": "32-34 Tran Phu, Nha Trang",
+          "star_rating": 5,
+          "price": 3500000,
+          "amenities": [
+            "Ocean View",
+            "Pool",
+            "Club Lounge",
+            "Beachfront"
+          ],
+          "description": "Experience luxury and comfort at InterContinental Nha Trang. Located in the heart of Nha Trang, we offer world-class services including Ocean View, Pool, Club Lounge. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.240561360022461,
+          "longitude": 109.18954081153493,
+          "rating": 4.9,
+          "reviews": 1749
+        },
+        {
+          "id": "nhatrang_3",
+          "name": "Vinpearl Resort Nha Trang",
+          "address": "Hon Tre Island, Nha Trang",
+          "star_rating": 5,
+          "price": 3000000,
+          "amenities": [
+            "Amusement Park",
+            "Cable Car",
+            "Huge Pool",
+            "Beach"
+          ],
+          "description": "Experience luxury and comfort at Vinpearl Resort Nha Trang. Located in the heart of Nha Trang, we offer world-class services including Amusement Park, Cable Car, Huge Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.225923922341165,
+          "longitude": 109.19124131361181,
+          "rating": 3.9,
+          "reviews": 1430
+        },
+        {
+          "id": "nhatrang_4",
+          "name": "Amiana Resort Nha Trang",
+          "address": "Turtle Bay, Nha Trang",
+          "star_rating": 5,
+          "price": 4500000,
+          "amenities": [
+            "Mud Bath",
+            "Seawater Pool",
+            "Private Beach",
+            "Snorkeling"
+          ],
+          "description": "Experience luxury and comfort at Amiana Resort Nha Trang. Located in the heart of Nha Trang, we offer world-class services including Mud Bath, Seawater Pool, Private Beach. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.235311157325114,
+          "longitude": 109.19558330463867,
+          "rating": 3.5,
+          "reviews": 479
+        },
+        {
+          "id": "nhatrang_5",
+          "name": "Sheraton Nha Trang",
+          "address": "26-28 Tran Phu, Nha Trang",
+          "star_rating": 5,
+          "price": 3200000,
+          "amenities": [
+            "Ocean View",
+            "Cooking School",
+            "Infinity Pool",
+            "Shine Spa"
+          ],
+          "description": "Experience luxury and comfort at Sheraton Nha Trang. Located in the heart of Nha Trang, we offer world-class services including Ocean View, Cooking School, Infinity Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.232146111627285,
+          "longitude": 109.18748485708765,
+          "rating": 4.9,
+          "reviews": 531
+        },
+        {
+          "id": "nhatrang_6",
+          "name": "Sunrise Nha Trang Beach Hotel & Spa",
+          "address": "12-14 Tran Phu, Nha Trang",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Colonial Style",
+            "Pool",
+            "Sky Lounge",
+            "Beach"
+          ],
+          "description": "Experience luxury and comfort at Sunrise Nha Trang Beach Hotel & Spa. Located in the heart of Nha Trang, we offer world-class services including Colonial Style, Pool, Sky Lounge. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.229343199531225,
+          "longitude": 109.21448692280995,
+          "rating": 4.0,
+          "reviews": 1692
+        },
+        {
+          "id": "nhatrang_7",
+          "name": "Mia Resort Nha Trang",
+          "address": "Bai Dong, Cam Lam, Nha Trang",
+          "star_rating": 5,
+          "price": 4200000,
+          "amenities": [
+            "Cliffside",
+            "Private Beach",
+            "Yoga",
+            "Relaxing"
+          ],
+          "description": "Experience luxury and comfort at Mia Resort Nha Trang. Located in the heart of Nha Trang, we offer world-class services including Cliffside, Private Beach, Yoga. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,nhatrang",
+          "latitude": 12.235869995344475,
+          "longitude": 109.20704007526196,
+          "rating": 3.6,
+          "reviews": 1334
+        }
+      ]
+    },
+    {
+      "id": "phuquoc",
+      "name": "Phú Quốc",
+      "description": "Đảo Ngọc với những bãi biển hoang sơ, rừng nguyên sinh và hoàng hôn tuyệt đẹp.",
+      "latitude": 10.2899,
+      "longitude": 103.984,
+      "hotels": [
+        {
+          "id": "phuquoc_1",
+          "name": "JW Marriott Phu Quoc Emerald Bay",
+          "address": "Khem Beach, An Thoi, Phú Quốc",
+          "star_rating": 5,
+          "price": 8000000,
+          "amenities": [
+            "Concept Design",
+            "Private Beach",
+            "University Theme",
+            "Luxury"
+          ],
+          "description": "Experience luxury and comfort at JW Marriott Phu Quoc Emerald Bay. Located in the heart of Phú Quốc, we offer world-class services including Concept Design, Private Beach, University Theme. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.298799117602304,
+          "longitude": 103.99461531202732,
+          "rating": 4.7,
+          "reviews": 1550
+        },
+        {
+          "id": "phuquoc_2",
+          "name": "Salinda Resort Phu Quoc Island",
+          "address": "Cua Lap, Duong To, Phú Quốc",
+          "star_rating": 5,
+          "price": 3500000,
+          "amenities": [
+            "Sunset View",
+            "Salt Filtration Pool",
+            "Gardens",
+            "Boutique"
+          ],
+          "description": "Experience luxury and comfort at Salinda Resort Phu Quoc Island. Located in the heart of Phú Quốc, we offer world-class services including Sunset View, Salt Filtration Pool, Gardens. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.28285973327371,
+          "longitude": 103.99962233745467,
+          "rating": 4.6,
+          "reviews": 181
+        },
+        {
+          "id": "phuquoc_3",
+          "name": "InterContinental Phu Quoc Long Beach Resort",
+          "address": "Bai Truong, Duong To, Phú Quốc",
+          "star_rating": 5,
+          "price": 4500000,
+          "amenities": [
+            "Sky Bar",
+            "Family Friendly",
+            "Beachfront",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at InterContinental Phu Quoc Long Beach Resort. Located in the heart of Phú Quốc, we offer world-class services including Sky Bar, Family Friendly, Beachfront. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.29531690736014,
+          "longitude": 103.98847379499539,
+          "rating": 3.6,
+          "reviews": 1226
+        },
+        {
+          "id": "phuquoc_4",
+          "name": "Vinpearl Resort & Spa Phu Quoc",
+          "address": "Bai Dai, Ganh Dau, Phú Quốc",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "Safari",
+            "Grand World",
+            "Huge Pool",
+            "Beach"
+          ],
+          "description": "Experience luxury and comfort at Vinpearl Resort & Spa Phu Quoc. Located in the heart of Phú Quốc, we offer world-class services including Safari, Grand World, Huge Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.272928890907885,
+          "longitude": 103.97296167214455,
+          "rating": 3.7,
+          "reviews": 1952
+        },
+        {
+          "id": "phuquoc_5",
+          "name": "Premier Village Phu Quoc Resort",
+          "address": "Ong Doi Cape, An Thoi, Phú Quốc",
+          "star_rating": 5,
+          "price": 6000000,
+          "amenities": [
+            "Two Coastlines",
+            "Private Pool Villa",
+            "Secluded",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Premier Village Phu Quoc Resort. Located in the heart of Phú Quốc, we offer world-class services including Two Coastlines, Private Pool Villa, Secluded. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.29195149305962,
+          "longitude": 103.97571692488458,
+          "rating": 4.0,
+          "reviews": 1620
+        },
+        {
+          "id": "phuquoc_6",
+          "name": "Fusion Resort Phu Quoc",
+          "address": "Vung Bau Beach, Phú Quốc",
+          "star_rating": 5,
+          "price": 5500000,
+          "amenities": [
+            "All-Spa Inclusive",
+            "River Pool",
+            "Beachfront",
+            "Wellness"
+          ],
+          "description": "Experience luxury and comfort at Fusion Resort Phu Quoc. Located in the heart of Phú Quốc, we offer world-class services including All-Spa Inclusive, River Pool, Beachfront. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.29046862839108,
+          "longitude": 103.96958685111991,
+          "rating": 4.3,
+          "reviews": 455
+        },
+        {
+          "id": "phuquoc_7",
+          "name": "Lahana Resort Phu Quoc",
+          "address": "91/3 Tran Hung Dao, Phú Quốc",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Eco Friendly",
+            "Hilltop View",
+            "Infinity Pool",
+            "Nature"
+          ],
+          "description": "Experience luxury and comfort at Lahana Resort Phu Quoc. Located in the heart of Phú Quốc, we offer world-class services including Eco Friendly, Hilltop View, Infinity Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phuquoc",
+          "latitude": 10.287686047966432,
+          "longitude": 104.00067347633333,
+          "rating": 4.0,
+          "reviews": 1866
+        }
+      ]
+    },
+    {
+      "id": "dalat",
+      "name": "Đà Lạt",
+      "description": "Thành phố sương mù lãng mạn, khí hậu mát mẻ quanh năm và ngàn hoa khoe sắc.",
+      "latitude": 11.9404,
+      "longitude": 108.4583,
+      "hotels": [
+        {
+          "id": "dalat_1",
+          "name": "Dalat Palace Heritage Hotel",
+          "address": "2 Tran Phu, Đà Lạt",
+          "star_rating": 5,
+          "price": 4000000,
+          "amenities": [
+            "Colonial",
+            "Lake View",
+            "Golf",
+            "Historic"
+          ],
+          "description": "Experience luxury and comfort at Dalat Palace Heritage Hotel. Located in the heart of Đà Lạt, we offer world-class services including Colonial, Lake View, Golf. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.944655257556681,
+          "longitude": 108.44311132302369,
+          "rating": 3.5,
+          "reviews": 139
+        },
+        {
+          "id": "dalat_2",
+          "name": "Ana Mandara Villas Dalat",
+          "address": "Le Lai, Đà Lạt",
+          "star_rating": 5,
+          "price": 3500000,
+          "amenities": [
+            "French Villa",
+            "Pine Forest",
+            "Pool",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Ana Mandara Villas Dalat. Located in the heart of Đà Lạt, we offer world-class services including French Villa, Pine Forest, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.923729798893703,
+          "longitude": 108.45849378778922,
+          "rating": 4.0,
+          "reviews": 1717
+        },
+        {
+          "id": "dalat_3",
+          "name": "Terracotta Hotel & Resort Dalat",
+          "address": "Tuyen Lam Lake, Đà Lạt",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Lake View",
+            "Gardens",
+            "Indoor Pool",
+            "Quiet"
+          ],
+          "description": "Experience luxury and comfort at Terracotta Hotel & Resort Dalat. Located in the heart of Đà Lạt, we offer world-class services including Lake View, Gardens, Indoor Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.953507083083869,
+          "longitude": 108.47325273614734,
+          "rating": 4.9,
+          "reviews": 1188
+        },
+        {
+          "id": "dalat_4",
+          "name": "Swiss-Belresort Tuyen Lam",
+          "address": "Phan Rang Area, Đà Lạt",
+          "star_rating": 5,
+          "price": 2200000,
+          "amenities": [
+            "Mountain View",
+            "Golf Course",
+            "Large Pool",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Swiss-Belresort Tuyen Lam. Located in the heart of Đà Lạt, we offer world-class services including Mountain View, Golf Course, Large Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.95985422848866,
+          "longitude": 108.44653342254205,
+          "rating": 4.0,
+          "reviews": 1997
+        },
+        {
+          "id": "dalat_5",
+          "name": "Colline Hotel",
+          "address": "10 Phan Boi Chau, Đà Lạt",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Market View",
+            "Modern Design",
+            "Central",
+            "Food Court"
+          ],
+          "description": "Experience luxury and comfort at Colline Hotel. Located in the heart of Đà Lạt, we offer world-class services including Market View, Modern Design, Central. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.928063282047214,
+          "longitude": 108.46461471693144,
+          "rating": 3.8,
+          "reviews": 238
+        },
+        {
+          "id": "dalat_6",
+          "name": "Du Parc Hotel Dalat",
+          "address": "15 Tran Phu, Đà Lạt",
+          "star_rating": 4,
+          "price": 1200000,
+          "amenities": [
+            "Heritage",
+            "City Center",
+            "Bar",
+            "Classic"
+          ],
+          "description": "Experience luxury and comfort at Du Parc Hotel Dalat. Located in the heart of Đà Lạt, we offer world-class services including Heritage, City Center, Bar. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.948773582726556,
+          "longitude": 108.45025614690321,
+          "rating": 4.1,
+          "reviews": 760
+        },
+        {
+          "id": "dalat_7",
+          "name": "Mercure Dalat Resort",
+          "address": "3 Nguyen Du, Đà Lạt",
+          "star_rating": 4,
+          "price": 2500000,
+          "amenities": [
+            "French Style",
+            "Garden",
+            "Tennis",
+            "Train Station View"
+          ],
+          "description": "Experience luxury and comfort at Mercure Dalat Resort. Located in the heart of Đà Lạt, we offer world-class services including French Style, Garden, Tennis. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,dalat",
+          "latitude": 11.93763417737776,
+          "longitude": 108.44456771782765,
+          "rating": 4.6,
+          "reviews": 1423
+        }
+      ]
+    },
+    {
+      "id": "halong",
+      "name": "Hạ Long",
+      "description": "Kỳ quan thiên nhiên thế giới với hàng nghìn đảo đá vôi hùng vĩ trên mặt biển xanh biếc.",
+      "latitude": 20.9069,
+      "longitude": 107.0734,
+      "hotels": [
+        {
+          "id": "halong_1",
+          "name": "Vinpearl Resort & Spa Ha Long",
+          "address": "Reu Island, Hạ Long",
+          "star_rating": 5,
+          "price": 3000000,
+          "amenities": [
+            "Private Island",
+            "360 Ocean View",
+            "Huge Pool",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Vinpearl Resort & Spa Ha Long. Located in the heart of Hạ Long, we offer world-class services including Private Island, 360 Ocean View, Huge Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.91606778906777,
+          "longitude": 107.0591879949571,
+          "rating": 3.9,
+          "reviews": 1756
+        },
+        {
+          "id": "halong_2",
+          "name": "Wyndham Legend Halong",
+          "address": "12 Ha Long, Hạ Long",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Bay View",
+            "Pool",
+            "Close to Sun World",
+            "Gym"
+          ],
+          "description": "Experience luxury and comfort at Wyndham Legend Halong. Located in the heart of Hạ Long, we offer world-class services including Bay View, Pool, Close to Sun World. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.906948825374513,
+          "longitude": 107.056902188355,
+          "rating": 3.8,
+          "reviews": 619
+        },
+        {
+          "id": "halong_3",
+          "name": "Muong Thanh Luxury Quang Ninh",
+          "address": "Ha Long Road, Hạ Long",
+          "star_rating": 5,
+          "price": 1500000,
+          "amenities": [
+            "City View",
+            "Large Capacity",
+            "Pool",
+            "Karaoke"
+          ],
+          "description": "Experience luxury and comfort at Muong Thanh Luxury Quang Ninh. Located in the heart of Hạ Long, we offer world-class services including City View, Large Capacity, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.904856209405803,
+          "longitude": 107.06781174106042,
+          "rating": 3.6,
+          "reviews": 1422
+        },
+        {
+          "id": "halong_4",
+          "name": "FLC Halong Bay Golf Club & Luxury Resort",
+          "address": "Nguyen Van Cu, Hạ Long",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "Golf Course",
+            "Hilltop View",
+            "Infinity Pool",
+            "Grand"
+          ],
+          "description": "Experience luxury and comfort at FLC Halong Bay Golf Club & Luxury Resort. Located in the heart of Hạ Long, we offer world-class services including Golf Course, Hilltop View, Infinity Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.92343902853944,
+          "longitude": 107.08558649980405,
+          "rating": 4.9,
+          "reviews": 529
+        },
+        {
+          "id": "halong_5",
+          "name": "Paradise Suites Hotel",
+          "address": "Tuan Chau Island, Hạ Long",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Boutique",
+            "Near Harbor",
+            "Spa",
+            "Beach Access"
+          ],
+          "description": "Experience luxury and comfort at Paradise Suites Hotel. Located in the heart of Hạ Long, we offer world-class services including Boutique, Near Harbor, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.906905827538655,
+          "longitude": 107.05500762252517,
+          "rating": 4.6,
+          "reviews": 102
+        },
+        {
+          "id": "halong_6",
+          "name": "Novotel Ha Long Bay",
+          "address": "160 Ha Long, Hạ Long",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Bay View",
+            "Pool",
+            "Terrace",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Novotel Ha Long Bay. Located in the heart of Hạ Long, we offer world-class services including Bay View, Pool, Terrace. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.908641647492598,
+          "longitude": 107.06922129781893,
+          "rating": 4.6,
+          "reviews": 986
+        },
+        {
+          "id": "halong_7",
+          "name": "D'Lioro Hotel & Resort",
+          "address": "Bai Chay, Hạ Long",
+          "star_rating": 5,
+          "price": 2100000,
+          "amenities": [
+            "Hillside",
+            "View Bay",
+            "Two Pools",
+            "Buffet"
+          ],
+          "description": "Experience luxury and comfort at D'Lioro Hotel & Resort. Located in the heart of Hạ Long, we offer world-class services including Hillside, View Bay, Two Pools. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,halong",
+          "latitude": 20.90931394178117,
+          "longitude": 107.0539224397587,
+          "rating": 4.6,
+          "reviews": 1894
+        }
+      ]
+    },
+    {
+      "id": "sapa",
+      "name": "Sapa",
+      "description": "Thị trấn trong mây với ruộng bậc thang kỳ vĩ, đỉnh Fansipan và văn hóa bản địa độc đáo.",
+      "latitude": 22.3364,
+      "longitude": 103.8438,
+      "hotels": [
+        {
+          "id": "sapa_1",
+          "name": "Hotel de la Coupole - MGallery",
+          "address": "1 Hoang Lien, Sapa",
+          "star_rating": 5,
+          "price": 4500000,
+          "amenities": [
+            "Indochine Style",
+            "Indoor Pool",
+            "Sky Bar",
+            "Mall Link"
+          ],
+          "description": "Experience luxury and comfort at Hotel de la Coupole - MGallery. Located in the heart of Sapa, we offer world-class services including Indochine Style, Indoor Pool, Sky Bar. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.31835310857207,
+          "longitude": 103.82496538911145,
+          "rating": 4.0,
+          "reviews": 1044
+        },
+        {
+          "id": "sapa_2",
+          "name": "Topas Ecolodge",
+          "address": "Thanh Kim, Sapa",
+          "star_rating": 4,
+          "price": 5500000,
+          "amenities": [
+            "Infinity Pool",
+            "Mountain View",
+            "Eco",
+            "Remote"
+          ],
+          "description": "Experience luxury and comfort at Topas Ecolodge. Located in the heart of Sapa, we offer world-class services including Infinity Pool, Mountain View, Eco. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.336338765741694,
+          "longitude": 103.825674662177,
+          "rating": 3.9,
+          "reviews": 1416
+        },
+        {
+          "id": "sapa_3",
+          "name": "Silk Path Grand Resort & Spa Sapa",
+          "address": "Doi Quan 6, Sapa",
+          "star_rating": 5,
+          "price": 2500000,
+          "amenities": [
+            "Rose Garden",
+            "Indoor Pool",
+            "Spa",
+            "Mountain View"
+          ],
+          "description": "Experience luxury and comfort at Silk Path Grand Resort & Spa Sapa. Located in the heart of Sapa, we offer world-class services including Rose Garden, Indoor Pool, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.32125242423514,
+          "longitude": 103.84892454335876,
+          "rating": 4.9,
+          "reviews": 766
+        },
+        {
+          "id": "sapa_4",
+          "name": "Pao's Sapa Leisure Hotel",
+          "address": "Muong Hoa, Sapa",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Valley View",
+            "Rooftop Bar",
+            "Pool",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Pao's Sapa Leisure Hotel. Located in the heart of Sapa, we offer world-class services including Valley View, Rooftop Bar, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.35068441035419,
+          "longitude": 103.84711547753648,
+          "rating": 4.6,
+          "reviews": 1800
+        },
+        {
+          "id": "sapa_5",
+          "name": "Victoria Sapa Resort & Spa",
+          "address": "Xuan Vien, Sapa",
+          "star_rating": 4,
+          "price": 2200000,
+          "amenities": [
+            "Traditional",
+            "Indoor Pool",
+            "Tennis",
+            "Train Ticket"
+          ],
+          "description": "Experience luxury and comfort at Victoria Sapa Resort & Spa. Located in the heart of Sapa, we offer world-class services including Traditional, Indoor Pool, Tennis. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.34038260681589,
+          "longitude": 103.8302782136519,
+          "rating": 4.7,
+          "reviews": 1452
+        },
+        {
+          "id": "sapa_6",
+          "name": "Sapa Horizon Hotel",
+          "address": "18 Pham Xuan Huan, Sapa",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "City Center",
+            "Mountain View",
+            "Friendly",
+            "Breakfast"
+          ],
+          "description": "Experience luxury and comfort at Sapa Horizon Hotel. Located in the heart of Sapa, we offer world-class services including City Center, Mountain View, Friendly. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.32800690921191,
+          "longitude": 103.85119561016697,
+          "rating": 4.1,
+          "reviews": 1411
+        },
+        {
+          "id": "sapa_7",
+          "name": "KK Sapa Hotel",
+          "address": "28A Muong Hoa, Sapa",
+          "star_rating": 5,
+          "price": 1800000,
+          "amenities": [
+            "View Fansipan",
+            "Pool",
+            "Lounge",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at KK Sapa Hotel. Located in the heart of Sapa, we offer world-class services including View Fansipan, Pool, Lounge. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,sapa",
+          "latitude": 22.350331476329924,
+          "longitude": 103.83763626182713,
+          "rating": 3.8,
+          "reviews": 884
+        }
+      ]
+    },
+    {
+      "id": "hue",
+      "name": "Huế",
+      "description": "Cố đô trầm mặc với Đại Nội, lăng tẩm vua chúa và dòng sông Hương thơ mộng.",
+      "latitude": 16.4637,
+      "longitude": 107.5909,
+      "hotels": [
+        {
+          "id": "hue_1",
+          "name": "Azerai La Residence Hue",
+          "address": "5 Le Loi, Huế",
+          "star_rating": 5,
+          "price": 4500000,
+          "amenities": [
+            "Art Deco",
+            "River View",
+            "Saltwater Pool",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Azerai La Residence Hue. Located in the heart of Huế, we offer world-class services including Art Deco, River View, Saltwater Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.445683955672543,
+          "longitude": 107.57257857494109,
+          "rating": 3.7,
+          "reviews": 641
+        },
+        {
+          "id": "hue_2",
+          "name": "Silk Path Grand Hue Hotel",
+          "address": "2 Le Loi, Huế",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Royal Style",
+            "Central",
+            "Pool",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Silk Path Grand Hue Hotel. Located in the heart of Huế, we offer world-class services including Royal Style, Central, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.469580162429224,
+          "longitude": 107.59883550368399,
+          "rating": 3.6,
+          "reviews": 1156
+        },
+        {
+          "id": "hue_3",
+          "name": "Indochine Palace",
+          "address": "105A Hung Vuong, Huế",
+          "star_rating": 5,
+          "price": 1800000,
+          "amenities": [
+            "Palatial",
+            "Large Pool",
+            "Garden",
+            "Convention"
+          ],
+          "description": "Experience luxury and comfort at Indochine Palace. Located in the heart of Huế, we offer world-class services including Palatial, Large Pool, Garden. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.451146707932953,
+          "longitude": 107.60881236225184,
+          "rating": 3.6,
+          "reviews": 1905
+        },
+        {
+          "id": "hue_4",
+          "name": "Pilgrimage Village Boutique Resort",
+          "address": "130 Minh Mang, Huế",
+          "star_rating": 5,
+          "price": 2200000,
+          "amenities": [
+            "Rustic",
+            "Wellness",
+            "Quiet",
+            "Shuttle"
+          ],
+          "description": "Experience luxury and comfort at Pilgrimage Village Boutique Resort. Located in the heart of Huế, we offer world-class services including Rustic, Wellness, Quiet. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.46428543294211,
+          "longitude": 107.5968103074927,
+          "rating": 4.4,
+          "reviews": 1122
+        },
+        {
+          "id": "hue_5",
+          "name": "Alba Wellness Resort By Fusion",
+          "address": "Phong Dien, Huế",
+          "star_rating": 5,
+          "price": 3500000,
+          "amenities": [
+            "Onsen",
+            "Hot Spring",
+            "Wellness",
+            "Forest"
+          ],
+          "description": "Experience luxury and comfort at Alba Wellness Resort By Fusion. Located in the heart of Huế, we offer world-class services including Onsen, Hot Spring, Wellness. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.472130693037407,
+          "longitude": 107.60953729857101,
+          "rating": 4.9,
+          "reviews": 946
+        },
+        {
+          "id": "hue_6",
+          "name": "Senna Hue Hotel",
+          "address": "7 Nguyen Tri Phuong, Huế",
+          "star_rating": 5,
+          "price": 1700000,
+          "amenities": [
+            "French Style",
+            "Fish Pond",
+            "Central",
+            "Pool"
+          ],
+          "description": "Experience luxury and comfort at Senna Hue Hotel. Located in the heart of Huế, we offer world-class services including French Style, Fish Pond, Central. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.482213165742543,
+          "longitude": 107.59107510127856,
+          "rating": 4.5,
+          "reviews": 395
+        },
+        {
+          "id": "hue_7",
+          "name": "Melia Vinpearl Hue",
+          "address": "50A Hung Vuong, Huế",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Skyscraper",
+            "City View",
+            "Pool",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Melia Vinpearl Hue. Located in the heart of Huế, we offer world-class services including Skyscraper, City View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,hue",
+          "latitude": 16.46275148096865,
+          "longitude": 107.57114844665385,
+          "rating": 4.5,
+          "reviews": 1888
+        }
+      ]
+    },
+    {
+      "id": "vungtau",
+      "name": "Vũng Tàu",
+      "description": "Thành phố biển gần Sài Gòn, nổi tiếng với bãi Sau, tượng chúa Kitô và hải sản.",
+      "latitude": 10.346,
+      "longitude": 107.0843,
+      "hotels": [
+        {
+          "id": "vungtau_1",
+          "name": "The Imperial Hotel Vung Tau",
+          "address": "159 Thuy Van, Vũng Tàu",
+          "star_rating": 5,
+          "price": 2500000,
+          "amenities": [
+            "Private Beach Club",
+            "Victorian",
+            "Pools",
+            "Gym"
+          ],
+          "description": "Experience luxury and comfort at The Imperial Hotel Vung Tau. Located in the heart of Vũng Tàu, we offer world-class services including Private Beach Club, Victorian, Pools. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.329559281526484,
+          "longitude": 107.08526538707069,
+          "rating": 3.6,
+          "reviews": 1537
+        },
+        {
+          "id": "vungtau_2",
+          "name": "Pullman Vung Tau",
+          "address": "15 Thi Sach, Vũng Tàu",
+          "star_rating": 5,
+          "price": 2200000,
+          "amenities": [
+            "Convention",
+            "Pool",
+            "Bar",
+            "Near Lotte Mart"
+          ],
+          "description": "Experience luxury and comfort at Pullman Vung Tau. Located in the heart of Vũng Tàu, we offer world-class services including Convention, Pool, Bar. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.348662685593634,
+          "longitude": 107.07284635827902,
+          "rating": 3.9,
+          "reviews": 482
+        },
+        {
+          "id": "vungtau_3",
+          "name": "Fusion Suites Vung Tau",
+          "address": "2 Truong Cong Dinh, Vũng Tàu",
+          "star_rating": 4,
+          "price": 2000000,
+          "amenities": [
+            "Infinity Pools",
+            "Slide",
+            "City View",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Fusion Suites Vung Tau. Located in the heart of Vũng Tàu, we offer world-class services including Infinity Pools, Slide, City View. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.363667551126778,
+          "longitude": 107.07510962744291,
+          "rating": 4.0,
+          "reviews": 221
+        },
+        {
+          "id": "vungtau_4",
+          "name": "Malibu Hotel",
+          "address": "263 Le Hong Phong, Vũng Tàu",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Infinity Pool",
+            "Buffet",
+            "Gym",
+            "Lounge"
+          ],
+          "description": "Experience luxury and comfort at Malibu Hotel. Located in the heart of Vũng Tàu, we offer world-class services including Infinity Pool, Buffet, Gym. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.365361151489308,
+          "longitude": 107.08391949402372,
+          "rating": 3.6,
+          "reviews": 282
+        },
+        {
+          "id": "vungtau_5",
+          "name": "Vias Hotel Vung Tau",
+          "address": "179 Thuy Van, Vũng Tàu",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Ocean View",
+            "Infinity Pool",
+            "Restaurant",
+            "Bar"
+          ],
+          "description": "Experience luxury and comfort at Vias Hotel Vung Tau. Located in the heart of Vũng Tàu, we offer world-class services including Ocean View, Infinity Pool, Restaurant. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.331788553879848,
+          "longitude": 107.09233425225787,
+          "rating": 4.2,
+          "reviews": 436
+        },
+        {
+          "id": "vungtau_6",
+          "name": "Mercure Vung Tau",
+          "address": "03 Ha Long, Vũng Tàu",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Private Beach",
+            "Sunset View",
+            "Pool",
+            "Resort Style"
+          ],
+          "description": "Experience luxury and comfort at Mercure Vung Tau. Located in the heart of Vũng Tàu, we offer world-class services including Private Beach, Sunset View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.33867405609039,
+          "longitude": 107.07410505159959,
+          "rating": 3.6,
+          "reviews": 1987
+        },
+        {
+          "id": "vungtau_7",
+          "name": "Marina Bay Vung Tau Resort & Spa",
+          "address": "115 Tran Phu, Vũng Tàu",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "Bay View",
+            "Infinity Pool",
+            "Quiet",
+            "Seafood"
+          ],
+          "description": "Experience luxury and comfort at Marina Bay Vung Tau Resort & Spa. Located in the heart of Vũng Tàu, we offer world-class services including Bay View, Infinity Pool, Quiet. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,vungtau",
+          "latitude": 10.346780913396836,
+          "longitude": 107.07391083861337,
+          "rating": 4.8,
+          "reviews": 393
+        }
+      ]
+    },
+    {
+      "id": "phanthiet",
+      "name": "Phan Thiết",
+      "description": "Thủ phủ resort với những đồi cát bay, làng chài Mũi Né và bãi biển xanh ngắt.",
+      "latitude": 10.9289,
+      "longitude": 108.1021,
+      "hotels": [
+        {
+          "id": "phanthiet_1",
+          "name": "Centara Mirage Resort Mui Ne",
+          "address": "Huynh Thuc Khang, Phan Thiết",
+          "star_rating": 5,
+          "price": 2500000,
+          "amenities": [
+            "Water Park",
+            "Family",
+            "Spanish Style",
+            "Pools"
+          ],
+          "description": "Experience luxury and comfort at Centara Mirage Resort Mui Ne. Located in the heart of Phan Thiết, we offer world-class services including Water Park, Family, Spanish Style. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.911996440224376,
+          "longitude": 108.09534440474317,
+          "rating": 3.7,
+          "reviews": 1793
+        },
+        {
+          "id": "phanthiet_2",
+          "name": "The Anam Mui Ne",
+          "address": "18 Nguyen Dinh Chieu, Phan Thiết",
+          "star_rating": 5,
+          "price": 3800000,
+          "amenities": [
+            "Luxury",
+            "Garden",
+            "Beachfront",
+            "Indochine"
+          ],
+          "description": "Experience luxury and comfort at The Anam Mui Ne. Located in the heart of Phan Thiết, we offer world-class services including Luxury, Garden, Beachfront. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.939491531135184,
+          "longitude": 108.10647421077448,
+          "rating": 4.9,
+          "reviews": 1590
+        },
+        {
+          "id": "phanthiet_3",
+          "name": "Anantara Mui Ne Resort",
+          "address": "12A Nguyen Dinh Chieu, Phan Thiết",
+          "star_rating": 5,
+          "price": 4200000,
+          "amenities": [
+            "Villas",
+            "Pool",
+            "Garden",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Anantara Mui Ne Resort. Located in the heart of Phan Thiết, we offer world-class services including Villas, Pool, Garden. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.944064278281093,
+          "longitude": 108.09869695689768,
+          "rating": 4.9,
+          "reviews": 1687
+        },
+        {
+          "id": "phanthiet_4",
+          "name": "Pandanus Resort",
+          "address": "Mui Ne, Phan Thiết",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Large Garden",
+            "Live Music",
+            "Beachfront",
+            "All Inclusive Option"
+          ],
+          "description": "Experience luxury and comfort at Pandanus Resort. Located in the heart of Phan Thiết, we offer world-class services including Large Garden, Live Music, Beachfront. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.935020135640938,
+          "longitude": 108.09566878397338,
+          "rating": 4.4,
+          "reviews": 1529
+        },
+        {
+          "id": "phanthiet_5",
+          "name": "Sailing Club Resort Mui Ne",
+          "address": "24 Nguyen Dinh Chieu, Phan Thiết",
+          "star_rating": 4,
+          "price": 2200000,
+          "amenities": [
+            "Boutique",
+            "Design",
+            "Pool",
+            "Restaurant"
+          ],
+          "description": "Experience luxury and comfort at Sailing Club Resort Mui Ne. Located in the heart of Phan Thiết, we offer world-class services including Boutique, Design, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.922446419168821,
+          "longitude": 108.11425136502665,
+          "rating": 3.8,
+          "reviews": 1086
+        },
+        {
+          "id": "phanthiet_6",
+          "name": "Bamboo Village Beach Resort & Spa",
+          "address": "38 Nguyen Dinh Chieu, Phan Thiết",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Green",
+            "Bamboo Theme",
+            "Spa",
+            "Beach"
+          ],
+          "description": "Experience luxury and comfort at Bamboo Village Beach Resort & Spa. Located in the heart of Phan Thiết, we offer world-class services including Green, Bamboo Theme, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.932423103012455,
+          "longitude": 108.11278227601606,
+          "rating": 4.9,
+          "reviews": 1803
+        },
+        {
+          "id": "phanthiet_7",
+          "name": "Sea Links Beach Resort & Golf",
+          "address": "Km9 Nguyen Thong, Phan Thiết",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Golf Course",
+            "Large Rooms",
+            "Pools",
+            "Apartment Option"
+          ],
+          "description": "Experience luxury and comfort at Sea Links Beach Resort & Golf. Located in the heart of Phan Thiết, we offer world-class services including Golf Course, Large Rooms, Pools. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,phanthiet",
+          "latitude": 10.926663012631613,
+          "longitude": 108.11975937063686,
+          "rating": 4.8,
+          "reviews": 843
+        }
+      ]
+    },
+    {
+      "id": "quynhon",
+      "name": "Quy Nhơn",
+      "description": "Thành phố biển hoang sơ với Kỳ Co, Eo Gió và đặc sản xứ Nẫu dân dã.",
+      "latitude": 13.782,
+      "longitude": 109.2192,
+      "hotels": [
+        {
+          "id": "quynhon_1",
+          "name": "FLC Luxury Hotel Quy Nhon",
+          "address": "Nhon Ly, Quy Nhơn",
+          "star_rating": 5,
+          "price": 2500000,
+          "amenities": [
+            "Safari",
+            "Golf",
+            "Huge Pool",
+            "Beachfront"
+          ],
+          "description": "Experience luxury and comfort at FLC Luxury Hotel Quy Nhon. Located in the heart of Quy Nhơn, we offer world-class services including Safari, Golf, Huge Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.793672577057842,
+          "longitude": 109.20467461308503,
+          "rating": 4.9,
+          "reviews": 1197
+        },
+        {
+          "id": "quynhon_2",
+          "name": "Avani Quy Nhon Resort",
+          "address": "Bai Dai, Quy Nhơn",
+          "star_rating": 5,
+          "price": 3000000,
+          "amenities": [
+            "Private Beach",
+            "Secluded",
+            "Spa",
+            "Island Trips"
+          ],
+          "description": "Experience luxury and comfort at Avani Quy Nhon Resort. Located in the heart of Quy Nhơn, we offer world-class services including Private Beach, Secluded, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.78461032966395,
+          "longitude": 109.21271621191774,
+          "rating": 3.7,
+          "reviews": 343
+        },
+        {
+          "id": "quynhon_3",
+          "name": "Anantara Quy Nhon Villas",
+          "address": "Bai Dai, Quy Nhơn",
+          "star_rating": 5,
+          "price": 8000000,
+          "amenities": [
+            "Private Villa",
+            "Luxury",
+            "Butler",
+            "Ocean View"
+          ],
+          "description": "Experience luxury and comfort at Anantara Quy Nhon Villas. Located in the heart of Quy Nhơn, we offer world-class services including Private Villa, Luxury, Butler. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.768303234256788,
+          "longitude": 109.23904834793062,
+          "rating": 3.6,
+          "reviews": 1448
+        },
+        {
+          "id": "quynhon_4",
+          "name": "Seaside Boutique Resort Quy Nhon",
+          "address": "1D National Road, Quy Nhơn",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Beachfront",
+            "Pool",
+            "Decoration",
+            "Relax"
+          ],
+          "description": "Experience luxury and comfort at Seaside Boutique Resort Quy Nhon. Located in the heart of Quy Nhơn, we offer world-class services including Beachfront, Pool, Decoration. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.768014669120767,
+          "longitude": 109.21743292497808,
+          "rating": 4.6,
+          "reviews": 1041
+        },
+        {
+          "id": "quynhon_5",
+          "name": "Anya Premier Hotel Quy Nhon",
+          "address": "44 An Duong Vuong, Quy Nhơn",
+          "star_rating": 5,
+          "price": 1800000,
+          "amenities": [
+            "City Center",
+            "Beach Access",
+            "Pool",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at Anya Premier Hotel Quy Nhon. Located in the heart of Quy Nhơn, we offer world-class services including City Center, Beach Access, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.801747569775157,
+          "longitude": 109.23378026023958,
+          "rating": 4.9,
+          "reviews": 285
+        },
+        {
+          "id": "quynhon_6",
+          "name": "Ky Co Peninsula Resort",
+          "address": "Nhon Ly, Quy Nhơn",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Near Ky Co",
+            "View",
+            "Pool",
+            "New"
+          ],
+          "description": "Experience luxury and comfort at Ky Co Peninsula Resort. Located in the heart of Quy Nhơn, we offer world-class services including Near Ky Co, View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.79984067216035,
+          "longitude": 109.21289654725742,
+          "rating": 4.9,
+          "reviews": 1563
+        },
+        {
+          "id": "quynhon_7",
+          "name": "Fleur De Lys Hotel Quy Nhon",
+          "address": "16 Nguyen Hue, Quy Nhơn",
+          "star_rating": 4,
+          "price": 1400000,
+          "amenities": [
+            "Sea View",
+            "Rooftop Bar",
+            "Pool",
+            "Central"
+          ],
+          "description": "Experience luxury and comfort at Fleur De Lys Hotel Quy Nhon. Located in the heart of Quy Nhơn, we offer world-class services including Sea View, Rooftop Bar, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,quynhon",
+          "latitude": 13.790526144767181,
+          "longitude": 109.19952745317805,
+          "rating": 4.0,
+          "reviews": 373
+        }
+      ]
+    },
+    {
+      "id": "ninhbinh",
+      "name": "Ninh Bình",
+      "description": "Vùng đất cố đô Hoa Lư với Tràng An, Tam Cốc đẹp như tranh vẽ.",
+      "latitude": 20.2506,
+      "longitude": 105.9744,
+      "hotels": [
+        {
+          "id": "ninhbinh_1",
+          "name": "Emeralda Resort Ninh Binh",
+          "address": "Van Long Reserve, Ninh Bình",
+          "star_rating": 5,
+          "price": 2800000,
+          "amenities": [
+            "Village Style",
+            "Green",
+            "Indoor Pool",
+            "Bike Rental"
+          ],
+          "description": "Experience luxury and comfort at Emeralda Resort Ninh Binh. Located in the heart of Ninh Bình, we offer world-class services including Village Style, Green, Indoor Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.26007517225221,
+          "longitude": 105.97730318796593,
+          "rating": 4.8,
+          "reviews": 251
+        },
+        {
+          "id": "ninhbinh_2",
+          "name": "Ninh Binh Hidden Charm Hotel & Resort",
+          "address": "Tam Coc, Ninh Bình",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Near Tam Coc",
+            "Pool",
+            "Spa",
+            "Garden"
+          ],
+          "description": "Experience luxury and comfort at Ninh Binh Hidden Charm Hotel & Resort. Located in the heart of Ninh Bình, we offer world-class services including Near Tam Coc, Pool, Spa. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.254304359592563,
+          "longitude": 105.9815539416243,
+          "rating": 3.5,
+          "reviews": 1449
+        },
+        {
+          "id": "ninhbinh_3",
+          "name": "Tam Coc Garden Resort",
+          "address": "Hai Nham, Ninh Hai, Ninh Bình",
+          "star_rating": 4,
+          "price": 2500000,
+          "amenities": [
+            "Rice Fields",
+            "Quiet",
+            "Eco",
+            "Pool"
+          ],
+          "description": "Experience luxury and comfort at Tam Coc Garden Resort. Located in the heart of Ninh Bình, we offer world-class services including Rice Fields, Quiet, Eco. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.23778855959933,
+          "longitude": 105.9762257759107,
+          "rating": 4.5,
+          "reviews": 641
+        },
+        {
+          "id": "ninhbinh_4",
+          "name": "Mua Caves Ecolodge",
+          "address": "Khe Ha, Ninh Xuan, Ninh Bình",
+          "star_rating": 3,
+          "price": 1200000,
+          "amenities": [
+            "Create View",
+            "Climbing",
+            "Rustic",
+            "Garden"
+          ],
+          "description": "Experience luxury and comfort at Mua Caves Ecolodge. Located in the heart of Ninh Bình, we offer world-class services including Create View, Climbing, Rustic. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.254292296812046,
+          "longitude": 105.96906804046178,
+          "rating": 3.7,
+          "reviews": 720
+        },
+        {
+          "id": "ninhbinh_5",
+          "name": "The Reed Hotel",
+          "address": "Dinh Dien, Ninh Bình",
+          "star_rating": 4,
+          "price": 1000000,
+          "amenities": [
+            "City Center",
+            "Convention",
+            "Lake View",
+            "Modern"
+          ],
+          "description": "Experience luxury and comfort at The Reed Hotel. Located in the heart of Ninh Bình, we offer world-class services including City Center, Convention, Lake View. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.236673201772824,
+          "longitude": 105.98030440921002,
+          "rating": 4.3,
+          "reviews": 89
+        },
+        {
+          "id": "ninhbinh_6",
+          "name": "Lalita Boutique Hotel & Spa",
+          "address": "Tam Coc, Ninh Bình",
+          "star_rating": 4,
+          "price": 1100000,
+          "amenities": [
+            "Decor",
+            "Pool",
+            "Friendly",
+            "New"
+          ],
+          "description": "Experience luxury and comfort at Lalita Boutique Hotel & Spa. Located in the heart of Ninh Bình, we offer world-class services including Decor, Pool, Friendly. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.266694742850294,
+          "longitude": 105.99188881869976,
+          "rating": 4.0,
+          "reviews": 1399
+        },
+        {
+          "id": "ninhbinh_7",
+          "name": "Bai Dinh Garden Resort",
+          "address": "Gia Sinh, Ninh Bình",
+          "star_rating": 4,
+          "price": 1400000,
+          "amenities": [
+            "Near Pagoda",
+            "Vegetarian",
+            "Peaceful",
+            "Pool"
+          ],
+          "description": "Experience luxury and comfort at Bai Dinh Garden Resort. Located in the heart of Ninh Bình, we offer world-class services including Near Pagoda, Vegetarian, Peaceful. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,ninhbinh",
+          "latitude": 20.269737083336054,
+          "longitude": 105.96240319439215,
+          "rating": 3.9,
+          "reviews": 1082
+        }
+      ]
+    },
+    {
+      "id": "cantho",
+      "name": "Cần Thơ",
+      "description": "Tây Đô sông nước với chợ nổi Cái Răng, bến Ninh Kiều và vườn trái cây trĩu quả.",
+      "latitude": 10.0452,
+      "longitude": 105.7469,
+      "hotels": [
+        {
+          "id": "cantho_1",
+          "name": "Azerai Can Tho",
+          "address": "Con Au Islet, Cần Thơ",
+          "star_rating": 5,
+          "price": 6000000,
+          "amenities": [
+            "Private Islet",
+            "Luxury",
+            "River View",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Azerai Can Tho. Located in the heart of Cần Thơ, we offer world-class services including Private Islet, Luxury, River View. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.054969393708307,
+          "longitude": 105.7486794202824,
+          "rating": 5.0,
+          "reviews": 1514
+        },
+        {
+          "id": "cantho_2",
+          "name": "Victoria Can Tho Resort",
+          "address": "Cai Khe Ward, Cần Thơ",
+          "star_rating": 4,
+          "price": 2500000,
+          "amenities": [
+            "Colonial",
+            "River View",
+            "Garden",
+            "Boat Trip"
+          ],
+          "description": "Experience luxury and comfort at Victoria Can Tho Resort. Located in the heart of Cần Thơ, we offer world-class services including Colonial, River View, Garden. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.056640121690146,
+          "longitude": 105.74137267665824,
+          "rating": 4.7,
+          "reviews": 1570
+        },
+        {
+          "id": "cantho_3",
+          "name": "Muong Thanh Luxury Can Tho",
+          "address": "Cai Khe Islet, Cần Thơ",
+          "star_rating": 5,
+          "price": 1500000,
+          "amenities": [
+            "Highest Building",
+            "River View",
+            "Pool",
+            "Sky Bar"
+          ],
+          "description": "Experience luxury and comfort at Muong Thanh Luxury Can Tho. Located in the heart of Cần Thơ, we offer world-class services including Highest Building, River View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.03466461636911,
+          "longitude": 105.7359091263274,
+          "rating": 4.4,
+          "reviews": 829
+        },
+        {
+          "id": "cantho_4",
+          "name": "TTC Hotel - Can Tho",
+          "address": "2 Hai Ba Trung, Cần Thơ",
+          "star_rating": 4,
+          "price": 1200000,
+          "amenities": [
+            "Right at Ninh Kieu",
+            "City View",
+            "Pool",
+            "Busy"
+          ],
+          "description": "Experience luxury and comfort at TTC Hotel - Can Tho. Located in the heart of Cần Thơ, we offer world-class services including Right at Ninh Kieu, City View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.039013885943788,
+          "longitude": 105.75838339268572,
+          "rating": 4.1,
+          "reviews": 1656
+        },
+        {
+          "id": "cantho_5",
+          "name": "Iris Hotel Can Tho",
+          "address": "224 30/4, Cần Thơ",
+          "star_rating": 4,
+          "price": 900000,
+          "amenities": [
+            "City Center",
+            "Sky Bar",
+            "Modern",
+            "Clean"
+          ],
+          "description": "Experience luxury and comfort at Iris Hotel Can Tho. Located in the heart of Cần Thơ, we offer world-class services including City Center, Sky Bar, Modern. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.056934477653202,
+          "longitude": 105.7403550480147,
+          "rating": 3.5,
+          "reviews": 1183
+        },
+        {
+          "id": "cantho_6",
+          "name": "Vinpearl Hotel Can Tho",
+          "address": "209 30/4, Cần Thơ",
+          "star_rating": 5,
+          "price": 1800000,
+          "amenities": [
+            "Shopping Mall Center",
+            "Pool",
+            "Luxury",
+            "View"
+          ],
+          "description": "Experience luxury and comfort at Vinpearl Hotel Can Tho. Located in the heart of Cần Thơ, we offer world-class services including Shopping Mall Center, Pool, Luxury. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.064159093175837,
+          "longitude": 105.7392628654696,
+          "rating": 3.7,
+          "reviews": 945
+        },
+        {
+          "id": "cantho_7",
+          "name": "Nam Bo Boutique Hotel",
+          "address": "1 Ngo Quyen, Cần Thơ",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Riverfront",
+            "Suite Only",
+            "Classic",
+            "Restaurant"
+          ],
+          "description": "Experience luxury and comfort at Nam Bo Boutique Hotel. Located in the heart of Cần Thơ, we offer world-class services including Riverfront, Suite Only, Classic. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,cantho",
+          "latitude": 10.063226770224208,
+          "longitude": 105.74630277652996,
+          "rating": 4.3,
+          "reviews": 891
+        }
+      ]
+    },
+    {
+      "id": "haiphong",
+      "name": "Hải Phòng",
+      "description": "Thành phố cảng sầm uất với hoa phượng đỏ, Đồ Sơn và ẩm thực đường phố độc đáo.",
+      "latitude": 20.8449,
+      "longitude": 106.6881,
+      "hotels": [
+        {
+          "id": "haiphong_1",
+          "name": "Hotel Nikko Hai Phong",
+          "address": "1 Road 1, Waterfront City, Hải Phòng",
+          "star_rating": 5,
+          "price": 2200000,
+          "amenities": [
+            "Japanese Style",
+            "Pool",
+            "Onsen",
+            "Clean"
+          ],
+          "description": "Experience luxury and comfort at Hotel Nikko Hai Phong. Located in the heart of Hải Phòng, we offer world-class services including Japanese Style, Pool, Onsen. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.860374041461014,
+          "longitude": 106.67909440436206,
+          "rating": 4.5,
+          "reviews": 458
+        },
+        {
+          "id": "haiphong_2",
+          "name": "Vinpearl Hotel Imperia Hai Phong",
+          "address": "Vinhomes Imperia, Hải Phòng",
+          "star_rating": 5,
+          "price": 2000000,
+          "amenities": [
+            "Tallest Tower",
+            "City View",
+            "Pool",
+            "Mall"
+          ],
+          "description": "Experience luxury and comfort at Vinpearl Hotel Imperia Hai Phong. Located in the heart of Hải Phòng, we offer world-class services including Tallest Tower, City View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.852156318350467,
+          "longitude": 106.68383116150339,
+          "rating": 4.8,
+          "reviews": 517
+        },
+        {
+          "id": "haiphong_3",
+          "name": "Mercure Hai Phong",
+          "address": "12 Lach Tray, Hải Phòng",
+          "star_rating": 5,
+          "price": 1800000,
+          "amenities": [
+            "Modern",
+            "Pool",
+            "Bar",
+            "Central"
+          ],
+          "description": "Experience luxury and comfort at Mercure Hai Phong. Located in the heart of Hải Phòng, we offer world-class services including Modern, Pool, Bar. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.85187449329492,
+          "longitude": 106.68157560840491,
+          "rating": 4.0,
+          "reviews": 1455
+        },
+        {
+          "id": "haiphong_4",
+          "name": "Flamingo Cat Ba Beach Resort",
+          "address": "Cat Co Beams, Hải Phòng",
+          "star_rating": 5,
+          "price": 2500000,
+          "amenities": [
+            "Island",
+            "Beachfront",
+            "Sky Walk",
+            "Architecture"
+          ],
+          "description": "Experience luxury and comfort at Flamingo Cat Ba Beach Resort. Located in the heart of Hải Phòng, we offer world-class services including Island, Beachfront, Sky Walk. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.86109889497625,
+          "longitude": 106.70714301640852,
+          "rating": 3.9,
+          "reviews": 1407
+        },
+        {
+          "id": "haiphong_5",
+          "name": "Hôtel Perle d'Orient Cat Ba - MGallery",
+          "address": "Cat C 3, Hải Phòng",
+          "star_rating": 5,
+          "price": 3000000,
+          "amenities": [
+            "Design",
+            "Beach",
+            "Roof Bar",
+            "Luxury"
+          ],
+          "description": "Experience luxury and comfort at Hôtel Perle d'Orient Cat Ba - MGallery. Located in the heart of Hải Phòng, we offer world-class services including Design, Beach, Roof Bar. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.850295098393755,
+          "longitude": 106.69691960242696,
+          "rating": 4.7,
+          "reviews": 1613
+        },
+        {
+          "id": "haiphong_6",
+          "name": "Manoir Des Arts Hotel",
+          "address": "64 Dien Bien Phu, Hải Phòng",
+          "star_rating": 4,
+          "price": 1200000,
+          "amenities": [
+            "Boutique",
+            "Classic",
+            "Garden",
+            "Quiet"
+          ],
+          "description": "Experience luxury and comfort at Manoir Des Arts Hotel. Located in the heart of Hải Phòng, we offer world-class services including Boutique, Classic, Garden. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.835791486773356,
+          "longitude": 106.69674997808295,
+          "rating": 4.4,
+          "reviews": 1707
+        },
+        {
+          "id": "haiphong_7",
+          "name": "Somerset Central TD Hai Phong City",
+          "address": "TD Plaza, Hải Phòng",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Apartment",
+            "Kitchen",
+            "Pool",
+            "Shopping"
+          ],
+          "description": "Experience luxury and comfort at Somerset Central TD Hai Phong City. Located in the heart of Hải Phòng, we offer world-class services including Apartment, Kitchen, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,haiphong",
+          "latitude": 20.859703260422716,
+          "longitude": 106.704426257973,
+          "rating": 4.8,
+          "reviews": 1777
+        }
+      ]
+    },
+    {
+      "id": "muine",
+      "name": "Mũi Né",
+      "description": "Thiên đường nghỉ dưỡng với những rặng dừa thơ mộng và hoạt động lướt ván diều nổi tiếng.",
+      "latitude": 10.9576,
+      "longitude": 108.277,
+      "hotels": [
+        {
+          "id": "muine_1",
+          "name": "Victoria Phan Thiet Beach Resort & Spa",
+          "address": "Km 9 Phu Hai, Mũi Né",
+          "star_rating": 4,
+          "price": 2200000,
+          "amenities": [
+            "Bungalows",
+            "Botanical Garden",
+            "Pool",
+            "Tennis"
+          ],
+          "description": "Experience luxury and comfort at Victoria Phan Thiet Beach Resort & Spa. Located in the heart of Mũi Né, we offer world-class services including Bungalows, Botanical Garden, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.95005911149293,
+          "longitude": 108.28591541996289,
+          "rating": 4.6,
+          "reviews": 202
+        },
+        {
+          "id": "muine_2",
+          "name": "Muine Bay Resort",
+          "address": "Quarter 14, Mũi Né",
+          "star_rating": 4,
+          "price": 1500000,
+          "amenities": [
+            "Private Beach",
+            "Garden",
+            "Pool",
+            "Peaceful"
+          ],
+          "description": "Experience luxury and comfort at Muine Bay Resort. Located in the heart of Mũi Né, we offer world-class services including Private Beach, Garden, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.977527138091673,
+          "longitude": 108.28425136789444,
+          "rating": 4.7,
+          "reviews": 1800
+        },
+        {
+          "id": "muine_3",
+          "name": "Blue Ocean Resort",
+          "address": "54 Nguyen Dinh Chieu, Mũi Né",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Beachfront",
+            "Pool",
+            "Green",
+            "Spa"
+          ],
+          "description": "Experience luxury and comfort at Blue Ocean Resort. Located in the heart of Mũi Né, we offer world-class services including Beachfront, Pool, Green. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.977081577221199,
+          "longitude": 108.2969904220228,
+          "rating": 3.9,
+          "reviews": 543
+        },
+        {
+          "id": "muine_4",
+          "name": "Poshanu Resort",
+          "address": "Quarter 5, Mũi Né",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Cham Style",
+            "Seaview",
+            "Pool",
+            "Relax"
+          ],
+          "description": "Experience luxury and comfort at Poshanu Resort. Located in the heart of Mũi Né, we offer world-class services including Cham Style, Seaview, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.94891356933932,
+          "longitude": 108.25841990623209,
+          "rating": 4.1,
+          "reviews": 1043
+        },
+        {
+          "id": "muine_5",
+          "name": "Sunny Beach Resort & Spa",
+          "address": "64-66 Nguyen Dinh Chieu, Mũi Né",
+          "star_rating": 4,
+          "price": 1200000,
+          "amenities": [
+            "Beachfront",
+            "Pool",
+            "Bar",
+            "Garden"
+          ],
+          "description": "Experience luxury and comfort at Sunny Beach Resort & Spa. Located in the heart of Mũi Né, we offer world-class services including Beachfront, Pool, Bar. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.952825160113212,
+          "longitude": 108.26339192995937,
+          "rating": 4.4,
+          "reviews": 1509
+        },
+        {
+          "id": "muine_6",
+          "name": "Cliff Resort & Residences",
+          "address": "Zone 5, Mũi Né",
+          "star_rating": 4,
+          "price": 2000000,
+          "amenities": [
+            "Ocean View",
+            "Apartments",
+            "Resort",
+            "Cinema"
+          ],
+          "description": "Experience luxury and comfort at Cliff Resort & Residences. Located in the heart of Mũi Né, we offer world-class services including Ocean View, Apartments, Resort. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.960090169678896,
+          "longitude": 108.27402179085027,
+          "rating": 4.2,
+          "reviews": 1174
+        },
+        {
+          "id": "muine_7",
+          "name": "Romana Resort & Spa",
+          "address": "Km 8, Mũi Né",
+          "star_rating": 4,
+          "price": 1300000,
+          "amenities": [
+            "Hillside",
+            "Private Pools",
+            "Tennis",
+            "View"
+          ],
+          "description": "Experience luxury and comfort at Romana Resort & Spa. Located in the heart of Mũi Né, we offer world-class services including Hillside, Private Pools, Tennis. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,muine",
+          "latitude": 10.948830227903663,
+          "longitude": 108.2654514832458,
+          "rating": 3.5,
+          "reviews": 1781
+        }
+      ]
+    },
+    {
+      "id": "condao",
+      "name": "Côn Đảo",
+      "description": "Hòn đảo linh thiêng, hoang sơ với những bãi biển tuyệt mỹ và hệ sinh thái đa dạng.",
+      "latitude": 8.6823,
+      "longitude": 106.6072,
+      "hotels": [
+        {
+          "id": "condao_1",
+          "name": "Six Senses Con Dao",
+          "address": "Dat Doc Beach, Côn Đảo",
+          "star_rating": 5,
+          "price": 20000000,
+          "amenities": [
+            "Ultimate Luxury",
+            "Private Pool",
+            "Secluded",
+            "Eco"
+          ],
+          "description": "Experience luxury and comfort at Six Senses Con Dao. Located in the heart of Côn Đảo, we offer world-class services including Ultimate Luxury, Private Pool, Secluded. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.688054811586529,
+          "longitude": 106.62439103996375,
+          "rating": 4.2,
+          "reviews": 559
+        },
+        {
+          "id": "condao_2",
+          "name": "Poulo Condor Boutique Resort & Spa",
+          "address": "Suoi Ot, Côn Đảo",
+          "star_rating": 4,
+          "price": 4500000,
+          "amenities": [
+            "French Colonial",
+            "Garden",
+            "Pool",
+            "Quiet"
+          ],
+          "description": "Experience luxury and comfort at Poulo Condor Boutique Resort & Spa. Located in the heart of Côn Đảo, we offer world-class services including French Colonial, Garden, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.694797516363478,
+          "longitude": 106.61258466871598,
+          "rating": 4.4,
+          "reviews": 542
+        },
+        {
+          "id": "condao_3",
+          "name": "The Secret Con Dao",
+          "address": "8 Ton Duc Thang, Côn Đảo",
+          "star_rating": 4,
+          "price": 2500000,
+          "amenities": [
+            "Heritage",
+            "Sea View",
+            "Pool",
+            "Central"
+          ],
+          "description": "Experience luxury and comfort at The Secret Con Dao. Located in the heart of Côn Đảo, we offer world-class services including Heritage, Sea View, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.692574623576398,
+          "longitude": 106.60505768002265,
+          "rating": 4.1,
+          "reviews": 710
+        },
+        {
+          "id": "condao_4",
+          "name": "Marina Bay Con Dao Hotel",
+          "address": "Nguyen Hue, Côn Đảo",
+          "star_rating": 4,
+          "price": 1800000,
+          "amenities": [
+            "Ocean View",
+            "Rooftop Pool",
+            "Modern",
+            "Clean"
+          ],
+          "description": "Experience luxury and comfort at Marina Bay Con Dao Hotel. Located in the heart of Côn Đảo, we offer world-class services including Ocean View, Rooftop Pool, Modern. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.66724846531767,
+          "longitude": 106.59057347628526,
+          "rating": 3.9,
+          "reviews": 1552
+        },
+        {
+          "id": "condao_5",
+          "name": "Con Dao Resort",
+          "address": "8 Nguyen Duc Thuan, Côn Đảo",
+          "star_rating": 3,
+          "price": 1500000,
+          "amenities": [
+            "Beachfront",
+            "Pool",
+            "Classic",
+            "Simple"
+          ],
+          "description": "Experience luxury and comfort at Con Dao Resort. Located in the heart of Côn Đảo, we offer world-class services including Beachfront, Pool, Classic. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.694885270478865,
+          "longitude": 106.60409540640212,
+          "rating": 4.2,
+          "reviews": 1201
+        },
+        {
+          "id": "condao_6",
+          "name": "Tan Son Nhat Con Dao Resort",
+          "address": "6 Nguyen Duc Thuan, Côn Đảo",
+          "star_rating": 3,
+          "price": 1200000,
+          "amenities": [
+            "Beach Access",
+            "Wooden",
+            "Garden",
+            "Restaurant"
+          ],
+          "description": "Experience luxury and comfort at Tan Son Nhat Con Dao Resort. Located in the heart of Côn Đảo, we offer world-class services including Beach Access, Wooden, Garden. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.667935524988156,
+          "longitude": 106.60425314761105,
+          "rating": 4.2,
+          "reviews": 984
+        },
+        {
+          "id": "condao_7",
+          "name": "Orson Hotel & Resort Con Dao",
+          "address": "Ben Dam, Côn Đảo",
+          "star_rating": 4,
+          "price": 1600000,
+          "amenities": [
+            "Remote",
+            "Private Beach",
+            "Pool",
+            "Mountain View"
+          ],
+          "description": "Experience luxury and comfort at Orson Hotel & Resort Con Dao. Located in the heart of Côn Đảo, we offer world-class services including Remote, Private Beach, Pool. Whether you are travelling for business or leisure, our hotel is the perfect choice for your stay.",
+          "image": "https://source.unsplash.com/800x600/?hotel,condao",
+          "latitude": 8.678444704965882,
+          "longitude": 106.59877353150375,
+          "rating": 4.9,
+          "reviews": 572
+        }
+      ]
+    }
+  ]
+}
