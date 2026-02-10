@@ -10,4 +10,5 @@ email-validator
 pymysql
 python-multipart
 fastapi-mail
+psycopg2-binary
 
