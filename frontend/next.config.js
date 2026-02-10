@@ -1,14 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Enable static HTML export for Static Site deployment
+  // Removed 'output: export' - Using Web Service instead of Static Site
+  // Static Site doesn't support dynamic routes like /hotel/[id]
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true, // Keep this for free tier
   },
   eslint: {
-    ignoreDuringBuilds: true, // Disable ESLint during build to avoid blocking deployment
+    ignoreDuringBuilds: true, // Keep linting disabled
   },
   typescript: {
-    ignoreBuildErrors: true, // Disable TypeScript errors during build
+    ignoreBuildErrors: true, // Keep TypeScript errors disabled
   },
 }
 
