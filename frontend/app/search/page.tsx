@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import { API_URL } from '@/lib/api';
 
 interface Hotel {
   id: number;
@@ -36,7 +37,7 @@ function SearchContent() {
             params.append('city', locationQuery);
         }
         
-        const res = await fetch(`http://127.0.0.1:8000/api/hotels/?${params.toString()}`);
+        const res = await fetch(`${API_URL}/api/hotels/?${params.toString()}`);
         if (!res.ok) throw new Error('API Error');
         
         const data = await res.json();

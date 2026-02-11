@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import RoomCard from '@/components/RoomCard';
 import Link from 'next/link';
+import { API_URL } from '@/lib/api';
 
 interface Hotel {
   id: number;
@@ -47,13 +48,13 @@ function HotelContent() {
       setLoading(true);
       try {
         // Fetch hotel details
-        const hotelRes = await fetch(`http://127.0.0.1:8000/api/hotels/${hotelId}`);
+        const hotelRes = await fetch(`${API_URL}/api/hotels/${hotelId}`);
         if (!hotelRes.ok) throw new Error('Failed to fetch hotel');
         const hotelData = await hotelRes.json();
         setHotel(hotelData);
 
         // Fetch rooms for this hotel
-        const roomRes = await fetch(`http://127.0.0.1:8000/api/rooms/?hotel_id=${hotelId}`);
+        const roomRes = await fetch(`${API_URL}/api/rooms/?hotel_id=${hotelId}`);
         if (!roomRes.ok) throw new Error('Failed to fetch rooms');
         const roomData = await roomRes.json();
         

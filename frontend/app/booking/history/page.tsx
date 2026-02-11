@@ -14,6 +14,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "@/components/ui/Toast";
+import { API_URL } from '@/lib/api';
 
 interface Room {
   id: number;
@@ -66,7 +67,7 @@ export default function BookingHistoryPage() {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/bookings/", {
+      const res = await fetch(`${API_URL}/api/bookings/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +120,7 @@ export default function BookingHistoryPage() {
     setCancellingId(selectedBooking.id);
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/bookings/${selectedBooking.id}/cancel`, {
+      const res = await fetch(`${API_URL}/api/bookings/${selectedBooking.id}/cancel`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

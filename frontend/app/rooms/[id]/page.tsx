@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import { API_URL } from '@/lib/api';
 
 interface Room {
   id: number;
@@ -42,7 +43,7 @@ export default function RoomDetail() {
 
     const fetchRoom = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/rooms/${id}`);
+        const res = await fetch(`${API_URL}/api/rooms/${id}`);
         if (!res.ok) throw new Error('Failed to fetch room');
         
         const data = await res.json();

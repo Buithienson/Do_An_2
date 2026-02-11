@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/SearchBar';
 import RoomCard from '@/components/RoomCard';
 import Link from 'next/link';
+import { API_URL } from '@/lib/api';
 
 // 1. Định nghĩa kiểu dữ liệu (Phải khớp với Backend trả về)
 interface Room {
@@ -29,7 +30,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/rooms/?limit=8'); // Lấy 6-8 phòng nổi bật
+        const res = await fetch(`${API_URL}/api/rooms/?limit=8`); // Lấy 6-8 phòng nổi bật
         if (!res.ok) throw new Error('Không gọi được API');
         
         const data = await res.json();
