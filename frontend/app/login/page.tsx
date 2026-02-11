@@ -79,7 +79,7 @@ export default function LoginPage() {
             
             <div className="-space-y-px rounded-md shadow-sm">
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-1">Email</label>
                 <input
                   type="email"
                   required
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                 <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                 <label className="block text-sm font-semibold text-gray-900 mb-1">Mật khẩu</label>
                 <input
                   type="password"
                   required

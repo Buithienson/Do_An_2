@@ -77,54 +77,54 @@ export default function RegisterPage() {
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-1">Họ và tên</label>
                 <input
                   type="text"
                   required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
                   value={formData.full_name}
                   onChange={(e) => setFormData({...formData, full_name: e.target.value})}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-1">Email</label>
                 <input
                   type="email"
                   required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-1">Số điện thoại</label>
                 <input
                   type="tel"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-1">Mật khẩu</label>
                 <input
                   type="password"
                   required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Xác nhận mật khẩu</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-1">Xác nhận mật khẩu</label>
                 <input
                   type="password"
                   required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
