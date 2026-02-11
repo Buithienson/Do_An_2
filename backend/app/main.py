@@ -23,6 +23,7 @@ FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 # Allowed origins: production URL + local development URLs
 allowed_origins = [
     FRONTEND_URL,
+    "https://do-an-2-1-xt7p.onrender.com",
     "http://localhost:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3000",
