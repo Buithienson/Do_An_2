@@ -1,0 +1,17 @@
+services:
+  # Backend API Service
+  - type: web
+    name: do-an-2-backend
+    env: python
+    region: oregon # Change this to your preferred region
+    plan: free # Free tier
+    rootDir: backend # CRITICAL: Set root directory to backend folder
+    buildCommand: pip install -r requirements.txt
+    startCommand: python start.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: FRONTEND_URL
+        value: https://do-an-2-1-xt7p.onrender.com
+    # Health check to ensure service is running
+    healthCheckPath: /
