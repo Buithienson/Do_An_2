@@ -5,12 +5,23 @@ from app.routers import users, rooms, bookings, hotels, auth, ai, seed_endpoint
 from app.cache import search_cache, availability_cache
 
 # Create all database tables (handled via seed endpoint or startup)
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
+
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app):
+    # Startup: auto-create tables so backend doesn't crash on fresh DB
+    Base.metadata.create_all(bind=engine)
+    yield
+
 
 app = FastAPI(
     title="AI-Booking API",
     version="3.0.0",
     description="Hotel Booking System with Full Features - Agoda-like Platform",
+    lifespan=lifespan,
 )
 
 # Configure CORS
