@@ -6,7 +6,26 @@ Supports dynamic PORT configuration from environment variables
 import os
 import uvicorn
 
+
+# Auto-create tables on startup (safe for PostgreSQL)
+def init_db():
+    """Initialize database tables if they don't exist"""
+    try:
+        from app.database import engine, Base
+        from app import models  # Import models to register them
+
+        print("🔄 Checking database tables...")
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database tables ready!")
+    except Exception as e:
+        print(f"⚠️  Database initialization warning: {e}")
+        # Don't crash the app, just log the warning
+
+
 if __name__ == "__main__":
+    # Initialize database first
+    init_db()
+
     # Get PORT from environment variable, default to 8000 for local development
     port = int(os.environ.get("PORT", 8000))
 

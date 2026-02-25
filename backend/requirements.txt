@@ -7,9 +7,7 @@ pydantic-settings
 passlib[bcrypt]
 python-jose[cryptography]
 email-validator
-pymysql
 python-multipart
 fastapi-mail
 psycopg2-binary
 pytz
-

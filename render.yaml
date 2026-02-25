@@ -1,17 +1,25 @@
+databases:
+  - name: do-an-2-db
+    plan: free
+    region: oregon
+
 services:
   # Backend API Service
   - type: web
     name: do-an-2-backend
     env: python
-    region: oregon # Change this to your preferred region
-    plan: free # Free tier
-    rootDir: backend # CRITICAL: Set root directory to backend folder
+    region: oregon
+    plan: free
+    rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: python start.py
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: do-an-2-db
+          property: connectionString
       - key: FRONTEND_URL
         value: https://do-an-2-1-xt7p.onrender.com
-    # Health check to ensure service is running
     healthCheckPath: /

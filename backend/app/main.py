@@ -4,7 +4,7 @@ from app.database import engine, Base
 from app.routers import users, rooms, bookings, hotels, auth, ai, seed_endpoint
 from app.cache import search_cache, availability_cache
 
-# Create all database tables
+# Create all database tables (handled via seed endpoint or startup)
 # Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -92,7 +92,7 @@ async def hello_world():
         "message": "Hello from FastAPI Backend!",
         "status": "success",
         "project": "AI-Booking Hotel System",
-        "integration": "FastAPI + Next.js + SQLite",
+        "integration": "FastAPI + Next.js + PostgreSQL",
     }
 
 
