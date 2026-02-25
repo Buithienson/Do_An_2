@@ -5,7 +5,7 @@ Visit: https://your-backend-url.onrender.com/seed-db
 
 from fastapi import APIRouter, HTTPException
 from app.database import SessionLocal, Base, engine
-from app.models import User, Hotel, Room
+from app.models import User, Hotel, Room, Booking
 from app.utils import hash_password
 import json
 from pathlib import Path
