@@ -24,6 +24,37 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+from fastapi import Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+import logging
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """
+    Log validation errors (422) for debugging
+    """
+    logging.error(f"Validation error for {request.url}: {exc.errors()}")
+    # Return JSON with details - CORS middleware will catch this response
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors(), "body": exc.body},
+    )
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    """
+    Log generic errors (500) for debugging
+    """
+    logging.error(f"Global error for {request.url}: {str(exc)}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error", "message": str(exc)},
+    )
+
+
 # Configure CORS
 # Support both local development and production deployment
 import os
