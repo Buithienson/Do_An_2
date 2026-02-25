@@ -142,6 +142,12 @@ async def seed_database_endpoint():
         ]
 
         # Helper mapping functions
+        import os
+
+        frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000").rstrip(
+            "/"
+        )
+
         def get_hotel_image(city_name: str) -> str:
             city_l = city_name.lower()
             if any(
@@ -158,20 +164,24 @@ async def seed_database_endpoint():
                     "quy nhon",
                 ]
             ):
-                return "/hotels/hotel_beach_resort.png"
-            if any(c in city_l for c in ["phú quốc", "phu quoc", "côn đảo", "con dao"]):
-                return "/hotels/hotel_island_villa.png"
-            if any(c in city_l for c in ["sa pa", "sapa"]):
-                return "/hotels/hotel_mountain_resort.png"
-            if any(c in city_l for c in ["hội an", "hoi an", "huế", "hue"]):
-                return "/hotels/hotel_heritage.png"
-            if any(c in city_l for c in ["hạ long", "ha long"]):
-                return "/hotels/hotel_bay_view.png"
-            if any(c in city_l for c in ["đà lạt", "da lat"]):
-                return "/hotels/hotel_dalat_french.png"
-            if any(c in city_l for c in ["đà nẵng", "da nang", "cần thơ", "can tho"]):
-                return "/hotels/hotel_riverside.png"
-            return "/hotels/hotel_city_luxury.png"
+                path = "/hotels/hotel_beach_resort.png"
+            elif any(
+                c in city_l for c in ["phú quốc", "phu quoc", "côn đảo", "con dao"]
+            ):
+                path = "/hotels/hotel_island_villa.png"
+            elif any(c in city_l for c in ["sa pa", "sapa"]):
+                path = "/hotels/hotel_mountain_resort.png"
+            elif any(c in city_l for c in ["hội an", "hoi an", "huế", "hue"]):
+                path = "/hotels/hotel_heritage.png"
+            elif any(c in city_l for c in ["hạ long", "ha long"]):
+                path = "/hotels/hotel_bay_view.png"
+            elif any(c in city_l for c in ["đà lạt", "da lat"]):
+                path = "/hotels/hotel_dalat_french.png"
+            elif any(c in city_l for c in ["đà nẵng", "da nang", "cần thơ", "can tho"]):
+                path = "/hotels/hotel_riverside.png"
+            else:
+                path = "/hotels/hotel_city_luxury.png"
+            return f"{frontend_url}{path}"
 
         room_image_map = {
             "Standard": "/rooms/standard_room.png",
