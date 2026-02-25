@@ -141,13 +141,53 @@ async def seed_database_endpoint():
             },
         ]
 
+        # Helper mapping functions
+        def get_hotel_image(city_name: str) -> str:
+            city_l = city_name.lower()
+            if any(
+                c in city_l
+                for c in [
+                    "nha trang",
+                    "vũng tàu",
+                    "vung tau",
+                    "phan thiết",
+                    "phan thiet",
+                    "mũi né",
+                    "mui ne",
+                    "quy nhơn",
+                    "quy nhon",
+                ]
+            ):
+                return "/hotels/hotel_beach_resort.png"
+            if any(c in city_l for c in ["phú quốc", "phu quoc", "côn đảo", "con dao"]):
+                return "/hotels/hotel_island_villa.png"
+            if any(c in city_l for c in ["sa pa", "sapa"]):
+                return "/hotels/hotel_mountain_resort.png"
+            if any(c in city_l for c in ["hội an", "hoi an", "huế", "hue"]):
+                return "/hotels/hotel_heritage.png"
+            if any(c in city_l for c in ["hạ long", "ha long"]):
+                return "/hotels/hotel_bay_view.png"
+            if any(c in city_l for c in ["đà lạt", "da lat"]):
+                return "/hotels/hotel_dalat_french.png"
+            if any(c in city_l for c in ["đà nẵng", "da nang", "cần thơ", "can tho"]):
+                return "/hotels/hotel_riverside.png"
+            return "/hotels/hotel_city_luxury.png"
+
+        room_image_map = {
+            "Standard": "/rooms/standard_room.png",
+            "Superior": "/rooms/superior_room.png",
+            "Deluxe": "/rooms/deluxe_room.png",
+            "Suite": "/rooms/suite_room.png",
+        }
+
         for dest in data["destinations"]:
             city_name = dest["name"]
             hotels_in_city = dest["hotels"]
 
             for h_data in hotels_in_city:
                 # Create Hotel
-                images_list = [h_data.get("image", "/hotels/default.png")]
+                hotel_img = get_hotel_image(city_name)
+                images_list = [hotel_img]
 
                 new_hotel = Hotel(
                     name=h_data["name"],
@@ -193,7 +233,7 @@ async def seed_database_endpoint():
                         size=float(room_info["size"]),
                         bed_type=room_info["bed_type"],
                         amenities=room_info["amenities"],
-                        images=images_list,  # Use hotel image for room temporarily
+                        images=[room_image_map.get(room_info["type"], hotel_img)],
                     )
                     db.add(new_room)
                     total_rooms += 1
