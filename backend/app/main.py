@@ -1,7 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import users, rooms, bookings, hotels, auth, ai, seed_endpoint
+from app.routers import (
+    users,
+    rooms,
+    bookings,
+    hotels,
+    auth,
+    ai,
+    seed_endpoint,
+    admin as admin_router,
+)
 from app.cache import search_cache, availability_cache
 
 # Create all database tables (handled via seed endpoint or startup)
@@ -108,6 +117,7 @@ app.include_router(rooms.router, prefix="/api")
 app.include_router(bookings.router, prefix="/api")
 app.include_router(ai.router, prefix="/api")
 app.include_router(seed_endpoint.router, prefix="/api")  # Database seeding endpoint
+app.include_router(admin_router.router, prefix="/api")  # Admin management endpoints
 
 
 @app.get("/")

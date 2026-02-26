@@ -44,8 +44,12 @@ export default function LoginPage() {
       if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      alert('Đăng nhập thành công!');
-      router.push('/');
+      // Chuyển hướng dựa theo role
+      if (data.user?.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/');
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
