@@ -16,13 +16,76 @@ from app.cache import search_cache, availability_cache
 # Create all database tables (handled via seed endpoint or startup)
 Base.metadata.create_all(bind=engine)
 
+import logging
 from contextlib import asynccontextmanager
+
+# ── Tài khoản Admin mặc định ─────────────────────────────────────────────────
+# Thay đổi thông tin bên dưới nếu muốn dùng email/mật khẩu khác
+DEFAULT_ADMIN_EMAIL = "admin@booking.com"
+DEFAULT_ADMIN_PASSWORD = "Admin@123"
+DEFAULT_ADMIN_NAME = "Super Admin"
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def _ensure_default_admin():
+    """
+    Tự động tạo tài khoản admin mặc định khi server khởi động,
+    nếu chưa có tài khoản nào mang email đó trong database.
+    """
+    from app.database import SessionLocal
+    from app import models
+    from app.utils import hash_password
+
+    db = SessionLocal()
+    try:
+        existing = (
+            db.query(models.User)
+            .filter(models.User.email == DEFAULT_ADMIN_EMAIL)
+            .first()
+        )
+
+        if existing:
+            # Đảm bảo luôn là admin dù bị đổi trước đó
+            if existing.role != "admin":
+                existing.role = "admin"
+                db.commit()
+                logging.info(
+                    f"[Admin] Đã nâng cấp '{DEFAULT_ADMIN_EMAIL}' lên role admin."
+                )
+            else:
+                logging.info(
+                    f"[Admin] Tài khoản admin '{DEFAULT_ADMIN_EMAIL}' đã tồn tại."
+                )
+            return
+
+        admin = models.User(
+            email=DEFAULT_ADMIN_EMAIL,
+            full_name=DEFAULT_ADMIN_NAME,
+            hashed_password=hash_password(DEFAULT_ADMIN_PASSWORD),
+            role="admin",
+            email_verified=True,
+        )
+        db.add(admin)
+        db.commit()
+        logging.info(
+            f"[Admin] Đã tạo tài khoản admin mặc định: "
+            f"email={DEFAULT_ADMIN_EMAIL} | password={DEFAULT_ADMIN_PASSWORD}"
+        )
+    except Exception as e:
+        db.rollback()
+        logging.error(f"[Admin] Không thể tạo admin mặc định: {e}")
+    finally:
+        db.close()
 
 
 @asynccontextmanager
 async def lifespan(app):
     # Startup: auto-create tables so backend doesn't crash on fresh DB
     Base.metadata.create_all(bind=engine)
+
+    # Auto-create default admin account if none exists
+    _ensure_default_admin()
+
     yield
 
 
