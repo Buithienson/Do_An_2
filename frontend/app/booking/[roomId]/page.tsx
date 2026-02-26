@@ -159,7 +159,7 @@ export default function BookingPaymentPage() {
       if (!res.ok) return null;
       const data = await res.json();
       if (data.access_token) {
-        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('token', data.access_token);
         if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
         return data.access_token;
       }
@@ -189,7 +189,7 @@ export default function BookingPaymentPage() {
     }
 
     // Kiểm tra token trước khi gửi request
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('Vui lòng đăng nhập để đặt phòng');
       window.location.href = '/login';
@@ -430,7 +430,7 @@ export default function BookingPaymentPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left: Form */}
           <div className="lg:col-span-7">
-            <div className="backdrop-blur-sm bg-white/60 border border-white/30 rounded-2xl shadow-[0_30px_60px_rgba(2,6,23,0.08)] p-6">
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-md p-6">
               <div className="flex items-start gap-4 mb-6">
                 {room.images && room.images[0] && (
                   <img src={room.images[0]} alt={room.name} className="w-28 h-20 object-cover rounded-lg shadow-md" />
@@ -443,12 +443,12 @@ export default function BookingPaymentPage() {
               </div>
 
               <section className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Thông tin khách hàng</h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Thông tin khách hàng</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Họ và tên" className="px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-300 outline-none" />
-                  <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email" className="px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-300 outline-none" />
-                  <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Số điện thoại" className="px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-300 outline-none" />
-                  <select name="guests" value={formData.guests} onChange={handleInputChange} className="px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-300 outline-none">
+                  <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Họ và tên" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Số điện thoại" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <select name="guests" value={formData.guests} onChange={handleInputChange} className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none">
                     {Array.from({ length: room.max_guests }, (_, i) => i + 1).map(num => (
                       <option key={num} value={num}>{num} người</option>
                     ))}
@@ -458,22 +458,22 @@ export default function BookingPaymentPage() {
 
               <section className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm text-gray-600">Ngày nhận</label>
-                  <input name="checkIn" type="date" value={formData.checkIn} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 outline-none" />
+                  <label className="text-sm font-medium text-gray-700">Ngày nhận</label>
+                  <input name="checkIn" type="date" value={formData.checkIn} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Ngày trả</label>
-                  <input name="checkOut" type="date" value={formData.checkOut} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 outline-none" />
+                  <label className="text-sm font-medium text-gray-700">Ngày trả</label>
+                  <input name="checkOut" type="date" value={formData.checkOut} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
                 </div>
               </section>
 
               <section className="mb-6">
-                <label className="text-sm text-gray-600">Yêu cầu đặc biệt</label>
-                <textarea name="specialRequests" rows={3} value={formData.specialRequests} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 outline-none" placeholder="Ghi chú..." />
+                <label className="text-sm font-medium text-gray-700">Yêu cầu đặc biệt</label>
+                <textarea name="specialRequests" rows={3} value={formData.specialRequests} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" placeholder="Ghi chú..." />
               </section>
 
               <section className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Phương thức thanh toán</h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Phương thức thanh toán</h3>
                 <div className="flex gap-3">
                   <button onClick={() => setFormData({...formData, paymentMethod: 'credit_card'})} className={`px-4 py-3 rounded-lg w-full border ${formData.paymentMethod === 'credit_card' ? 'bg-white shadow-md border-orange-300' : 'bg-gray-50 border-gray-200'}`}>
                     Thẻ tín dụng
@@ -485,10 +485,10 @@ export default function BookingPaymentPage() {
 
                 {formData.paymentMethod === 'credit_card' && (
                   <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} placeholder="Số thẻ" className="px-4 py-3 rounded-lg border border-gray-200 outline-none" />
-                    <input name="cardName" value={formData.cardName} onChange={handleInputChange} placeholder="Tên trên thẻ" className="px-4 py-3 rounded-lg border border-gray-200 outline-none" />
-                    <input name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="px-4 py-3 rounded-lg border border-gray-200 outline-none" />
-                    <input name="cvv" value={formData.cvv} onChange={handleInputChange} placeholder="CVV" className="px-4 py-3 rounded-lg border border-gray-200 outline-none" />
+                    <input name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} placeholder="Số thẻ" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="cardName" value={formData.cardName} onChange={handleInputChange} placeholder="Tên trên thẻ" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="cvv" value={formData.cvv} onChange={handleInputChange} placeholder="CVV" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
                   </div>
                 )}
               </section>
