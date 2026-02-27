@@ -116,7 +116,7 @@ async def send_booking_confirmation_email(to_email: EmailStr, booking_data: dict
     """
 
     message = MessageSchema(
-        subject=f"✅ Xác nhận đặt phòng #{booking_data.get('booking_id')} - BookingAI",
+        subject=f" Xác nhận đặt phòng #{booking_data.get('booking_id')} - BookingAI",
         recipients=[to_email],
         body=html_body,
         subtype=MessageType.html,
