@@ -92,15 +92,20 @@ def get_dashboard_stats(
         or 0.0
     )
 
+    # Booking chờ thanh toán = payment_status pending và chưa hủy
     pending_bookings = (
         db.query(func.count(models.Booking.id))
-        .filter(models.Booking.status == "pending")
+        .filter(
+            models.Booking.payment_status == "pending",
+            models.Booking.status != "cancelled",
+        )
         .scalar()
         or 0
     )
+    # Booking đã xác nhận thanh toán = payment_status paid
     confirmed_bookings = (
         db.query(func.count(models.Booking.id))
-        .filter(models.Booking.status == "confirmed")
+        .filter(models.Booking.payment_status == "paid")
         .scalar()
         or 0
     )

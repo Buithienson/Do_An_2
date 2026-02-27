@@ -132,18 +132,18 @@ export default function AdminDashboard() {
                 sub="Doanh thu từ booking đã xác nhận"
               />
               <StatCard
-                title="Booking chờ duyệt"
+                title="Booking chờ thanh toán"
                 value={stats.pending_bookings.toLocaleString()}
                 icon={Clock}
                 color="bg-yellow-500"
-                sub="Đang ở trạng thái pending"
+                sub="Chưa được xác nhận thanh toán"
               />
               <StatCard
-                title="Booking đã xác nhận"
+                title="Booking đã thanh toán"
                 value={stats.confirmed_bookings.toLocaleString()}
                 icon={CheckCircle}
                 color="bg-teal-500"
-                sub="Đã thanh toán & xác nhận"
+                sub="Đã xác nhận thanh toán"
               />
             </div>
           )
