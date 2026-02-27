@@ -52,6 +52,8 @@ export default function BookingHistoryPage() {
   const [cancellingId, setCancellingId] = useState<number | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [payingBooking, setPayingBooking] = useState<Booking | null>(null);
 
   useEffect(() => {
     fetchBookings();
@@ -111,6 +113,11 @@ export default function BookingHistoryPage() {
   const handleCancelClick = (booking: Booking) => {
     setSelectedBooking(booking);
     setShowCancelModal(true);
+  };
+
+  const handlePayClick = (booking: Booking) => {
+    setPayingBooking(booking);
+    setShowQRModal(true);
   };
 
   const handleCancelBooking = async () => {
@@ -304,7 +311,16 @@ export default function BookingHistoryPage() {
                           {formatPrice(booking.total_price)}
                         </p>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
+                        {/* Nút Thanh toán - chỉ hiện khi chưa thanh toán và chưa hủy */}
+                        {booking.status !== "cancelled" && booking.payment_status === "pending" && (
+                          <button
+                            onClick={() => handlePayClick(booking)}
+                            className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition shadow-sm"
+                          >
+                            Thanh toán
+                          </button>
+                        )}
                         <button
                           onClick={() =>
                             router.push(`/booking/${booking.room_id}?view=${booking.id}`)
@@ -385,6 +401,84 @@ export default function BookingHistoryPage() {
                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition disabled:opacity-50"
                 >
                   {cancellingId ? "Đang hủy..." : "Xác nhận hủy"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* QR Payment Modal */}
+        {showQRModal && payingBooking && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+              {/* Header */}
+              <div className="mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <CreditCard className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Thanh toán đơn #BK{payingBooking.id}</h3>
+                <p className="text-sm text-gray-500 mt-1">Quét mã QR để hoàn tất thanh toán</p>
+              </div>
+
+              {/* Số tiền */}
+              <div className="bg-green-50 rounded-xl py-3 px-4 mb-4">
+                <p className="text-sm text-gray-500 mb-1">Số tiền cần thanh toán</p>
+                <p className="text-2xl font-bold text-green-600">{payingBooking.total_price.toLocaleString('vi-VN')}đ</p>
+              </div>
+
+              {/* QR Image
+                  Để thay ảnh QR: đặt file vào frontend/public/qr-payment.png
+                  hoặc đổi src thành URL ảnh QR của bạn */}
+              <div className="flex justify-center mb-4">
+                <div className="border-4 border-gray-200 rounded-xl p-2 bg-white shadow-inner">
+                  <img
+                    src="/qr-payment.png"
+                    alt="QR Code thanh toán"
+                    className="w-48 h-48 object-contain"
+                    onError={(e) => {
+                      const t = e.currentTarget as HTMLImageElement;
+                      t.style.display = 'none';
+                      const ph = t.nextElementSibling as HTMLElement;
+                      if (ph) ph.style.display = 'flex';
+                    }}
+                  />
+                  <div className="w-48 h-48 bg-gray-100 rounded-lg hidden flex-col items-center justify-center text-center p-4">
+                    <div className="text-4xl mb-2">📱</div>
+                    <p className="text-xs text-gray-500 font-medium">Đặt ảnh QR vào</p>
+                    <p className="text-xs text-orange-500 font-bold mt-1">public/qr-payment.png</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hướng dẫn */}
+              <div className="bg-blue-50 rounded-lg p-3 mb-5 text-left text-xs text-blue-700 space-y-1">
+                <p className="font-semibold text-blue-800 mb-1">Hướng dẫn thanh toán:</p>
+                <p>1. Mở app ngân hàng và quét mã QR</p>
+                <p>2. Nhập đúng số tiền <strong>{payingBooking.total_price.toLocaleString('vi-VN')}đ</strong></p>
+                <p>3. Nội dung: <strong>Thanh toán đơn #BK{payingBooking.id}</strong></p>
+                <p>4. Nhấn "Xác nhận" sau khi chuyển xong</p>
+              </div>
+
+              {/* Buttons */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setShowQRModal(false);
+                    setPayingBooking(null);
+                    toast.success('Cảm ơn! Đơn hàng của bạn sẽ được xác nhận sau khi kiểm tra thanh toán.');
+                  }}
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl font-bold hover:from-green-600 hover:to-green-700 transition shadow-lg"
+                >
+                  ✅ Xác nhận đã thanh toán
+                </button>
+                <button
+                  onClick={() => {
+                    setShowQRModal(false);
+                    setPayingBooking(null);
+                  }}
+                  className="w-full py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition text-sm"
+                >
+                  Hủy, quay lại
                 </button>
               </div>
             </div>

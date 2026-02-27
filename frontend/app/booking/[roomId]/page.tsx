@@ -517,7 +517,7 @@ export default function BookingPaymentPage() {
                     </svg>
                     Đang xử lý...
                   </span>
-                ) : '✅ Xác nhận đã thanh toán'}
+                ) : ' Xác nhận đã thanh toán'}
               </button>
               <button
                 onClick={() => setShowQRModal(false)}
