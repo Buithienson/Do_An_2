@@ -238,6 +238,110 @@ def delete_booking(
     db.commit()
 
 
+@router.patch("/bookings/{booking_id}/confirm-payment")
+def confirm_payment(
+    booking_id: int,
+    db: Session = Depends(get_db),
+    _admin=Depends(require_admin),
+):
+    """
+    Admin xác nhận thanh toán cho booking (pending → paid).
+    Tự động gửi email thông báo cho khách hàng.
+    """
+    booking = db.query(models.Booking).filter(models.Booking.id == booking_id).first()
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Booking {booking_id} not found",
+        )
+
+    if booking.payment_status == "paid":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Booking đã được thanh toán trước đó",
+        )
+
+    # Cập nhật trạng thái thanh toán
+    booking.payment_status = "paid"
+    booking.status = "confirmed"
+    booking.payment_method = booking.payment_method or "bank_transfer"
+
+    # Tạo payment record nếu chưa có
+    import secrets
+
+    existing_payment = (
+        db.query(models.Payment).filter(models.Payment.booking_id == booking_id).first()
+    )
+
+    if not existing_payment:
+        db_payment = models.Payment(
+            booking_id=booking_id,
+            amount=booking.total_price,
+            currency="VND",
+            payment_method=booking.payment_method or "bank_transfer",
+            transaction_id=f"ADMIN-{secrets.token_hex(6).upper()}",
+            status="completed",
+            payment_metadata={"confirmed_by": "admin"},
+        )
+        db.add(db_payment)
+
+    db.commit()
+    db.refresh(booking)
+
+    # Gửi email thông báo cho khách hàng (bất đồng bộ, không chặn response)
+    try:
+        user = db.query(models.User).filter(models.User.id == booking.user_id).first()
+        hotel = (
+            db.query(models.Hotel).filter(models.Hotel.id == booking.hotel_id).first()
+        )
+        room = db.query(models.Room).filter(models.Room.id == booking.room_id).first()
+
+        if user and user.email:
+            from app.services.email_service import send_booking_confirmation_email
+            import asyncio
+
+            booking_data = {
+                "booking_id": booking.id,
+                "hotel_name": hotel.name if hotel else "N/A",
+                "room_name": room.name if room else "N/A",
+                "check_in": booking.check_in_date.strftime("%d/%m/%Y"),
+                "check_out": booking.check_out_date.strftime("%d/%m/%Y"),
+                "guests": booking.guests,
+                "total_price": booking.total_price,
+                "payment_method": "Chuyển khoản ngân hàng",
+                "customer_name": user.full_name,
+                "payment_status": "Đã thanh toán",
+            }
+
+            # Chạy email async trong background
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    import concurrent.futures
+
+                    with concurrent.futures.ThreadPoolExecutor() as pool:
+                        future = pool.submit(
+                            asyncio.run,
+                            send_booking_confirmation_email(user.email, booking_data),
+                        )
+                else:
+                    loop.run_until_complete(
+                        send_booking_confirmation_email(user.email, booking_data)
+                    )
+            except Exception:
+                pass  # Email lỗi không ảnh hưởng confirm
+
+    except Exception:
+        pass  # Không để email lỗi chặn response
+
+    return {
+        "id": booking.id,
+        "payment_status": booking.payment_status,
+        "status": booking.status,
+        "message": f"Đã xác nhận thanh toán cho booking #{booking_id}",
+    }
+
+
 # ─────────────────────────────────────────────
 # Cập nhật role user
 # ─────────────────────────────────────────────

@@ -42,6 +42,7 @@ export default function AdminBookingsPage() {
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -98,6 +99,33 @@ export default function AdminBookingsPage() {
       alert(err.message);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleConfirmPayment = async (bookingId: number, userEmail: string | null) => {
+    if (!confirm(`Xác nhận đã nhận thanh toán cho booking #${bookingId}?\n\nEmail thông báo sẽ được gửi tới: ${userEmail || 'khách hàng'}`)) return;
+    setConfirmingId(bookingId);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${apiUrl}/api/admin/bookings/${bookingId}/confirm-payment`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || 'Xác nhận thất bại');
+      }
+      // Cập nhật UI ngay lập tức
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId ? { ...b, payment_status: 'paid', status: 'confirmed' } : b
+        )
+      );
+      alert(`Đã xác nhận thanh toán cho booking #${bookingId}\nEmail thông báo đang được gửi tới khách hàng.`);
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setConfirmingId(null);
     }
   };
 
@@ -201,18 +229,36 @@ export default function AdminBookingsPage() {
                         </span>
                       </td>
                       <td className="px-5 py-4">
-                        <button
-                          onClick={() => handleDelete(b.id)}
-                          disabled={deletingId === b.id}
-                          className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                          title="Xóa booking"
-                        >
-                          {deletingId === b.id ? (
-                            <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Trash2 size={16} />
+                        <div className="flex items-center gap-1">
+                          {/* Nút Xác nhận thanh toán - chỉ hiện khi payment đang pending */}
+                          {b.payment_status === 'pending' && b.status !== 'cancelled' && (
+                            <button
+                              onClick={() => handleConfirmPayment(b.id, b.user_email)}
+                              disabled={confirmingId === b.id}
+                              className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-semibold hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+                              title="Xác nhận đã nhận thanh toán"
+                            >
+                              {confirmingId === b.id ? (
+                                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                '✓'
+                              )}
+                              <span>{confirmingId === b.id ? 'Đang xử lý...' : 'Xác nhận TT'}</span>
+                            </button>
                           )}
-                        </button>
+                          <button
+                            onClick={() => handleDelete(b.id)}
+                            disabled={deletingId === b.id}
+                            className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            title="Xóa booking"
+                          >
+                            {deletingId === b.id ? (
+                              <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <Trash2 size={16} />
+                            )}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
