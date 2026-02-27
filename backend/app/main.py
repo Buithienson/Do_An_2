@@ -201,6 +201,63 @@ async def root():
     }
 
 
+@app.get("/api/init-admin")
+async def init_admin():
+    """
+    Endpoint tạo tài khoản admin mặc định thủ công.
+    Gọi endpoint này 1 lần nếu login admin bị lỗi 401.
+    URL: /api/init-admin
+    """
+    from app.database import SessionLocal
+    from app import models
+    from app.utils import hash_password
+
+    db = SessionLocal()
+    try:
+        existing = (
+            db.query(models.User)
+            .filter(models.User.email == DEFAULT_ADMIN_EMAIL)
+            .first()
+        )
+        if existing:
+            if existing.role != "admin":
+                existing.role = "admin"
+                db.commit()
+                return {
+                    "status": "updated",
+                    "message": f"Đã nâng cấp {DEFAULT_ADMIN_EMAIL} lên admin",
+                    "email": DEFAULT_ADMIN_EMAIL,
+                    "password": DEFAULT_ADMIN_PASSWORD,
+                }
+            return {
+                "status": "exists",
+                "message": f"Tài khoản admin đã tồn tại",
+                "email": DEFAULT_ADMIN_EMAIL,
+                "password": DEFAULT_ADMIN_PASSWORD,
+            }
+
+        admin = models.User(
+            email=DEFAULT_ADMIN_EMAIL,
+            full_name=DEFAULT_ADMIN_NAME,
+            hashed_password=hash_password(DEFAULT_ADMIN_PASSWORD),
+            role="admin",
+            email_verified=True,
+        )
+        db.add(admin)
+        db.commit()
+        return {
+            "status": "created",
+            "message": "Đã tạo tài khoản admin thành công!",
+            "email": DEFAULT_ADMIN_EMAIL,
+            "password": DEFAULT_ADMIN_PASSWORD,
+        }
+    except Exception as e:
+        db.rollback()
+        return {"status": "error", "message": str(e)}
+    finally:
+        db.close()
+
+
 @app.get("/api/hello")
 async def hello_world():
     return {
