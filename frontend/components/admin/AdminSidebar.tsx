@@ -8,12 +8,16 @@ import {
   CalendarCheck,
   LogOut,
   Hotel,
+  BedDouble,
+  BarChart2,
 } from 'lucide-react';
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/users', label: 'Quản lý User', icon: Users },
   { href: '/admin/bookings', label: 'Quản lý Booking', icon: CalendarCheck },
+  { href: '/admin/hotels', label: 'Khách sạn & Phòng', icon: BedDouble },
+  { href: '/admin/reports', label: 'Báo cáo Doanh thu', icon: BarChart2 },
 ];
 
 export default function AdminSidebar() {

@@ -384,3 +384,229 @@ def update_user_role(
         "user_id": user.id,
         "role": user.role,
     }
+
+
+# ─────────────────────────────────────────────
+# Quản lý Khách sạn & Phòng
+# ─────────────────────────────────────────────
+
+
+@router.get("/hotels")
+def list_hotels(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    _admin=Depends(require_admin),
+):
+    """Danh sách tất cả khách sạn kèm số phòng và thống kê booking"""
+    hotels = (
+        db.query(models.Hotel)
+        .order_by(models.Hotel.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    result = []
+    for h in hotels:
+        room_count = (
+            db.query(func.count(models.Room.id))
+            .filter(models.Room.hotel_id == h.id)
+            .scalar()
+            or 0
+        )
+        booking_count = (
+            db.query(func.count(models.Booking.id))
+            .filter(models.Booking.hotel_id == h.id)
+            .scalar()
+            or 0
+        )
+        revenue = (
+            db.query(func.sum(models.Booking.total_price))
+            .filter(
+                models.Booking.hotel_id == h.id, models.Booking.status != "cancelled"
+            )
+            .scalar()
+            or 0.0
+        )
+        result.append(
+            {
+                "id": h.id,
+                "name": h.name,
+                "city": getattr(h, "city", None)
+                or getattr(h, "location", None)
+                or "N/A",
+                "address": getattr(h, "address", "N/A"),
+                "star_rating": getattr(h, "star_rating", None),
+                "room_count": room_count,
+                "booking_count": booking_count,
+                "total_revenue": float(revenue),
+                "created_at": h.created_at.isoformat() if h.created_at else None,
+            }
+        )
+
+    return result
+
+
+@router.get("/rooms")
+def list_rooms_admin(
+    hotel_id: int = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    _admin=Depends(require_admin),
+):
+    """Danh sách phòng (có thể lọc theo hotel_id)"""
+    query = db.query(models.Room)
+    if hotel_id:
+        query = query.filter(models.Room.hotel_id == hotel_id)
+    rooms = query.order_by(models.Room.id.desc()).offset(skip).limit(limit).all()
+
+    result = []
+    for r in rooms:
+        hotel = db.query(models.Hotel).filter(models.Hotel.id == r.hotel_id).first()
+        booking_count = (
+            db.query(func.count(models.Booking.id))
+            .filter(
+                models.Booking.room_id == r.id, models.Booking.status != "cancelled"
+            )
+            .scalar()
+            or 0
+        )
+        result.append(
+            {
+                "id": r.id,
+                "name": r.name,
+                "room_type": r.room_type,
+                "base_price": r.base_price,
+                "max_guests": r.max_guests,
+                "hotel_id": r.hotel_id,
+                "hotel_name": hotel.name if hotel else "N/A",
+                "booking_count": booking_count,
+            }
+        )
+    return result
+
+
+# ─────────────────────────────────────────────
+# Báo cáo & Thống kê
+# ─────────────────────────────────────────────
+
+
+@router.get("/reports/revenue")
+def revenue_report(
+    year: int = None,
+    db: Session = Depends(get_db),
+    _admin=Depends(require_admin),
+):
+    """Doanh thu theo từng tháng trong năm (mặc định năm hiện tại)"""
+    from sqlalchemy import extract
+
+    if not year:
+        year = datetime.now().year
+
+    monthly = []
+    for month in range(1, 13):
+        revenue = (
+            db.query(func.sum(models.Booking.total_price))
+            .filter(
+                models.Booking.payment_status == "paid",
+                extract("year", models.Booking.created_at) == year,
+                extract("month", models.Booking.created_at) == month,
+            )
+            .scalar()
+            or 0.0
+        )
+        count = (
+            db.query(func.count(models.Booking.id))
+            .filter(
+                models.Booking.payment_status == "paid",
+                extract("year", models.Booking.created_at) == year,
+                extract("month", models.Booking.created_at) == month,
+            )
+            .scalar()
+            or 0
+        )
+        monthly.append(
+            {"month": month, "year": year, "revenue": float(revenue), "bookings": count}
+        )
+
+    total = sum(m["revenue"] for m in monthly)
+    return {"year": year, "total_revenue": total, "monthly": monthly}
+
+
+@router.get("/reports/top-rooms")
+def top_rooms_report(
+    limit: int = 5,
+    db: Session = Depends(get_db),
+    _admin=Depends(require_admin),
+):
+    """Top phòng được đặt nhiều nhất"""
+    rows = (
+        db.query(
+            models.Room.id,
+            models.Room.name,
+            models.Room.room_type,
+            models.Room.base_price,
+            models.Room.hotel_id,
+            func.count(models.Booking.id).label("booking_count"),
+            func.sum(models.Booking.total_price).label("total_revenue"),
+        )
+        .join(models.Booking, models.Booking.room_id == models.Room.id)
+        .filter(models.Booking.status != "cancelled")
+        .group_by(models.Room.id)
+        .order_by(func.count(models.Booking.id).desc())
+        .limit(limit)
+        .all()
+    )
+
+    result = []
+    for r in rows:
+        hotel = db.query(models.Hotel).filter(models.Hotel.id == r.hotel_id).first()
+        result.append(
+            {
+                "room_id": r.id,
+                "room_name": r.name,
+                "room_type": r.room_type,
+                "base_price": r.base_price,
+                "hotel_name": hotel.name if hotel else "N/A",
+                "booking_count": r.booking_count,
+                "total_revenue": float(r.total_revenue or 0),
+            }
+        )
+    return result
+
+
+@router.get("/reports/top-customers")
+def top_customers_report(
+    limit: int = 5,
+    db: Session = Depends(get_db),
+    _admin=Depends(require_admin),
+):
+    """Top khách hàng đặt phòng nhiều nhất"""
+    rows = (
+        db.query(
+            models.User.id,
+            models.User.full_name,
+            models.User.email,
+            func.count(models.Booking.id).label("booking_count"),
+            func.sum(models.Booking.total_price).label("total_spent"),
+        )
+        .join(models.Booking, models.Booking.user_id == models.User.id)
+        .filter(models.Booking.status != "cancelled")
+        .group_by(models.User.id)
+        .order_by(func.count(models.Booking.id).desc())
+        .limit(limit)
+        .all()
+    )
+
+    return [
+        {
+            "user_id": r.id,
+            "full_name": r.full_name,
+            "email": r.email,
+            "booking_count": r.booking_count,
+            "total_spent": float(r.total_spent or 0),
+        }
+        for r in rows
+    ]
