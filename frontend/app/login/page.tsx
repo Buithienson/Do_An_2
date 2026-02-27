@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -11,6 +11,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Đọc ?redirect= param từ URL để sau khi login sẽ về đúng trang
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect');
+      if (redirect && redirect.startsWith('/')) {
+        setRedirectUrl(redirect);
+      }
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,8 +56,10 @@ export default function LoginPage() {
       if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      // Chuyển hướng dựa theo role
-      if (data.user?.role === 'admin') {
+      // Chuyển hướng dựa theo role (hoặc về đúng trang đặt phòng nếu có redirect)
+      if (redirectUrl && !redirectUrl.startsWith('/admin')) {
+        router.push(redirectUrl);
+      } else if (data.user?.role === 'admin') {
         router.push('/admin/dashboard');
       } else {
         router.push('/');

@@ -41,8 +41,10 @@ export default function BookingPaymentPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
   const [bookingId, setBookingId] = useState<string>('');
   const [availability, setAvailability] = useState<any>(null);
+  const [pendingBooking, setPendingBooking] = useState(false);
   
   const [formData, setFormData] = useState<BookingFormData>({
     name: '',
@@ -59,9 +61,18 @@ export default function BookingPaymentPage() {
     specialRequests: ''
   });
 
-  // Load query parameters on mount
+  // Auth guard + Load query parameters on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Kiểm tra đăng nhập
+      const token = localStorage.getItem('token');
+      if (!token) {
+        const currentUrl = window.location.pathname + window.location.search;
+        router.replace(`/login?redirect=${encodeURIComponent(currentUrl)}`);
+        return;
+      }
+
+      // Load query params
       const searchParams = new URLSearchParams(window.location.search);
       const checkIn = searchParams.get('checkIn');
       const checkOut = searchParams.get('checkOut');
@@ -76,7 +87,7 @@ export default function BookingPaymentPage() {
         }));
       }
     }
-  }, []);
+  }, [router]);
 
   // Fetch room details
   useEffect(() => {
@@ -188,7 +199,19 @@ export default function BookingPaymentPage() {
       return;
     }
 
-    // Kiểm tra token trước khi gửi request
+    // Nếu thanh toán bằng thẻ → hiện QR code trước
+    if (formData.paymentMethod === 'credit_card') {
+      setShowQRModal(true);
+      return;
+    }
+
+    // Thanh toán tại quầy → xử lý ngay
+    await processBooking();
+  };
+
+  // Hàm xử lý đặt phòng thực sự (gọi sau khi xác nhận QR hoặc thanh toán tiền mặt)
+  const processBooking = async () => {
+    // Kiểm tra token
     const token = localStorage.getItem('token');
     if (!token) {
       alert('Vui lòng đăng nhập để đặt phòng');
@@ -197,7 +220,6 @@ export default function BookingPaymentPage() {
     }
 
     setSubmitting(true);
-
     try {
       // Create booking
       const bookingPayload = {
@@ -294,6 +316,7 @@ export default function BookingPaymentPage() {
         }
       }
 
+      setShowQRModal(false);
       setBookingId(bookingData.id.toString());
       setShowSuccess(true);
 
@@ -353,38 +376,38 @@ export default function BookingPaymentPage() {
                 : 'Vui lòng thanh toán tại quầy lễ tân khi nhận phòng.'}
             </p>
 
-            <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left space-y-2">
-              <div className="flex justify-between text-sm">
-                <strong>Mã đặt phòng:</strong>
-                <span className="text-blue-600 font-semibold">#BK{bookingId}</span>
+            <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6 text-left space-y-3">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Mã đặt phòng:</span>
+                <span className="text-blue-600 font-bold">#BK{bookingId}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <strong>Khách hàng:</strong>
-                <span className="truncate ml-2">{formData.name}</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Khách hàng:</span>
+                <span className="text-gray-900 font-medium truncate ml-2">{formData.name}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <strong>Loại phòng:</strong>
-                <span className="truncate ml-2">{room.room_type}</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Loại phòng:</span>
+                <span className="text-gray-900 font-medium truncate ml-2">{room.room_type}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <strong>Nhận phòng:</strong>
-                <span>{new Date(formData.checkIn).toLocaleDateString('vi-VN')}</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Nhận phòng:</span>
+                <span className="text-gray-900 font-medium">{new Date(formData.checkIn).toLocaleDateString('vi-VN')}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <strong>Trả phòng:</strong>
-                <span>{new Date(formData.checkOut).toLocaleDateString('vi-VN')}</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Trả phòng:</span>
+                <span className="text-gray-900 font-medium">{new Date(formData.checkOut).toLocaleDateString('vi-VN')}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <strong>Số đêm:</strong>
-                <span className="font-semibold">{calculateNights()} đêm</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Số đêm:</span>
+                <span className="text-gray-900 font-bold">{calculateNights()} đêm</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <strong>Phương thức:</strong>
-                <span className="text-xs">{formData.paymentMethod === 'credit_card' ? 'Thẻ tín dụng' : 'Tiền mặt'}</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 font-semibold">Phương thức:</span>
+                <span className="text-gray-900 font-medium">{formData.paymentMethod === 'credit_card' ? 'Thẻ tín dụng' : 'Tiền mặt'}</span>
               </div>
-              <div className="flex justify-between text-sm pt-2 border-t">
-                <strong>Tổng tiền:</strong>
-                <span className="text-blue-600 font-bold">{calculateTotal().toLocaleString('vi-VN')}đ</span>
+              <div className="flex justify-between items-center text-sm pt-3 border-t border-gray-200">
+                <span className="text-gray-700 font-bold">Tổng tiền:</span>
+                <span className="text-orange-600 font-bold text-base">{calculateTotal().toLocaleString('vi-VN')}đ</span>
               </div>
             </div>
 
@@ -414,6 +437,99 @@ export default function BookingPaymentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <Navbar variant="dark" />
+
+      {/* =====================================================
+          QR CODE MODAL - Hiện khi chọn thanh toán bằng thẻ
+          ===================================================== */}
+      {showQRModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center animate-in fade-in zoom-in duration-200">
+            {/* Header */}
+            <div className="mb-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <CreditCard className="w-6 h-6 text-orange-500" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">Thanh toán chuyển khoản</h3>
+              <p className="text-sm text-gray-500 mt-1">Quét mã QR để hoàn tất thanh toán</p>
+            </div>
+
+            {/* Số tiền */}
+            <div className="bg-orange-50 rounded-xl py-3 px-4 mb-4">
+              <p className="text-sm text-gray-500 mb-1">Số tiền cần thanh toán</p>
+              <p className="text-2xl font-bold text-orange-600">{calculateTotal().toLocaleString('vi-VN')}đ</p>
+            </div>
+
+            {/* ================================================
+                QR CODE IMAGE
+                ------------------------------------------------
+                Để thay thế QR code của bạn:
+                Cách 1 (file local): Đặt ảnh QR vào thư mục
+                  frontend/public/qr-payment.png
+                  rồi đổi src thành: src="/qr-payment.png"
+                Cách 2 (URL online): Thay src thành đường link
+                  ảnh QR của bạn, ví dụ:
+                  src="https://img.vietqr.io/image/..."
+                ================================================ */}
+            <div className="flex justify-center mb-4">
+              <div className="border-4 border-gray-200 rounded-xl p-2 bg-white shadow-inner">
+                <img
+                  src="/qr-payment.png"
+                  alt="QR Code thanh toán"
+                  className="w-48 h-48 object-contain"
+                  onError={(e) => {
+                    /* Nếu chưa có ảnh, hiện placeholder */
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.style.display = 'none';
+                    const placeholder = target.nextElementSibling as HTMLElement;
+                    if (placeholder) placeholder.style.display = 'flex';
+                  }}
+                />
+                {/* Placeholder hiện khi chưa có ảnh QR */}
+                <div className="w-48 h-48 bg-gray-100 rounded-lg hidden flex-col items-center justify-center text-center p-4">
+                  <div className="text-4xl mb-2">📱</div>
+                  <p className="text-xs text-gray-500 font-medium">Đặt ảnh QR code vào</p>
+                  <p className="text-xs text-orange-500 font-bold mt-1">public/qr-payment.png</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hướng dẫn */}
+            <div className="bg-blue-50 rounded-lg p-3 mb-5 text-left text-xs text-blue-700 space-y-1">
+              <p className="font-semibold text-blue-800 mb-1">Hướng dẫn thanh toán:</p>
+              <p>1. Mở app ngân hàng và quét mã QR</p>
+              <p>2. Nhập đúng số tiền <strong>{calculateTotal().toLocaleString('vi-VN')}đ</strong></p>
+              <p>3. Nội dung chuyển khoản: <strong>Đặt phòng {formData.name}</strong></p>
+              <p>4. Nhấn "Xác nhận đã thanh toán" sau khi chuyển xong</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="space-y-2">
+              <button
+                onClick={() => processBooking()}
+                disabled={submitting}
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold hover:from-orange-600 hover:to-orange-700 transition disabled:opacity-50 shadow-lg"
+              >
+                {submitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    </svg>
+                    Đang xử lý...
+                  </span>
+                ) : '✅ Xác nhận đã thanh toán'}
+              </button>
+              <button
+                onClick={() => setShowQRModal(false)}
+                disabled={submitting}
+                className="w-full py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition text-sm disabled:opacity-50"
+              >
+                Hủy, quay lại
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 py-10">
         <div className="flex items-center gap-4 mb-6">
@@ -445,10 +561,10 @@ export default function BookingPaymentPage() {
               <section className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">Thông tin khách hàng</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Họ và tên" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
-                  <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
-                  <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Số điện thoại" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
-                  <select name="guests" value={formData.guests} onChange={handleInputChange} className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none">
+                  <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Họ và tên" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Số điện thoại" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <select name="guests" value={formData.guests} onChange={handleInputChange} className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none">
                     {Array.from({ length: room.max_guests }, (_, i) => i + 1).map(num => (
                       <option key={num} value={num}>{num} người</option>
                     ))}
@@ -458,37 +574,37 @@ export default function BookingPaymentPage() {
 
               <section className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Ngày nhận</label>
-                  <input name="checkIn" type="date" value={formData.checkIn} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <label className="text-sm font-semibold text-gray-700">Ngày nhận</label>
+                  <input name="checkIn" type="date" value={formData.checkIn} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Ngày trả</label>
-                  <input name="checkOut" type="date" value={formData.checkOut} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
+                  <label className="text-sm font-semibold text-gray-700">Ngày trả</label>
+                  <input name="checkOut" type="date" value={formData.checkOut} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" />
                 </div>
               </section>
 
               <section className="mb-6">
-                <label className="text-sm font-medium text-gray-700">Yêu cầu đặc biệt</label>
-                <textarea name="specialRequests" rows={3} value={formData.specialRequests} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" placeholder="Ghi chú..." />
+                <label className="text-sm font-semibold text-gray-700">Yêu cầu đặc biệt</label>
+                <textarea name="specialRequests" rows={3} value={formData.specialRequests} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none" placeholder="Ghi chú..." />
               </section>
 
               <section className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">Phương thức thanh toán</h3>
                 <div className="flex gap-3">
-                  <button onClick={() => setFormData({...formData, paymentMethod: 'credit_card'})} className={`px-4 py-3 rounded-lg w-full border ${formData.paymentMethod === 'credit_card' ? 'bg-white shadow-md border-orange-300' : 'bg-gray-50 border-gray-200'}`}>
+                  <button onClick={() => setFormData({...formData, paymentMethod: 'credit_card'})} className={`px-4 py-3 rounded-lg w-full border font-semibold text-gray-800 ${formData.paymentMethod === 'credit_card' ? 'bg-white shadow-md border-orange-400 text-orange-600' : 'bg-gray-50 border-gray-300 text-gray-700'}`}>
                     Thẻ tín dụng
                   </button>
-                  <button onClick={() => setFormData({...formData, paymentMethod: 'cash'})} className={`px-4 py-3 rounded-lg w-full border ${formData.paymentMethod === 'cash' ? 'bg-white shadow-md border-orange-300' : 'bg-gray-50 border-gray-200'}`}>
+                  <button onClick={() => setFormData({...formData, paymentMethod: 'cash'})} className={`px-4 py-3 rounded-lg w-full border font-semibold ${formData.paymentMethod === 'cash' ? 'bg-white shadow-md border-orange-400 text-orange-600' : 'bg-gray-50 border-gray-300 text-gray-700'}`}>
                     Thanh toán tại quầy
                   </button>
                 </div>
 
                 {formData.paymentMethod === 'credit_card' && (
                   <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} placeholder="Số thẻ" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
-                    <input name="cardName" value={formData.cardName} onChange={handleInputChange} placeholder="Tên trên thẻ" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
-                    <input name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
-                    <input name="cvv" value={formData.cvv} onChange={handleInputChange} placeholder="CVV" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} placeholder="Số thẻ" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="cardName" value={formData.cardName} onChange={handleInputChange} placeholder="Tên trên thẻ" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
+                    <input name="cvv" value={formData.cvv} onChange={handleInputChange} placeholder="CVV" className="px-4 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium placeholder-gray-500 bg-white focus:ring-2 focus:ring-orange-400 outline-none" />
                   </div>
                 )}
               </section>

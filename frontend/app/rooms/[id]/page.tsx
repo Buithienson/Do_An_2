@@ -82,15 +82,23 @@ export default function RoomDetail() {
         alert("Vui lòng chọn ngày nhận phòng và trả phòng");
         return;
     }
-    
-    // Chuyển hướng đến trang booking/payment với query params
-    const params = new URLSearchParams({
+
+    // Kiểm tra đăng nhập trước khi chuyển sang trang đặt phòng
+    const token = localStorage.getItem('token');
+    const bookingParams = new URLSearchParams({
         checkIn,
         checkOut,
         guests: guests.toString()
     });
-    
-    router.push(`/booking/${id}?${params.toString()}`);
+    const bookingUrl = `/booking/${id}?${bookingParams.toString()}`;
+
+    if (!token) {
+        // Chưa đăng nhập → redirect sang login, giữ lại URL đặt phòng
+        router.push(`/login?redirect=${encodeURIComponent(bookingUrl)}`);
+        return;
+    }
+
+    router.push(bookingUrl);
   };
 
   if (loading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
