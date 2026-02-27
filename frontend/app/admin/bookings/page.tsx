@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
-import { Trash2, Search, RefreshCw } from 'lucide-react';
+import { Trash2, Search, RefreshCw, CheckCircle, Clock } from 'lucide-react';
 
 interface AdminBooking {
   id: number;
@@ -31,15 +31,17 @@ const STATUS_STYLES: Record<string, string> = {
 
 const PAYMENT_STYLES: Record<string, string> = {
   paid: 'bg-green-100 text-green-700',
-  pending: 'bg-yellow-100 text-yellow-700',
+  pending: 'bg-orange-100 text-orange-700',
   refunded: 'bg-purple-100 text-purple-700',
 };
 
+type FilterTab = 'all' | 'pending' | 'paid' | 'cancelled';
+
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
-  const [filtered, setFiltered] = useState<AdminBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState<FilterTab>('all');
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmingId, setConfirmingId] = useState<number | null>(null);
@@ -57,7 +59,6 @@ export default function AdminBookingsPage() {
       if (!res.ok) throw new Error('Không thể tải danh sách booking');
       const data = await res.json();
       setBookings(data);
-      setFiltered(data);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -65,21 +66,26 @@ export default function AdminBookingsPage() {
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  useEffect(() => { fetchBookings(); }, []);
 
-  useEffect(() => {
+  // Filter logic
+  const filtered = bookings.filter((b) => {
     const q = search.toLowerCase();
-    setFiltered(
-      bookings.filter(
-        (b) =>
-          (b.user_email?.toLowerCase().includes(q) ?? false) ||
-          (b.hotel_name?.toLowerCase().includes(q) ?? false) ||
-          String(b.id).includes(q)
-      )
-    );
-  }, [search, bookings]);
+    const matchSearch =
+      (b.user_email?.toLowerCase().includes(q) ?? false) ||
+      (b.hotel_name?.toLowerCase().includes(q) ?? false) ||
+      String(b.id).includes(q);
+
+    const matchTab =
+      activeTab === 'all' ? true :
+      activeTab === 'pending' ? (b.payment_status === 'pending' && b.status !== 'cancelled') :
+      activeTab === 'paid' ? b.payment_status === 'paid' :
+      activeTab === 'cancelled' ? b.status === 'cancelled' : true;
+
+    return matchSearch && matchTab;
+  });
+
+  const pendingCount = bookings.filter(b => b.payment_status === 'pending' && b.status !== 'cancelled').length;
 
   const handleDelete = async (bookingId: number) => {
     if (!confirm(`Xóa booking #${bookingId}? Hành động này không thể hoàn tác.`)) return;
@@ -103,7 +109,7 @@ export default function AdminBookingsPage() {
   };
 
   const handleConfirmPayment = async (bookingId: number, userEmail: string | null) => {
-    if (!confirm(`Xác nhận đã nhận thanh toán cho booking #${bookingId}?\n\nEmail thông báo sẽ được gửi tới: ${userEmail || 'khách hàng'}`)) return;
+    if (!confirm(`Xác nhận đã nhận thanh toán cho booking #${bookingId}?\nEmail thông báo sẽ gửi tới: ${userEmail || 'khách hàng'}`)) return;
     setConfirmingId(bookingId);
     try {
       const token = localStorage.getItem('token');
@@ -115,13 +121,12 @@ export default function AdminBookingsPage() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.detail || 'Xác nhận thất bại');
       }
-      // Cập nhật UI ngay lập tức
       setBookings((prev) =>
         prev.map((b) =>
           b.id === bookingId ? { ...b, payment_status: 'paid', status: 'confirmed' } : b
         )
       );
-      alert(`Đã xác nhận thanh toán cho booking #${bookingId}\nEmail thông báo đang được gửi tới khách hàng.`);
+      alert(`✅ Đã xác nhận thanh toán booking #${bookingId}\nEmail đã được gửi tới khách hàng.`);
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -135,9 +140,16 @@ export default function AdminBookingsPage() {
   const formatMoney = (n: number) =>
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
 
+  const tabs: { key: FilterTab; label: string; count?: number }[] = [
+    { key: 'all', label: 'Tất cả', count: bookings.length },
+    { key: 'pending', label: '⏳ Chờ thanh toán', count: pendingCount },
+    { key: 'paid', label: '✅ Đã thanh toán', count: bookings.filter(b => b.payment_status === 'paid').length },
+    { key: 'cancelled', label: '❌ Đã hủy', count: bookings.filter(b => b.status === 'cancelled').length },
+  ];
+
   return (
     <AdminLayout title="Quản lý Booking">
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -165,6 +177,53 @@ export default function AdminBookingsPage() {
           </div>
         </div>
 
+        {/* Pending Alert Banner */}
+        {pendingCount > 0 && (
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Clock className="w-5 h-5 text-orange-500" />
+              <div>
+                <p className="font-semibold text-orange-800">
+                  Có {pendingCount} đơn đang chờ xác nhận thanh toán!
+                </p>
+                <p className="text-xs text-orange-600 mt-0.5">
+                  Nhấn tab "Chờ thanh toán" để xem và xử lý.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setActiveTab('pending')}
+              className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 transition"
+            >
+              Xử lý ngay
+            </button>
+          </div>
+        )}
+
+        {/* Filter Tabs */}
+        <div className="flex gap-2 flex-wrap">
+          {tabs.map(({ key, label, count }) => (
+            <button
+              key={key}
+              onClick={() => setActiveTab(key)}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                activeTab === key
+                  ? 'bg-orange-500 text-white shadow-md'
+                  : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {label}
+              {count !== undefined && (
+                <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${
+                  activeTab === key ? 'bg-white/30 text-white' : 'bg-gray-100 text-gray-500'
+                }`}>
+                  {count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-4 text-sm">{error}</div>
         )}
@@ -183,7 +242,7 @@ export default function AdminBookingsPage() {
                   <th className="text-left px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng tiền</th>
                   <th className="text-left px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Trạng thái</th>
                   <th className="text-left px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Thanh toán</th>
-                  <th className="px-5 py-4"></th>
+                  <th className="text-left px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Hành động</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -200,12 +259,17 @@ export default function AdminBookingsPage() {
                 ) : filtered.length === 0 ? (
                   <tr>
                     <td colSpan={9} className="px-5 py-12 text-center text-gray-400">
-                      Không tìm thấy booking nào
+                      {activeTab === 'pending' ? '🎉 Không có đơn nào chờ thanh toán!' : 'Không tìm thấy booking nào'}
                     </td>
                   </tr>
                 ) : (
                   filtered.map((b) => (
-                    <tr key={b.id} className="hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={b.id}
+                      className={`hover:bg-gray-50 transition-colors ${
+                        b.payment_status === 'pending' && b.status !== 'cancelled' ? 'bg-orange-50/40' : ''
+                      }`}
+                    >
                       <td className="px-5 py-4 text-gray-400 font-mono text-xs">#{b.id}</td>
                       <td className="px-5 py-4">
                         <p className="font-medium text-gray-800 leading-tight">{b.user_name || '—'}</p>
@@ -229,23 +293,24 @@ export default function AdminBookingsPage() {
                         </span>
                       </td>
                       <td className="px-5 py-4">
-                        <div className="flex items-center gap-1">
-                          {/* Nút Xác nhận thanh toán - chỉ hiện khi payment đang pending */}
+                        <div className="flex items-center gap-2">
+                          {/* Nút xác nhận thanh toán */}
                           {b.payment_status === 'pending' && b.status !== 'cancelled' && (
                             <button
                               onClick={() => handleConfirmPayment(b.id, b.user_email)}
                               disabled={confirmingId === b.id}
-                              className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-semibold hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
-                              title="Xác nhận đã nhận thanh toán"
+                              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-green-600 text-white text-xs font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md whitespace-nowrap"
+                              title="Xác nhận đã nhận được tiền từ khách"
                             >
                               {confirmingId === b.id ? (
                                 <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                               ) : (
-                                '✓'
+                                <CheckCircle size={13} />
                               )}
-                              <span>{confirmingId === b.id ? 'Đang xử lý...' : 'Xác nhận TT'}</span>
+                              {confirmingId === b.id ? 'Đang xử lý...' : 'Xác nhận TT'}
                             </button>
                           )}
+                          {/* Nút xóa */}
                           <button
                             onClick={() => handleDelete(b.id)}
                             disabled={deletingId === b.id}
