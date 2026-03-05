@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Volkhov } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "@/components/ui/Toast";
+import AIAssistant from "@/components/AIAssistant";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} ${volkhov.variable} font-sans antialiased`}>
         {children}
         <ToastContainer />
+        <AIAssistant />
       </body>
     </html>
   );
