@@ -1,6 +1,7 @@
 // File: frontend/components/RoomCard.tsx
 import React from 'react';
 import Link from 'next/link';
+import { getRoomImageUrl } from '@/lib/imageUtils';
 
 interface RoomProps {
   id: number;
@@ -28,9 +29,12 @@ const RoomCard: React.FC<{
         {/* Hình ảnh phòng */}
         <div className="h-48 w-full overflow-hidden">
           <img
-            src={room.image_url || "https://placehold.co/600x400"}
+            src={getRoomImageUrl(room.image_url)}
             alt={room.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/rooms/standard_room.png';
+            }}
           />
         </div>
         

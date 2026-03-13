@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import RoomCard from '@/components/RoomCard';
 import Link from 'next/link';
 import { API_URL } from '@/lib/api';
+import { getHotelImageUrl, getFirstImage } from '@/lib/imageUtils';
 
 interface Hotel {
   id: number;
@@ -114,21 +115,25 @@ function HotelContent() {
         {/* Images */}
         <div className="lg:col-span-2">
           <div className="mb-4">
-            {hotel.images && hotel.images.length > 0 && (
-              <img
-                src={hotel.images[0]}
-                alt={hotel.name}
-                className="w-full h-96 object-cover rounded-lg"
-              />
-            )}
+            <img
+              src={getFirstImage(hotel.images)}
+              alt={hotel.name}
+              className="w-full h-96 object-cover rounded-lg"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/hotels/hotel_city_luxury.png';
+              }}
+            />
           </div>
           <div className="grid grid-cols-3 gap-2">
             {hotel.images?.slice(1, 4).map((img, idx) => (
               <img
                 key={idx}
-                src={img}
+                src={getHotelImageUrl(img)}
                 alt={`${hotel.name} ${idx}`}
                 className="w-full h-24 object-cover rounded-lg"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/hotels/hotel_city_luxury.png';
+                }}
               />
             ))}
           </div>

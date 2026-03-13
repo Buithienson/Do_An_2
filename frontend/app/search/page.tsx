@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { API_URL } from '@/lib/api';
+import { getFirstImage } from '@/lib/imageUtils';
 
 interface Hotel {
   id: number;
@@ -70,13 +71,14 @@ function SearchContent() {
                       <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer overflow-hidden">
                         {/* Hotel Image */}
                         <div className="relative h-48 overflow-hidden bg-gray-200">
-                          {hotel.images && hotel.images.length > 0 && (
-                            <img
-                              src={hotel.images[0]}
-                              alt={hotel.name}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform"
-                            />
-                          )}
+                          <img
+                            src={getFirstImage(hotel.images)}
+                            alt={hotel.name}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/hotels/hotel_city_luxury.png';
+                            }}
+                          />
                         </div>
 
                         {/* Hotel Info */}

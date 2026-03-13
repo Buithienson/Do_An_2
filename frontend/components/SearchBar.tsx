@@ -23,8 +23,7 @@ export default function SearchBar() {
     const fetchCities = async () => {
       setIsLoadingLocations(true);
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        const response = await fetch(`${apiUrl}/api/hotels/cities`);
+        const response = await fetch('http://localhost:8000/api/hotels/cities');
         if (response.ok) {
           const cities = await response.json();
           setLocations(cities);
@@ -126,47 +125,35 @@ export default function SearchBar() {
 
         {/* Check-in Section */}
         <div className="relative w-full md:w-auto md:min-w-[160px] py-2 md:py-0 px-4 group">
-          <div className="flex flex-col cursor-pointer hover:bg-gray-50 rounded-2xl px-4 py-2 transition-all relative">
+          <div className="flex flex-col cursor-pointer hover:bg-gray-50 rounded-2xl px-4 py-2 transition-all">
             <label className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-2">
               <Calendar size={14} className="text-orange-500" />
               Ngày nhận
             </label>
-            <div className="relative">
-              <input 
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className={`w-full bg-transparent text-sm text-gray-700 font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full ${!checkIn ? 'text-transparent' : ''}`}
-              />
-              {!checkIn && (
-                <span className="absolute left-0 top-0 text-sm text-gray-400 font-medium pointer-events-none">
-                  Thêm ngày
-                </span>
-              )}
-            </div>
+            <input 
+              type="date"
+              value={checkIn}
+              onChange={(e) => setCheckIn(e.target.value)}
+              className="w-full bg-transparent text-sm text-gray-700 font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full"
+            />
+            {!checkIn && <span className="absolute bottom-2 left-4 text-sm text-gray-400 font-medium pointer-events-none">Thêm ngày</span>}
           </div>
         </div>
 
         {/* Check-out Section */}
         <div className="relative w-full md:w-auto md:min-w-[160px] py-2 md:py-0 px-4 group">
-           <div className="flex flex-col cursor-pointer hover:bg-gray-50 rounded-2xl px-4 py-2 transition-all relative">
+           <div className="flex flex-col cursor-pointer hover:bg-gray-50 rounded-2xl px-4 py-2 transition-all">
             <label className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-2">
               <Calendar size={14} className="text-orange-500" />
               Ngày trả
             </label>
-            <div className="relative">
-              <input 
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className={`w-full bg-transparent text-sm text-gray-700 font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full ${!checkOut ? 'text-transparent' : ''}`}
-              />
-              {!checkOut && (
-                <span className="absolute left-0 top-0 text-sm text-gray-400 font-medium pointer-events-none">
-                  Thêm ngày
-                </span>
-              )}
-            </div>
+            <input 
+              type="date"
+              value={checkOut}
+              onChange={(e) => setCheckOut(e.target.value)}
+              className="w-full bg-transparent text-sm text-gray-700 font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full"
+            />
+             {!checkOut && <span className="absolute bottom-2 left-4 text-sm text-gray-400 font-medium pointer-events-none">Thêm ngày</span>}
           </div>
         </div>
 

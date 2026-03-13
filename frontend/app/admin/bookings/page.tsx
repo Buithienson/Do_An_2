@@ -307,7 +307,7 @@ export default function AdminBookingsPage() {
                               ) : (
                                 <CheckCircle size={13} />
                               )}
-                              {confirmingId === b.id ? 'Đang xử lý...' : 'Xác nhận TT'}
+                              {confirmingId === b.id ? 'Đang xử lý...' : 'Xác nhận '}
                             </button>
                           )}
                           {/* Nút xóa */}

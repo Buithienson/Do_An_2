@@ -3,25 +3,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Lấy DATABASE_URL từ biến môi trường (Render sẽ tự động cung cấp nếu dùng PostgreSQL)
-# Nếu không có, mặc định dùng SQLite để chạy được ngay (lưu ý: data sẽ mất khi deploy lại trên Render free tier)
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/ai_booking.db")
+# Lấy DATABASE_URL từ biến môi trường (Render cung cấp tự động)
+# Nếu không có, mặc định dùng MySQL local
+SQLALCHEMY_DATABASE_URL = os.environ.get(
+    "DATABASE_URL", "mysql+pymysql://root@localhost:3306/booking_ai_db"
+)
 
-# Fix lỗi tương thích với Render (PostgreSQL bắt đầu bằng postgres:// nhưng SQLAlchemy cần postgresql://)
-if SQLALCHEMY_DATABASE_URL and SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+# SQLAlchemy yêu cầu 'postgresql://' thay vì 'postgres://' (Render thường cấp postgres://)
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(
         "postgres://", "postgresql://", 1
     )
 
-# Cấu hình engine
-if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
-    # SQLite cần connect_args đặc biệt
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-    )
-else:
-    # MySQL / PostgreSQL
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# Create engine
+engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=False)  # Tắt echo trên production
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

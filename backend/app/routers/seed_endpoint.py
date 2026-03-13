@@ -13,6 +13,155 @@ from pathlib import Path
 router = APIRouter()
 
 
+@router.api_route("/fix-images", methods=["GET", "POST"])
+async def fix_images_endpoint():
+    """Fix existing broken image URLs in the database"""
+    db = SessionLocal()
+    try:
+        hotels = db.query(Hotel).all()
+        hotel_count = 0
+        UNSPLASH_PARAMS = "?w=800&auto=format&fit=crop&q=80"
+
+        def fix_url(url: str) -> str:
+            if not url:
+                return url
+            for prefix in [
+                "http://localhost:3000",
+                "https://localhost:3000",
+                "http://127.0.0.1:3000",
+            ]:
+                if url.startswith(prefix):
+                    return url[len(prefix) :]
+            if "images.unsplash.com" in url and "?" not in url:
+                return url + UNSPLASH_PARAMS
+            return url
+
+        def fix_list(images: list) -> list:
+            if not images:
+                return images
+            return [fix_url(u) for u in images]
+
+        for hotel in hotels:
+            if hotel.images:
+                fixed = fix_list(hotel.images)
+                if fixed != hotel.images:
+                    hotel.images = fixed
+                    hotel_count += 1
+
+        rooms = db.query(Room).all()
+        room_count = 0
+        for room in rooms:
+            if room.images:
+                fixed = fix_list(room.images)
+                if fixed != room.images:
+                    room.images = fixed
+                    room_count += 1
+
+        db.commit()
+        return {
+            "status": "success",
+            "fixed_hotels": hotel_count,
+            "fixed_rooms": room_count,
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
+
+@router.api_route("/update-all-images", methods=["GET", "POST"])
+async def update_all_images_endpoint():
+    """Update all hotels with correct default images based on city"""
+    db = SessionLocal()
+    try:
+        beach_cities = [
+            "Nha Trang",
+            "Vũng Tàu",
+            "Phan Thiết",
+            "Mũi Né",
+            "Quy Nhơn",
+            "Vung Tau",
+            "Phan Thiet",
+            "Mui Ne",
+            "Quy Nhon",
+        ]
+        island_cities = ["Phú Quốc", "Côn Đảo", "Phu Quoc", "Con Dao"]
+        mountain_cities = ["Sa Pa", "Sapa", "Sapa"]
+        heritage_cities = ["Hội An", "Huế", "Hoi An", "Hue"]
+        bay_cities = ["Hạ Long", "Ha Long", "Halong"]
+        highland_cities = ["Đà Lạt", "Da Lat", "Dalat"]
+        riverside_cities = ["Đà Nẵng", "Da Nang", "Danang", "Cần Thơ", "Can Tho"]
+        city_cities = [
+            "Hà Nội",
+            "Ha Noi",
+            "Hanoi",
+            "TP. Hồ Chí Minh",
+            "Hồ Chí Minh",
+            "Ho Chi Minh",
+            "HCM",
+        ]
+
+        updated_count = 0
+
+        def map_city_to_image(city: str) -> str:
+            if not city:
+                return "/hotels/hotel_city_luxury.png"
+            for c in beach_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_beach_resort.png"
+            for c in island_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_island_villa.png"
+            for c in mountain_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_mountain_resort.png"
+            for c in heritage_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_heritage.png"
+            for c in bay_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_bay_view.png"
+            for c in highland_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_dalat_french.png"
+            for c in riverside_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_riverside.png"
+            for c in city_cities:
+                if c.lower() in city.lower():
+                    return "/hotels/hotel_city_luxury.png"
+            return "/hotels/hotel_city_luxury.png"
+
+        hotels = db.query(Hotel).all()
+        for hotel in hotels:
+            new_img = map_city_to_image(hotel.city)
+            hotel.images = [new_img]
+            updated_count += 1
+
+        rooms = db.query(Room).all()
+        for room in rooms:
+            if "Suite" in room.room_type or "Suite" in room.name:
+                room.images = ["/rooms/suite_room.png"]
+            elif "Deluxe" in room.room_type or "Deluxe" in room.name:
+                room.images = ["/rooms/deluxe_room.png"]
+            elif "Superior" in room.room_type or "Superior" in room.name:
+                room.images = ["/rooms/superior_room.png"]
+            else:
+                room.images = ["/rooms/standard_room.png"]
+
+        db.commit()
+        return {
+            "status": "success",
+            "message": f"Updated {updated_count} hotels and {len(rooms)} rooms with default internal images.",
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
+
 @router.api_route("/seed-db", methods=["GET", "POST"])
 async def seed_database_endpoint():
     """
@@ -141,13 +290,6 @@ async def seed_database_endpoint():
             },
         ]
 
-        # Helper mapping functions
-        import os
-
-        frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000").rstrip(
-            "/"
-        )
-
         def get_hotel_image(city_name: str) -> str:
             city_l = city_name.lower()
             if any(
@@ -164,24 +306,23 @@ async def seed_database_endpoint():
                     "quy nhon",
                 ]
             ):
-                path = "/hotels/hotel_beach_resort.png"
+                return "/hotels/hotel_beach_resort.png"
             elif any(
                 c in city_l for c in ["phú quốc", "phu quoc", "côn đảo", "con dao"]
             ):
-                path = "/hotels/hotel_island_villa.png"
+                return "/hotels/hotel_island_villa.png"
             elif any(c in city_l for c in ["sa pa", "sapa"]):
-                path = "/hotels/hotel_mountain_resort.png"
+                return "/hotels/hotel_mountain_resort.png"
             elif any(c in city_l for c in ["hội an", "hoi an", "huế", "hue"]):
-                path = "/hotels/hotel_heritage.png"
+                return "/hotels/hotel_heritage.png"
             elif any(c in city_l for c in ["hạ long", "ha long"]):
-                path = "/hotels/hotel_bay_view.png"
+                return "/hotels/hotel_bay_view.png"
             elif any(c in city_l for c in ["đà lạt", "da lat"]):
-                path = "/hotels/hotel_dalat_french.png"
+                return "/hotels/hotel_dalat_french.png"
             elif any(c in city_l for c in ["đà nẵng", "da nang", "cần thơ", "can tho"]):
-                path = "/hotels/hotel_riverside.png"
+                return "/hotels/hotel_riverside.png"
             else:
-                path = "/hotels/hotel_city_luxury.png"
-            return f"{frontend_url}{path}"
+                return "/hotels/hotel_city_luxury.png"
 
         room_image_map = {
             "Standard": "/rooms/standard_room.png",
