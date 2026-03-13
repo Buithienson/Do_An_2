@@ -75,80 +75,47 @@ async def update_all_images_endpoint():
     """Update all hotels with correct default images based on city"""
     db = SessionLocal()
     try:
-        beach_cities = [
-            "Nha Trang",
-            "Vũng Tàu",
-            "Phan Thiết",
-            "Mũi Né",
-            "Quy Nhơn",
-            "Vung Tau",
-            "Phan Thiet",
-            "Mui Ne",
-            "Quy Nhon",
+        HOTEL_IMAGES = [
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1518602164578-cd0074062767?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1542314831-c6a4d14d8c1e?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1590073242678-70ee3d6fa268?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1551882547-ff40c0d5eefa?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1596436889106-be35e843f97f?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&auto=format&fit=crop&q=80",
         ]
-        island_cities = ["Phú Quốc", "Côn Đảo", "Phu Quoc", "Con Dao"]
-        mountain_cities = ["Sa Pa", "Sapa", "Sapa"]
-        heritage_cities = ["Hội An", "Huế", "Hoi An", "Hue"]
-        bay_cities = ["Hạ Long", "Ha Long", "Halong"]
-        highland_cities = ["Đà Lạt", "Da Lat", "Dalat"]
-        riverside_cities = ["Đà Nẵng", "Da Nang", "Danang", "Cần Thơ", "Can Tho"]
-        city_cities = [
-            "Hà Nội",
-            "Ha Noi",
-            "Hanoi",
-            "TP. Hồ Chí Minh",
-            "Hồ Chí Minh",
-            "Ho Chi Minh",
-            "HCM",
+
+        ROOM_IMAGES = [
+            "https://images.unsplash.com/photo-1596436889106-be35e843f97f?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&auto=format&fit=crop&q=80",
         ]
 
         updated_count = 0
 
-        def map_city_to_image(city: str) -> str:
-            if not city:
-                return "/hotels/hotel_city_luxury.png"
-            for c in beach_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_beach_resort.png"
-            for c in island_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_island_villa.png"
-            for c in mountain_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_mountain_resort.png"
-            for c in heritage_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_heritage.png"
-            for c in bay_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_bay_view.png"
-            for c in highland_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_dalat_french.png"
-            for c in riverside_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_riverside.png"
-            for c in city_cities:
-                if c.lower() in city.lower():
-                    return "/hotels/hotel_city_luxury.png"
-            return "/hotels/hotel_city_luxury.png"
-
         hotels = db.query(Hotel).all()
         for hotel in hotels:
-            new_img = map_city_to_image(hotel.city)
+            hotel_id = hotel.id or 0
+            new_img = HOTEL_IMAGES[hotel_id % len(HOTEL_IMAGES)]
             hotel.images = [new_img]
             updated_count += 1
 
         rooms = db.query(Room).all()
         for room in rooms:
-            if "Suite" in room.room_type or "Suite" in room.name:
-                room.images = ["/rooms/suite_room.png"]
-            elif "Deluxe" in room.room_type or "Deluxe" in room.name:
-                room.images = ["/rooms/deluxe_room.png"]
-            elif "Superior" in room.room_type or "Superior" in room.name:
-                room.images = ["/rooms/superior_room.png"]
-            else:
-                room.images = ["/rooms/standard_room.png"]
+            room_id = room.id or 0
+            new_img = ROOM_IMAGES[room_id % len(ROOM_IMAGES)]
+            room.images = [new_img]
 
         db.commit()
         return {

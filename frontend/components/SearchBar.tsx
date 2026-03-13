@@ -135,7 +135,7 @@ export default function SearchBar() {
               type="date"
               value={checkIn}
               onChange={(e) => setCheckIn(e.target.value)}
-              className="w-full bg-transparent text-sm text-gray-700 font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full"
+              className={`w-full bg-transparent text-sm font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full ${checkIn ? 'text-gray-700' : 'text-transparent'}`}
             />
             {!checkIn && <span className="absolute bottom-2 left-4 text-sm text-gray-400 font-medium pointer-events-none">Thêm ngày</span>}
           </div>
@@ -152,7 +152,7 @@ export default function SearchBar() {
               type="date"
               value={checkOut}
               onChange={(e) => setCheckOut(e.target.value)}
-              className="w-full bg-transparent text-sm text-gray-700 font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full"
+              className={`w-full bg-transparent text-sm font-medium focus:outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full ${checkOut ? 'text-gray-700' : 'text-transparent'}`}
             />
              {!checkOut && <span className="absolute bottom-2 left-4 text-sm text-gray-400 font-medium pointer-events-none">Thêm ngày</span>}
           </div>
