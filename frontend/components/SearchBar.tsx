@@ -3,6 +3,7 @@
 import { Calendar, Users, MapPin, Search, ChevronDown, Minus, Plus } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '@/lib/api';
 
 export default function SearchBar() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function SearchBar() {
     const fetchCities = async () => {
       setIsLoadingLocations(true);
       try {
-        const response = await fetch('http://localhost:8000/api/hotels/cities');
+        const response = await fetch(`${API_URL}/api/hotels/cities`);
         if (response.ok) {
           const cities = await response.json();
           setLocations(cities);
