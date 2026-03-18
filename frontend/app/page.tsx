@@ -2,60 +2,13 @@
 'use client'; // Bắt buộc dòng này để dùng được useEffect (React)
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/SearchBar';
-import RoomCard from '@/components/RoomCard';
 import Link from 'next/link';
-import { API_URL } from '@/lib/api';
-
-// 1. Định nghĩa kiểu dữ liệu (Phải khớp với Backend trả về)
-interface Room {
-  id: number;
-  name: string;
-  price_per_night: number;
-  location: string;
-  image_url: string;
-  amenities: string[];
-}
 
 export default function Home() {
-  const router = useRouter(); // Hook điều hướng
   // 2. Khai báo các biến trạng thái (State)
-  const [searchTerm, setSearchTerm] = useState('');
-  const [rooms, setRooms] = useState<Room[]>([]); // Chứa danh sách phòng
-  const [loading, setLoading] = useState(true);   // Trạng thái đang tải
   const [currentDestinationSlide, setCurrentDestinationSlide] = useState(0);
-
-  // 3. Hàm gọi API
-  useEffect(() => {
-    const fetchRooms = async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/rooms/?limit=8`); // Lấy 6-8 phòng nổi bật
-        if (!res.ok) throw new Error('Không gọi được API');
-        
-        const data = await res.json();
-        
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const mappedData = data.map((item: any) => ({
-            id: item.id,
-            name: item.name,
-            price_per_night: item.base_price,
-            location: item.hotel ? `${item.hotel.city}, ${item.hotel.country}` : "Vietnam",
-            image_url: item.images?.[0] || "", 
-            amenities: item.amenities || []
-        }));
-
-        setRooms(mappedData);
-      } catch (error) {
-        console.error("Lỗi gọi API:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRooms();
-  }, []);
 
   return (
     <main className="min-h-screen bg-white">
@@ -215,31 +168,38 @@ export default function Home() {
         </div>
       </section>
       
-      {/* --- PHẦN 3: HOTEL LISTING (Database) --- */}
+      {/* --- PHẦN 3: DISCOVERY HUB (Không hiển thị hạng phòng ở trang chủ) --- */}
       <section className="bg-gray-50 py-24">
         <div className="mx-auto max-w-7xl px-8">
-            <div className="text-center mb-16">
-                 <h2 className="text-3xl font-serif font-bold text-gray-900 mb-4">Lựa Chọn Nghỉ Dưỡng Hoàn Hảo</h2>
-                 <p className="text-gray-500 max-w-2xl mx-auto">Được đề xuất dựa trên dữ liệu thật từ hệ thống và sở thích của bạn.</p>
+          <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-serif font-bold text-gray-900">Lên Kế Hoạch Nhanh Hơn</h2>
+              <p className="mt-3 text-gray-600">
+                Trang chủ giờ tập trung vào khám phá điểm đến và trải nghiệm. Danh sách hạng phòng được hiển thị tại trang chi tiết khách sạn.
+              </p>
             </div>
+            <Link href="/search" className="rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 transition hover:border-gray-900 hover:bg-gray-900 hover:text-white">
+              Tìm khách sạn phù hợp
+            </Link>
+          </div>
 
-            {loading ? (
-            <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div></div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {rooms.map((room) => (
-                        <div key={room.id} className="h-[400px]">
-                            <RoomCard room={room} />
-                        </div>
-                    ))}
-                </div>
-            )}
-            
-            <div className="text-center mt-12">
-                 <Link href="/search" className="inline-block rounded-full border border-gray-300 bg-white px-8 py-3 font-semibold text-gray-900 transition hover:bg-gray-900 hover:text-white hover:border-gray-900">
-                    Xem tất cả phòng
-                 </Link>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+              <p className="text-sm font-semibold uppercase tracking-wider text-orange-600">01</p>
+              <h3 className="mt-3 text-xl font-bold text-gray-900">Chọn điểm đến</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">Tìm theo thành phố, phong cách nghỉ dưỡng hoặc ngân sách.</p>
             </div>
+            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+              <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">02</p>
+              <h3 className="mt-3 text-xl font-bold text-gray-900">Xem chi tiết khách sạn</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">So sánh tiện nghi, chính sách và bộ sưu tập hạng phòng trực quan.</p>
+            </div>
+            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+              <p className="text-sm font-semibold uppercase tracking-wider text-emerald-600">03</p>
+              <h3 className="mt-3 text-xl font-bold text-gray-900">Đặt phòng thông minh</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">Xác nhận nhanh, thanh toán linh hoạt và lưu lịch sử đặt phòng dễ dàng.</p>
+            </div>
+          </div>
         </div>
       </section>
 

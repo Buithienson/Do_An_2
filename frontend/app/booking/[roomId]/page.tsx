@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { CreditCard, Banknote, CheckCircle, Calendar, Users, Hotel, ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { API_URL } from '@/lib/api';
+import { getRoomImageUrl, getRoomLocalFallback } from '@/lib/imageUtils';
 
 interface Room {
   id: number;
@@ -421,92 +422,145 @@ export default function BookingPaymentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="min-h-screen bg-slate-50">
       <Navbar variant="dark" />
 
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        <div className="flex items-center gap-4 mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-gray-600 hover:text-gray-900 transition"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Quay lại
-          </button>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Xác nhận đặt phòng</h1>
+      <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-12">
+        <div className="mb-8 rounded-3xl bg-gradient-to-r from-[#0f4a73] via-[#155785] to-[#1e6b9d] p-6 text-white md:p-8">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <button
+              onClick={() => router.back()}
+              className="inline-flex items-center rounded-full border border-white/35 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Quay lại
+            </button>
+            <div className="hidden items-center gap-2 text-xs font-medium md:flex">
+              <span className="rounded-full bg-white/20 px-3 py-1">1. Dien thong tin</span>
+              <span className="rounded-full bg-white/20 px-3 py-1">2. Xac nhan lich</span>
+              <span className="rounded-full bg-white/20 px-3 py-1">3. Thanh toan</span>
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-bold md:text-4xl">Hoan tat dat phong</h1>
+          <p className="mt-2 max-w-2xl text-sm text-white/85 md:text-base">
+            Kiem tra thong tin khach hang, lich luu tru va phuong thuc thanh toan de xac nhan phong trong vai phut.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* Left: Form */}
           <div className="lg:col-span-7">
-            <div className="backdrop-blur-sm bg-white/60 border border-white/30 rounded-2xl shadow-[0_30px_60px_rgba(2,6,23,0.08)] p-6">
-              <div className="flex items-start gap-4 mb-6">
-                {room.images && room.images[0] && (
-                  <img
-                    src={room.images[0]}
-                    alt={room.name}
-                    className="w-28 h-20 object-cover rounded-lg shadow-md"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      target.style.display = 'none';
-                      target.onerror = null;
-                    }}
-                  />
-                )}
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_50px_rgba(15,23,42,0.08)] md:p-7">
+              <div className="mb-7 flex flex-col gap-4 rounded-2xl bg-slate-50 p-4 sm:flex-row sm:items-center">
+                <img
+                  src={getRoomImageUrl(room.images?.[0] || '')}
+                  alt={room.name}
+                  className="h-24 w-full rounded-xl object-cover shadow-sm sm:w-40"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = getRoomLocalFallback(room.id);
+                  }}
+                />
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">{room.name}</h2>
-                  <p className="text-sm text-gray-600">{room.room_type} • Tối đa {room.max_guests} khách</p>
-                  <p className="mt-2 text-xl font-semibold text-orange-600">{room.base_price.toLocaleString('vi-VN')}đ <span className="text-sm font-medium text-gray-500">/ đêm</span></p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Phong da chon</p>
+                  <h2 className="mt-1 text-xl font-bold text-slate-900">{room.name}</h2>
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                    <span className="inline-flex items-center gap-1">
+                      <Hotel className="h-4 w-4" />
+                      {room.room_type}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      Toi da {room.max_guests} khach
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <section className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Thông tin khách hàng</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Họ và tên" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-300 outline-none" />
-                  <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-300 outline-none" />
-                  <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Số điện thoại" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-300 outline-none" />
-                  <select name="guests" value={formData.guests} onChange={handleInputChange} className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 focus:ring-2 focus:ring-orange-300 outline-none">
-                    {Array.from({ length: room.max_guests }, (_, i) => i + 1).map(num => (
-                      <option key={num} value={num}>{num} người</option>
+              <section className="mb-7">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Thong tin khach hang</h3>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Ho va ten" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
+                  <input name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="Email" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
+                  <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="So dien thoai" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
+                  <select name="guests" value={formData.guests} onChange={handleInputChange} className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100">
+                    {Array.from({ length: room.max_guests }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>{num} nguoi</option>
                     ))}
                   </select>
                 </div>
               </section>
 
-              <section className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm text-gray-600">Ngày nhận</label>
-                  <input name="checkIn" type="date" value={formData.checkIn} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-800 focus:ring-2 focus:ring-blue-200 outline-none" />
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600">Ngày trả</label>
-                  <input name="checkOut" type="date" value={formData.checkOut} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-800 focus:ring-2 focus:ring-blue-200 outline-none" />
+              <section className="mb-7">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Lich luu tru</h3>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="rounded-xl border border-slate-200 px-4 py-3">
+                    <label className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                      <Calendar className="h-4 w-4" /> Ngay nhan phong
+                    </label>
+                    <input name="checkIn" type="date" value={formData.checkIn} onChange={handleInputChange} className="w-full border-0 p-0 text-slate-800 outline-none" />
+                  </div>
+                  <div className="rounded-xl border border-slate-200 px-4 py-3">
+                    <label className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                      <Calendar className="h-4 w-4" /> Ngay tra phong
+                    </label>
+                    <input name="checkOut" type="date" value={formData.checkOut} onChange={handleInputChange} className="w-full border-0 p-0 text-slate-800 outline-none" />
+                  </div>
                 </div>
               </section>
 
-              <section className="mb-6">
-                <label className="text-sm text-gray-600">Yêu cầu đặc biệt</label>
-                <textarea name="specialRequests" rows={3} value={formData.specialRequests} onChange={handleInputChange} className="mt-2 w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-200 outline-none" placeholder="Ghi chú..." />
+              <section className="mb-7">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Yeu cau dac biet</h3>
+                <textarea
+                  name="specialRequests"
+                  rows={4}
+                  value={formData.specialRequests}
+                  onChange={handleInputChange}
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                  placeholder="Vi du: nhan phong som, phong tang cao, khong hut thuoc..."
+                />
               </section>
 
-              <section className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Phương thức thanh toán</h3>
-                <div className="flex gap-3">
-                  <button onClick={() => setFormData({...formData, paymentMethod: 'credit_card'})} className={`px-4 py-3 rounded-lg w-full border text-gray-800 ${formData.paymentMethod === 'credit_card' ? 'bg-white shadow-md border-orange-300' : 'bg-gray-50 border-gray-200'}`}>
-                    Thẻ tín dụng
+              <section>
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Phuong thuc thanh toan</h3>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, paymentMethod: 'credit_card' })}
+                    className={`rounded-xl border p-4 text-left transition ${
+                      formData.paymentMethod === 'credit_card'
+                        ? 'border-sky-300 bg-sky-50 ring-2 ring-sky-100'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                      <CreditCard className="h-4 w-4" /> The tin dung
+                    </div>
+                    <p className="mt-1 text-xs text-slate-500">Thanh toan ngay de giu phong</p>
                   </button>
-                  <button onClick={() => setFormData({...formData, paymentMethod: 'cash'})} className={`px-4 py-3 rounded-lg w-full border text-gray-800 ${formData.paymentMethod === 'cash' ? 'bg-white shadow-md border-orange-300' : 'bg-gray-50 border-gray-200'}`}>
-                    Thanh toán tại quầy
+
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, paymentMethod: 'cash' })}
+                    className={`rounded-xl border p-4 text-left transition ${
+                      formData.paymentMethod === 'cash'
+                        ? 'border-sky-300 bg-sky-50 ring-2 ring-sky-100'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                      <Banknote className="h-4 w-4" /> Thanh toan tai quay
+                    </div>
+                    <p className="mt-1 text-xs text-slate-500">Thanh toan khi nhan phong</p>
                   </button>
                 </div>
 
                 {formData.paymentMethod === 'credit_card' && (
-                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} placeholder="Số thẻ" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 outline-none" />
-                    <input name="cardName" value={formData.cardName} onChange={handleInputChange} placeholder="Tên trên thẻ" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 outline-none" />
-                    <input name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 outline-none" />
-                    <input name="cvv" value={formData.cvv} onChange={handleInputChange} placeholder="CVV" className="px-4 py-3 rounded-lg border border-gray-200 text-gray-800 placeholder:text-gray-400 outline-none" />
+                  <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                    <input name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} placeholder="So the" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
+                    <input name="cardName" value={formData.cardName} onChange={handleInputChange} placeholder="Ten tren the" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
+                    <input name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
+                    <input name="cvv" value={formData.cvv} onChange={handleInputChange} placeholder="CVV" className="rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100" />
                   </div>
                 )}
               </section>
@@ -515,47 +569,66 @@ export default function BookingPaymentPage() {
 
           {/* Right: Summary Card */}
           <aside className="lg:col-span-5">
-            <div className="sticky top-28">
-              <div className="bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-white/40 p-6">
-                <h4 className="text-sm text-gray-500 uppercase tracking-wider">Chi tiết đặt phòng</h4>
-                <div className="mt-4 space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-700">Phòng</span>
-                    <span className="text-sm font-medium text-gray-900">{room.room_type}</span>
+            <div className="sticky top-28 space-y-4">
+              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+                <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Booking Summary</h4>
+
+                <div className="mt-4 space-y-3 rounded-2xl bg-slate-50 p-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">Hang phong</span>
+                    <span className="font-medium text-slate-900">{room.room_type}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-700">Số đêm</span>
-                    <span className="text-sm font-medium text-gray-900">{calculateNights()} đêm</span>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">So dem</span>
+                    <span className="font-medium text-slate-900">{calculateNights()} dem</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-700">Giá / đêm</span>
-                    <span className="text-sm font-medium text-gray-900">{room.base_price.toLocaleString('vi-VN')}đ</span>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">Gia moi dem</span>
+                    <span className="font-medium text-slate-900">{room.base_price.toLocaleString('vi-VN')}đ</span>
                   </div>
                   {availability && availability.discount_rate > 0 && (
-                    <div className="flex justify-between text-sm text-green-600">
-                      <span>Giảm giá</span>
+                    <div className="flex items-center justify-between text-sm text-emerald-600">
+                      <span>Uu dai</span>
                       <span>-{((availability.total_price_before_discount || 0) - (availability.total_price || 0)).toLocaleString('vi-VN')}đ</span>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-4 border-t pt-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">Tổng cộng</span>
-                    <span className="text-2xl font-bold text-orange-600">{calculateTotal().toLocaleString('vi-VN')}đ</span>
+                <div className="mt-4 border-t border-slate-200 pt-4">
+                  <div className="flex items-end justify-between">
+                    <span className="text-slate-600">Tong thanh toan</span>
+                    <span className="text-3xl font-bold text-orange-600">{calculateTotal().toLocaleString('vi-VN')}đ</span>
                   </div>
                   {availability && (
-                    <p className={`text-sm ${availability.available ? 'text-green-600' : 'text-red-600'}`}>
-                      {availability.available ? 'Phòng còn trống' : 'Phòng không khả dụng'}
+                    <p className={`mt-2 text-sm font-medium ${availability.available ? 'text-emerald-600' : 'text-red-600'}`}>
+                      {availability.available ? 'Phong dang kha dung' : 'Phong khong kha dung'}
                     </p>
                   )}
                 </div>
 
-                <button onClick={handleSubmit} disabled={submitting || (availability && !availability.available)} className="mt-6 w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-lg font-semibold shadow-lg hover:scale-[1.01] transition">
-                  {submitting ? 'Đang xử lý...' : formData.paymentMethod === 'credit_card' ? 'Thanh toán ngay' : 'Xác nhận đặt phòng'}
+                <button
+                  onClick={handleSubmit}
+                  disabled={submitting || (availability && !availability.available)}
+                  className="mt-6 w-full rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? 'Dang xu ly...' : formData.paymentMethod === 'credit_card' ? 'Thanh toan ngay' : 'Xac nhan dat phong'}
                 </button>
 
-                <button onClick={() => router.push(`/rooms/${roomId}`)} className="mt-3 w-full border border-gray-200 py-2 rounded-lg text-sm text-gray-700">Xem chi tiết phòng</button>
+                <button
+                  onClick={() => router.push(`/rooms/${roomId}`)}
+                  className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                >
+                  Xem chi tiet phong
+                </button>
+              </div>
+
+              <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4 text-sm text-sky-900">
+                <p className="font-semibold">Luu y ve dat phong</p>
+                <ul className="mt-2 space-y-1 text-sky-800/90">
+                  <li>Check-in sau 14:00, check-out truoc 12:00.</li>
+                  <li>Gia da bao gom thue va phi dich vu co ban.</li>
+                  <li>Thong tin thanh toan duoc ma hoa va bao mat.</li>
+                </ul>
               </div>
             </div>
           </aside>
