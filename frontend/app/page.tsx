@@ -5,10 +5,85 @@ import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
+import { API_URL } from '@/lib/api';
+import { getRoomImageUrl, getRoomLocalFallback } from '@/lib/imageUtils';
+
+interface Room {
+  id: number;
+  name: string;
+  room_type: string;
+  base_price: number;
+  hotel_id: number;
+  images?: string[];
+  amenities?: string[];
+}
+
+function getRoomMeta(room: Room): { bed: string; area: string; view: string } {
+  const text = `${room.name} ${(room.amenities || []).join(' ')}`.toLowerCase();
+
+  let bed = 'King Bed';
+  if (text.includes('twin')) {
+    bed = 'King Bed hay Twin beds';
+  } else if (text.includes('double')) {
+    bed = 'Double Bed';
+  }
+
+  let area = '45 m2';
+  if (text.includes('suite')) {
+    area = '80 m2';
+  } else if (text.includes('villa')) {
+    area = '130 m2';
+  } else if (text.includes('deluxe')) {
+    area = '51 m2';
+  } else if (text.includes('superior')) {
+    area = '40 m2';
+  }
+
+  let view = 'Huong vuon';
+  if (text.includes('ocean') || text.includes('sea') || text.includes('beach')) {
+    view = 'Huong bien';
+  } else if (text.includes('city')) {
+    view = 'Huong pho';
+  }
+
+  return { bed, area, view };
+}
+
+const ROOM_LAYOUT_CLASSES = [
+  'md:col-span-3 md:row-span-2',
+  'md:col-span-5 md:row-span-4',
+  'md:col-span-2 md:row-span-2',
+  'md:col-span-2 md:row-span-2',
+  'md:col-span-2 md:row-span-2',
+  'md:col-span-2 md:row-span-2',
+];
+
+function getRoomLayoutClass(index: number): string {
+  return ROOM_LAYOUT_CLASSES[index % ROOM_LAYOUT_CLASSES.length] || 'md:col-span-3 md:row-span-2';
+}
 
 export default function Home() {
   // 2. Khai báo các biến trạng thái (State)
   const [currentDestinationSlide, setCurrentDestinationSlide] = useState(0);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [roomsLoading, setRoomsLoading] = useState(true);
+
+  // Fetch rooms cho hang phong section
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/rooms/?limit=12`);
+        if (!res.ok) throw new Error('Failed to fetch rooms');
+        const data = await res.json();
+        setRooms(data);
+      } catch (error) {
+        console.error('Error fetching rooms:', error);
+      } finally {
+        setRoomsLoading(false);
+      }
+    };
+    fetchRooms();
+  }, []);
 
   return (
     <main className="min-h-screen bg-white">
@@ -168,39 +243,75 @@ export default function Home() {
         </div>
       </section>
       
-      {/* --- PHẦN 3: DISCOVERY HUB (Không hiển thị hạng phòng ở trang chủ) --- */}
-      <section className="bg-gray-50 py-24">
-        <div className="mx-auto max-w-7xl px-8">
-          <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl font-serif font-bold text-gray-900">Lên Kế Hoạch Nhanh Hơn</h2>
-              <p className="mt-3 text-gray-600">
-                Trang chủ giờ tập trung vào khám phá điểm đến và trải nghiệm. Danh sách hạng phòng được hiển thị tại trang chi tiết khách sạn.
-              </p>
-            </div>
-            <Link href="/search" className="rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 transition hover:border-gray-900 hover:bg-gray-900 hover:text-white">
-              Tìm khách sạn phù hợp
-            </Link>
-          </div>
+      {/* --- PHẦN 3: ROOM GALLERY (HANG PHONG) --- */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#0f4a73] mx-4 md:mx-8 my-16 px-4 py-10 md:px-8">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 20% 10%, rgba(255,255,255,.5) 0, rgba(255,255,255,0) 40%), linear-gradient(115deg, rgba(255,255,255,.16) 1px, transparent 1px)',
+            backgroundSize: 'auto, 34px 34px',
+          }}
+        />
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-              <p className="text-sm font-semibold uppercase tracking-wider text-orange-600">01</p>
-              <h3 className="mt-3 text-xl font-bold text-gray-900">Chọn điểm đến</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">Tìm theo thành phố, phong cách nghỉ dưỡng hoặc ngân sách.</p>
-            </div>
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-              <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">02</p>
-              <h3 className="mt-3 text-xl font-bold text-gray-900">Xem chi tiết khách sạn</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">So sánh tiện nghi, chính sách và bộ sưu tập hạng phòng trực quan.</p>
-            </div>
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-              <p className="text-sm font-semibold uppercase tracking-wider text-emerald-600">03</p>
-              <h3 className="mt-3 text-xl font-bold text-gray-900">Đặt phòng thông minh</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">Xác nhận nhanh, thanh toán linh hoạt và lưu lịch sử đặt phòng dễ dàng.</p>
-            </div>
-          </div>
+        <div className="relative z-10 mb-8 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/70">ROOM COLLECTION</p>
+          <h2 className="mt-2 text-3xl font-semibold tracking-[0.15em] text-white md:text-4xl">HANG PHONG</h2>
         </div>
+
+        {roomsLoading ? (
+          <div className="relative z-10 rounded-2xl bg-white p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0f4a73] mx-auto"></div>
+          </div>
+        ) : rooms.length > 0 ? (
+          <div className="relative z-10 grid grid-cols-1 gap-4 rounded-2xl bg-white/95 p-4 md:grid-cols-12 md:auto-rows-[132px] md:gap-3 md:p-3">
+            {rooms.map((room, index) => {
+              const meta = getRoomMeta(room);
+              return (
+                <Link
+                  key={room.id}
+                  href={`/rooms/${room.id}`}
+                  className={`group relative min-h-[220px] overflow-hidden rounded-xl ${getRoomLayoutClass(index)}`}
+                >
+                  <img
+                    src={getRoomImageUrl(room.images?.[0] || '')}
+                    alt={room.name}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = getRoomLocalFallback(room.id);
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+                  <div className="absolute bottom-3 left-3 right-3 text-white md:bottom-4 md:left-4 md:right-4">
+                    <h3 className="line-clamp-2 text-2xl font-semibold leading-tight drop-shadow md:text-4xl lg:text-5xl">
+                      {room.name}
+                    </h3>
+
+                    <div className="mt-2 grid grid-cols-3 gap-2 rounded-md bg-black/35 px-3 py-2 text-xs md:mt-3 md:text-sm">
+                      <div className="flex items-center gap-1">
+                        <span aria-hidden="true">🛏️</span>
+                        <span>{meta.bed}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span aria-hidden="true">🗖</span>
+                        <span>{meta.area}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span aria-hidden="true">👁️</span>
+                        <span>{meta.view}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="relative z-10 rounded-2xl bg-white p-12 text-center text-gray-500">
+            Khong co phong nao.
+          </div>
+        )}
       </section>
 
 
