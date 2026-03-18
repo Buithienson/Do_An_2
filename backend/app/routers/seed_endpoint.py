@@ -3,7 +3,9 @@ Endpoint to seed database for deployed backend
 Visit: https://your-backend-url.onrender.com/seed-db
 """
 
-from fastapi import APIRouter, HTTPException
+import os
+from typing import Optional
+from fastapi import APIRouter, HTTPException, Header, status
 from app.database import SessionLocal, Base, engine
 from app.models import User, Hotel, Room, Booking
 from app.utils import hash_password
@@ -13,9 +15,31 @@ from pathlib import Path
 router = APIRouter()
 
 
+def _is_production_env() -> bool:
+    env = os.environ.get("ENVIRONMENT", os.environ.get("ENV", "")).lower()
+    return bool(os.environ.get("RENDER")) or env in {"prod", "production"}
+
+
+def _authorize_seed_endpoint(token: Optional[str]) -> None:
+    expected = os.environ.get("SEED_ADMIN_TOKEN", "")
+
+    if _is_production_env() and not expected:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="SEED_ADMIN_TOKEN is not configured",
+        )
+
+    if expected and token != expected:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+
+
 @router.api_route("/fix-images", methods=["GET", "POST"])
-async def fix_images_endpoint():
+async def fix_images_endpoint(
+    x_seed_token: Optional[str] = Header(default=None, alias="X-Seed-Token")
+):
     """Fix existing broken image URLs in the database"""
+    _authorize_seed_endpoint(x_seed_token)
+
     db = SessionLocal()
     try:
         hotels = db.query(Hotel).all()
@@ -71,8 +95,12 @@ async def fix_images_endpoint():
 
 
 @router.api_route("/update-all-images", methods=["GET", "POST"])
-async def update_all_images_endpoint():
+async def update_all_images_endpoint(
+    x_seed_token: Optional[str] = Header(default=None, alias="X-Seed-Token")
+):
     """Update all hotels with correct default images based on city"""
+    _authorize_seed_endpoint(x_seed_token)
+
     db = SessionLocal()
     try:
         HOTEL_IMAGES = [
@@ -141,11 +169,15 @@ async def update_all_images_endpoint():
 
 
 @router.api_route("/seed-db", methods=["GET", "POST"])
-async def seed_database_endpoint():
+async def seed_database_endpoint(
+    x_seed_token: Optional[str] = Header(default=None, alias="X-Seed-Token")
+):
     """
     Seed database with FULL DATA for production
     This endpoint will CLEAR existing data and reload from vietnam_hotels.json
     """
+    _authorize_seed_endpoint(x_seed_token)
+
     db = SessionLocal()
 
     try:

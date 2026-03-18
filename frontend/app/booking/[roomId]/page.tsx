@@ -38,6 +38,7 @@ export default function BookingPaymentPage() {
   const roomId = params.roomId as string;
   
   const [room, setRoom] = useState<Room | null>(null);
+  const [roomNotFound, setRoomNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -83,10 +84,15 @@ export default function BookingPaymentPage() {
     const fetchRoom = async () => {
       try {
         const res = await fetch(`${API_URL}/api/rooms/${roomId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setRoom(data);
+        if (!res.ok) {
+          if (res.status === 404) {
+            setRoomNotFound(true);
+          }
+          return;
         }
+
+        const data = await res.json();
+        setRoom(data);
       } catch (error) {
         console.error('Error fetching room:', error);
       } finally {
@@ -102,7 +108,7 @@ export default function BookingPaymentPage() {
   // Check availability when dates change
   useEffect(() => {
     const checkAvailability = async () => {
-      if (!formData.checkIn || !formData.checkOut || !roomId) return;
+      if (!formData.checkIn || !formData.checkOut || !roomId || !room || roomNotFound) return;
 
       try {
         const checkIn = new Date(formData.checkIn).toISOString();
@@ -122,7 +128,7 @@ export default function BookingPaymentPage() {
     };
 
     checkAvailability();
-  }, [formData.checkIn, formData.checkOut, roomId]);
+  }, [formData.checkIn, formData.checkOut, roomId, room, roomNotFound]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -323,7 +329,10 @@ export default function BookingPaymentPage() {
         <Navbar variant="dark" />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center p-8">
-            <p className="text-gray-600 text-lg mb-4">Không tìm thấy phòng</p>
+            <p className="text-gray-600 text-lg mb-2">Không tìm thấy phòng</p>
+            {roomNotFound && (
+              <p className="text-sm text-gray-500 mb-4">Phòng #{roomId} không tồn tại trong dữ liệu hiện tại.</p>
+            )}
             <button
               onClick={() => router.push('/')}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"

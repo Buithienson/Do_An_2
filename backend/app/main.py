@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app.routers import (
@@ -12,6 +12,7 @@ from app.routers import (
     admin as admin_router,
 )
 from app.cache import search_cache, availability_cache
+import os
 
 # Create all database tables (handled via seed endpoint or startup)
 Base.metadata.create_all(bind=engine)
@@ -19,12 +20,16 @@ Base.metadata.create_all(bind=engine)
 import logging
 from contextlib import asynccontextmanager
 
-# ── Tài khoản Admin mặc định ─────────────────────────────────────────────────
-# Thay đổi thông tin bên dưới nếu muốn dùng email/mật khẩu khác
-DEFAULT_ADMIN_EMAIL = "admin@booking.com"
-DEFAULT_ADMIN_PASSWORD = "Admin@123"
-DEFAULT_ADMIN_NAME = "Super Admin"
-# ─────────────────────────────────────────────────────────────────────────────
+def _is_production_env() -> bool:
+    env = os.environ.get("ENVIRONMENT", os.environ.get("ENV", "")).lower()
+    return bool(os.environ.get("RENDER")) or env in {"prod", "production"}
+
+
+# Admin bootstrap config (read from environment, no hardcoded secrets)
+DEFAULT_ADMIN_EMAIL = os.environ.get("DEFAULT_ADMIN_EMAIL", "admin@booking.com")
+DEFAULT_ADMIN_PASSWORD = os.environ.get("DEFAULT_ADMIN_PASSWORD", "")
+DEFAULT_ADMIN_NAME = os.environ.get("DEFAULT_ADMIN_NAME", "Super Admin")
+ADMIN_BOOTSTRAP_TOKEN = os.environ.get("ADMIN_BOOTSTRAP_TOKEN", "")
 
 
 def _ensure_default_admin():
@@ -35,6 +40,10 @@ def _ensure_default_admin():
     from app.database import SessionLocal
     from app import models
     from app.utils import hash_password
+
+    if not DEFAULT_ADMIN_PASSWORD:
+        logging.warning("[Admin] DEFAULT_ADMIN_PASSWORD is not set, skip auto admin bootstrap.")
+        return
 
     db = SessionLocal()
     try:
@@ -68,8 +77,7 @@ def _ensure_default_admin():
         db.add(admin)
         db.commit()
         logging.info(
-            f"[Admin] Đã tạo tài khoản admin mặc định: "
-            f"email={DEFAULT_ADMIN_EMAIL} | password={DEFAULT_ADMIN_PASSWORD}"
+            f"[Admin] Đã tạo tài khoản admin mặc định: email={DEFAULT_ADMIN_EMAIL}"
         )
     except Exception as e:
         db.rollback()
@@ -128,44 +136,32 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 
 # Configure CORS
-# Support both local development and production deployment
-import os
-import re
+# Keep explicit allow-list in production; avoid wildcard subdomains with credentials.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000").rstrip("/")
+extra_origins_raw = os.environ.get("CORS_EXTRA_ORIGINS", "")
+extra_origins = [origin.strip().rstrip("/") for origin in extra_origins_raw.split(",") if origin.strip()]
 
-# Get frontend URL from environment, default to local development
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+allowed_origins = sorted(
+    set(
+        [
+            FRONTEND_URL,
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:3001",
+            *extra_origins,
+        ]
+    )
+)
 
-# Allowed origins: production URL + local development URLs
-allowed_origins = [
-    FRONTEND_URL,
-    "https://do-an-2-1-xt7p.onrender.com",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-]
-
-# Remove duplicates
-allowed_origins = list(set(allowed_origins))
-
-
-# Custom CORS origin validation to support Render's dynamic subdomains
-def cors_allow_all_render_origins(origin: str) -> bool:
-    """
-    Allow all *.onrender.com origins plus explicitly listed origins
-    """
-    if origin in allowed_origins:
-        return True
-    # Allow all onrender.com subdomains
-    if re.match(r"https://.*\.onrender\.com$", origin):
-        return True
-    return False
+# Optional override for specific trusted regex (keep empty by default).
+allow_origin_regex = os.environ.get("CORS_ALLOW_ORIGIN_REGEX") or None
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"https://.*\.onrender\.com",  # Allow all Render subdomains
-    allow_origins=allowed_origins,  # Specific allowed origins
+    allow_origin_regex=allow_origin_regex,
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -202,12 +198,27 @@ async def root():
 
 
 @app.get("/api/init-admin")
-async def init_admin():
+async def init_admin(token: str | None = Query(default=None)):
     """
     Endpoint tạo tài khoản admin mặc định thủ công.
     Gọi endpoint này 1 lần nếu login admin bị lỗi 401.
     URL: /api/init-admin
     """
+    if _is_production_env() and not ADMIN_BOOTSTRAP_TOKEN:
+        raise HTTPException(
+            status_code=503,
+            detail="ADMIN_BOOTSTRAP_TOKEN is not configured",
+        )
+
+    if ADMIN_BOOTSTRAP_TOKEN and token != ADMIN_BOOTSTRAP_TOKEN:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    if not DEFAULT_ADMIN_PASSWORD:
+        raise HTTPException(
+            status_code=503,
+            detail="DEFAULT_ADMIN_PASSWORD is not configured",
+        )
+
     from app.database import SessionLocal
     from app import models
     from app.utils import hash_password
@@ -227,13 +238,11 @@ async def init_admin():
                     "status": "updated",
                     "message": f"Đã nâng cấp {DEFAULT_ADMIN_EMAIL} lên admin",
                     "email": DEFAULT_ADMIN_EMAIL,
-                    "password": DEFAULT_ADMIN_PASSWORD,
                 }
             return {
                 "status": "exists",
                 "message": f"Tài khoản admin đã tồn tại",
                 "email": DEFAULT_ADMIN_EMAIL,
-                "password": DEFAULT_ADMIN_PASSWORD,
             }
 
         admin = models.User(
@@ -249,7 +258,6 @@ async def init_admin():
             "status": "created",
             "message": "Đã tạo tài khoản admin thành công!",
             "email": DEFAULT_ADMIN_EMAIL,
-            "password": DEFAULT_ADMIN_PASSWORD,
         }
     except Exception as e:
         db.rollback()
