@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { CreditCard, Banknote, CheckCircle, Calendar, Users, Hotel, ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { API_URL } from '@/lib/api';
 
 interface Room {
   id: number;
@@ -81,7 +82,7 @@ export default function BookingPaymentPage() {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/rooms/${roomId}`);
+        const res = await fetch(`${API_URL}/api/rooms/${roomId}`);
         if (res.ok) {
           const data = await res.json();
           setRoom(data);
@@ -108,7 +109,7 @@ export default function BookingPaymentPage() {
         const checkOut = new Date(formData.checkOut).toISOString();
         
         const res = await fetch(
-          `http://127.0.0.1:8000/api/bookings/availability?room_id=${roomId}&check_in_date=${checkIn}&check_out_date=${checkOut}`
+          `${API_URL}/api/bookings/availability?room_id=${roomId}&check_in_date=${checkIn}&check_out_date=${checkOut}`
         );
         
         if (res.ok) {
@@ -150,7 +151,7 @@ export default function BookingPaymentPage() {
     const refresh_token = localStorage.getItem('refresh_token');
     if (!refresh_token) return null;
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/auth/refresh', {
+      const res = await fetch(`${API_URL}/api/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh_token })
@@ -214,7 +215,7 @@ export default function BookingPaymentPage() {
         'Authorization': `Bearer ${accessToken}`
       };
 
-      let bookingRes = await fetch('http://127.0.0.1:8000/api/bookings/', {
+      let bookingRes = await fetch(`${API_URL}/api/bookings/`, {
         method: 'POST',
         headers,
         body: JSON.stringify(bookingPayload)
@@ -226,7 +227,7 @@ export default function BookingPaymentPage() {
         if (newToken) {
           accessToken = newToken;
           headers['Authorization'] = `Bearer ${accessToken}`;
-          bookingRes = await fetch('http://127.0.0.1:8000/api/bookings/', {
+          bookingRes = await fetch(`${API_URL}/api/bookings/`, {
             method: 'POST',
             headers,
             body: JSON.stringify(bookingPayload)
@@ -259,7 +260,7 @@ export default function BookingPaymentPage() {
           }
         };
 
-        let paymentRes = await fetch('http://127.0.0.1:8000/api/bookings/payment', {
+        let paymentRes = await fetch(`${API_URL}/api/bookings/payment`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -272,7 +273,7 @@ export default function BookingPaymentPage() {
           const newToken = await refreshToken();
           if (newToken) {
             accessToken = newToken;
-            paymentRes = await fetch('http://127.0.0.1:8000/api/bookings/payment', {
+            paymentRes = await fetch(`${API_URL}/api/bookings/payment`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

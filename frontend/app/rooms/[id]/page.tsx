@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { API_URL } from '@/lib/api';
-import { getRoomImageUrl } from '@/lib/imageUtils';
 
 interface Room {
   id: number;
@@ -44,7 +43,7 @@ export default function RoomDetail() {
 
     const fetchRoom = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/rooms/${id}`);
+                const res = await fetch(`${API_URL}/api/rooms/${id}`);
         if (!res.ok) throw new Error('Failed to fetch room');
         
         const data = await res.json();
@@ -57,7 +56,7 @@ export default function RoomDetail() {
            description: data.description || "Mô tả đang cập nhật...",
            price_per_night: data.base_price,
            location: data.hotel ? `${data.hotel.city}, ${data.hotel.country}` : "Vietnam",
-           image_url: data.images?.[0] || '',
+           image_url: data.images?.[0] || "https://placehold.co/800x600",
            images: data.images || [],
            amenities: data.amenities || [],
            room_type: data.room_type,
@@ -115,12 +114,9 @@ export default function RoomDetail() {
                 {/* Ảnh chính */}
                 <div className="overflow-hidden rounded-2xl bg-gray-200">
                     <img 
-                        src={getRoomImageUrl(room.image_url)} 
+                        src={room.image_url} 
                         alt={room.name} 
                         className="h-[400px] w-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/rooms/standard_room.png';
-                        }}
                     />
                 </div>
                 
