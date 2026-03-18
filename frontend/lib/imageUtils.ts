@@ -9,6 +9,27 @@
 
 const UNSPLASH_PARAMS = '?w=800&auto=format&fit=crop&q=80';
 
+const HOTEL_LOCAL_POOL = [
+  '/hotels/hotel_bay_view.png',
+  '/hotels/hotel_beach_resort.png',
+  '/hotels/hotel_city_luxury.png',
+  '/hotels/hotel_dalat.png',
+  '/hotels/hotel_dalat_french.png',
+  '/hotels/hotel_halong.png',
+  '/hotels/hotel_hanoi.png',
+  '/hotels/hotel_heritage.png',
+  '/hotels/hotel_hoian.png',
+  '/hotels/hotel_island_villa.png',
+  '/hotels/hotel_mountain_resort.png',
+  '/hotels/hotel_phuquoc.png',
+  '/hotels/hotel_riverside.png',
+  '/hotels/hotel_sapa.png',
+  '/hotels/jw_marriott_phuquoc.png',
+  '/hotels/renaissance_danang.png',
+  '/hotels/sheraton_saigon.png',
+  '/hotels/vinpearl_nhatrang.png'
+];
+
 // Fallback local images for hotels and rooms
 const HOTEL_FALLBACK = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80';
 const ROOM_FALLBACK = 'https://images.unsplash.com/photo-1596436889106-be35e843f97f?w=800&auto=format&fit=crop&q=80';
@@ -87,4 +108,17 @@ export function extractAllImages(images: string[] | null | undefined): string[] 
   }
   
   return images.map(img => getHotelImageUrl(img));
+}
+
+/**
+ * Deterministic local fallback by seed (hotel id/name hash).
+ */
+export function getHotelLocalFallback(seed: number | string): string {
+  const numericSeed =
+    typeof seed === 'number'
+      ? seed
+      : Array.from(String(seed)).reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+
+  const index = Math.abs(numericSeed) % HOTEL_LOCAL_POOL.length;
+  return HOTEL_LOCAL_POOL[index];
 }

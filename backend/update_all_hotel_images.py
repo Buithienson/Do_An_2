@@ -1,10 +1,13 @@
-"""
-Script de cap nhat hinh anh cho tat ca khach san
-Chay: python update_all_hotel_images.py
+"""Bulk assign a different image URL for every hotel.
+
+Run:
+    python update_all_hotel_images.py
 """
 
+import re
 import sys
 from pathlib import Path
+from collections import Counter
 
 sys.path.append(str(Path(__file__).parent))
 
@@ -12,45 +15,55 @@ from app.database import SessionLocal
 from app.models import Hotel
 
 
-def update_all_hotel_images():
-    """
-    Cap nhat hinh anh moi cho tat ca cac khach san
-    """
+def _slugify(text: str) -> str:
+    if not text:
+        return "hotel"
+    text = text.lower().strip()
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+    text = re.sub(r"-+", "-", text).strip("-")
+    return text or "hotel"
+
+
+def _build_unique_image_url(hotel: Hotel) -> str:
+    """Create a deterministic unique URL per hotel using Picsum seed."""
+    city_seed = _slugify(hotel.city or "vietnam")
+    name_seed = _slugify(hotel.name or f"hotel-{hotel.id}")
+    seed = f"{hotel.id}-{city_seed}-{name_seed}"
+    return f"https://picsum.photos/seed/{seed}/1200/800"
+
+
+def update_all_hotel_images() -> None:
     db = SessionLocal()
 
     try:
-        # Mapping hotel name keyword to new image path
-        hotel_images = {
-            "JW Marriott": ["/hotels/jw_marriott_phuquoc.png"],
-            "Sheraton": ["/hotels/sheraton_saigon.png"],
-            "Renaissance": ["/hotels/renaissance_danang.png"],
-            "Vinpearl Resort Nha Trang": ["/hotels/vinpearl_nhatrang.png"],
-            "Sofitel": ["/hotels/hotel_hanoi.png"],
-            "Anantara": ["/hotels/hotel_hoian.png"],
-            "Dalat Palace": ["/hotels/hotel_dalat.png"],
-            "Coupole": ["/hotels/hotel_sapa.png"],
-            "Vinpearl Resort Ha Long": ["/hotels/hotel_halong.png"],
-            "InterContinental": ["/hotels/hotel_phuquoc.png"],
-        }
+        hotels = db.query(Hotel).order_by(Hotel.id.asc()).all()
 
-        # Get all hotels
-        hotels = db.query(Hotel).all()
+        if not hotels:
+            print("[INFO] No hotels found.")
+            return
 
         print(f"Found {len(hotels)} hotels in database")
-        print("-" * 50)
+        print("-" * 70)
 
-        updated_count = 0
         for hotel in hotels:
-            for keyword, new_images in hotel_images.items():
-                if keyword.lower() in hotel.name.lower():
-                    hotel.images = new_images
-                    print(f"Updated: {hotel.name} -> {new_images[0]}")
-                    updated_count += 1
-                    break
+            new_image = _build_unique_image_url(hotel)
+            hotel.images = [new_image]
+            print(f"Updated #{hotel.id}: {hotel.name} -> {new_image}")
 
         db.commit()
-        print("-" * 50)
-        print(f"[OK] Updated {updated_count} hotels successfully!")
+
+        # Verify uniqueness after update
+        first_images = [h.images[0] for h in hotels if h.images and len(h.images) > 0]
+        duplicate_counts = Counter(first_images)
+        duplicates = [img for img, count in duplicate_counts.items() if count > 1]
+
+        print("-" * 70)
+        print(f"[OK] Updated {len(hotels)} hotels.")
+        print(f"[OK] Unique image URLs: {len(set(first_images))}/{len(first_images)}")
+        if duplicates:
+            print(f"[WARN] Duplicate URLs still found: {len(duplicates)}")
+        else:
+            print("[OK] No duplicate image URL found.")
 
     except Exception as e:
         print(f"[ERROR] Error updating hotel images: {e}")

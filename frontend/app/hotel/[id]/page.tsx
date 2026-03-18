@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import RoomCard from '@/components/RoomCard';
 import Link from 'next/link';
 import { API_URL } from '@/lib/api';
-import { getHotelImageUrl, getFirstImage } from '@/lib/imageUtils';
+import { getHotelImageUrl, getFirstImage, getHotelLocalFallback } from '@/lib/imageUtils';
 
 interface Hotel {
   id: number;
@@ -120,7 +120,7 @@ function HotelContent() {
               alt={hotel.name}
               className="w-full h-96 object-cover rounded-lg"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/hotels/hotel_city_luxury.png';
+                (e.target as HTMLImageElement).src = getHotelLocalFallback(hotel.id);
               }}
             />
           </div>
@@ -132,7 +132,7 @@ function HotelContent() {
                 alt={`${hotel.name} ${idx}`}
                 className="w-full h-24 object-cover rounded-lg"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/hotels/hotel_city_luxury.png';
+                  (e.target as HTMLImageElement).src = getHotelLocalFallback(`${hotel.id}-${idx}`);
                 }}
               />
             ))}

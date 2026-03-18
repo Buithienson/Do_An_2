@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { API_URL } from '@/lib/api';
-import { getFirstImage } from '@/lib/imageUtils';
+import { getFirstImage, getHotelLocalFallback } from '@/lib/imageUtils';
 
 interface Hotel {
   id: number;
@@ -76,7 +76,7 @@ function SearchContent() {
                             alt={hotel.name}
                             className="w-full h-full object-cover hover:scale-105 transition-transform"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = '/hotels/hotel_city_luxury.png';
+                              (e.target as HTMLImageElement).src = getHotelLocalFallback(hotel.id);
                             }}
                           />
                         </div>

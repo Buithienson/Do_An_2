@@ -7,15 +7,32 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Keep form controls readable regardless of OS color scheme */
+input,
+select,
+textarea,
+button {
+  color: #111827;
+}
+
+input,
+select,
+textarea {
+  background-color: #ffffff;
+}
+
+/* Normalize browser autofill so fields do not look "disabled" */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  -webkit-text-fill-color: #111827;
 }
