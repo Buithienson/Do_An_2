@@ -268,46 +268,44 @@ async def seed_database_endpoint():
             },
         ]
 
-        def get_hotel_image(city_name: str) -> str:
-            city_l = city_name.lower()
-            if any(
-                c in city_l
-                for c in [
-                    "nha trang",
-                    "vũng tàu",
-                    "vung tau",
-                    "phan thiết",
-                    "phan thiet",
-                    "mũi né",
-                    "mui ne",
-                    "quy nhơn",
-                    "quy nhon",
-                ]
-            ):
-                return "/hotels/hotel_beach_resort.png"
-            elif any(
-                c in city_l for c in ["phú quốc", "phu quoc", "côn đảo", "con dao"]
-            ):
-                return "/hotels/hotel_island_villa.png"
-            elif any(c in city_l for c in ["sa pa", "sapa"]):
-                return "/hotels/hotel_mountain_resort.png"
-            elif any(c in city_l for c in ["hội an", "hoi an", "huế", "hue"]):
-                return "/hotels/hotel_heritage.png"
-            elif any(c in city_l for c in ["hạ long", "ha long"]):
-                return "/hotels/hotel_bay_view.png"
-            elif any(c in city_l for c in ["đà lạt", "da lat"]):
-                return "/hotels/hotel_dalat_french.png"
-            elif any(c in city_l for c in ["đà nẵng", "da nang", "cần thơ", "can tho"]):
-                return "/hotels/hotel_riverside.png"
-            else:
-                return "/hotels/hotel_city_luxury.png"
+        HOTEL_IMAGES = [
+            "/hotels/hotel_bay_view.png",
+            "/hotels/hotel_beach_resort.png",
+            "/hotels/hotel_city_luxury.png",
+            "/hotels/hotel_dalat.png",
+            "/hotels/hotel_dalat_french.png",
+            "/hotels/hotel_halong.png",
+            "/hotels/hotel_hanoi.png",
+            "/hotels/hotel_heritage.png",
+            "/hotels/hotel_hoian.png",
+            "/hotels/hotel_island_villa.png",
+            "/hotels/hotel_mountain_resort.png",
+            "/hotels/hotel_phuquoc.png",
+            "/hotels/hotel_riverside.png",
+            "/hotels/hotel_sapa.png",
+            "/hotels/jw_marriott_phuquoc.png",
+            "/hotels/renaissance_danang.png",
+            "/hotels/sheraton_saigon.png",
+            "/hotels/vinpearl_nhatrang.png"
+        ]
 
-        room_image_map = {
-            "Standard": "/rooms/standard_room.png",
-            "Superior": "/rooms/superior_room.png",
-            "Deluxe": "/rooms/deluxe_room.png",
-            "Suite": "/rooms/suite_room.png",
-        }
+        ROOM_IMAGES = [
+            "/rooms/beach_villa_1769786630195.png",
+            "/rooms/deluxe_garden_view_1769786613988.png",
+            "/rooms/deluxe_ocean_view_1769786499296.png",
+            "/rooms/deluxe_river_view_1769786577151.png",
+            "/rooms/deluxe_room.png",
+            "/rooms/executive_suite_1769786549773.png",
+            "/rooms/family_room_1769786596501.png",
+            "/rooms/hanoi_colonial_suite.png",
+            "/rooms/hanoi_deluxe_garden.png",
+            "/rooms/hoian_riverside_suite.png",
+            "/rooms/ocean_suite_1769786517001.png",
+            "/rooms/standard_room.png",
+            "/rooms/suite_room.png",
+            "/rooms/superior_city_view_1769786533906.png",
+            "/rooms/superior_room.png"
+        ]
 
         for dest in data["destinations"]:
             city_name = dest["name"]
@@ -315,7 +313,7 @@ async def seed_database_endpoint():
 
             for h_data in hotels_in_city:
                 # Create Hotel
-                hotel_img = get_hotel_image(city_name)
+                hotel_img = HOTEL_IMAGES[total_hotels % len(HOTEL_IMAGES)]
                 images_list = [hotel_img]
 
                 new_hotel = Hotel(
@@ -362,7 +360,7 @@ async def seed_database_endpoint():
                         size=float(room_info["size"]),
                         bed_type=room_info["bed_type"],
                         amenities=room_info["amenities"],
-                        images=[room_image_map.get(room_info["type"], hotel_img)],
+                        images=[ROOM_IMAGES[total_rooms % len(ROOM_IMAGES)]],
                     )
                     db.add(new_room)
                     total_rooms += 1
