@@ -189,7 +189,23 @@ def _build_context(history: List[ChatMessage]) -> Dict[str, Any]:
         "guests": None,
         "budget": None,
     }
-    for msg in history:
+    
+    # Lấy câu mới nhất của user
+    latest_user_msg = None
+    for msg in reversed(history):
+        if msg.role == "user":
+            latest_user_msg = msg.content.lower()
+            break
+            
+    # Kiểm tra nhu cầu đặt lại / thay đổi hoàn toàn của user
+    if latest_user_msg:
+        reset_keywords = ["chọn điểm đến khác", "đổi điểm đến", "đặt lại", "làm mới", "bắt đầu lại", "đổi ý"]
+        if any(kw in latest_user_msg for kw in reset_keywords):
+            # Nếu user muốn khởi động lại, trả về context rỗng hoàn toàn để AI hỏi lại từ đầu
+            return ctx
+
+    # Duyệt từ MỚI NHẤT tới CŨ NHẤT để ưu tiên thông tin vừa mới cập nhật
+    for msg in reversed(history):
         if msg.role == "user":
             if not ctx["location"]:
                 ctx["location"] = _extract_location(msg.content)
@@ -197,6 +213,7 @@ def _build_context(history: List[ChatMessage]) -> Dict[str, Any]:
                 ctx["guests"] = _extract_guests(msg.content)
             if not ctx["budget"]:
                 ctx["budget"] = _extract_budget(msg.content)
+                
     return ctx
 
 
