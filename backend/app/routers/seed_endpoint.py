@@ -76,45 +76,56 @@ async def update_all_images_endpoint():
     db = SessionLocal()
     try:
         HOTEL_IMAGES = [
-            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1518602164578-cd0074062767?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1542314831-c6a4d14d8c1e?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1590073242678-70ee3d6fa268?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1551882547-ff40c0d5eefa?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1596436889106-be35e843f97f?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&auto=format&fit=crop&q=80",
+            "/hotels/hotel_bay_view.png",
+            "/hotels/hotel_beach_resort.png",
+            "/hotels/hotel_city_luxury.png",
+            "/hotels/hotel_dalat.png",
+            "/hotels/hotel_dalat_french.png",
+            "/hotels/hotel_halong.png",
+            "/hotels/hotel_hanoi.png",
+            "/hotels/hotel_heritage.png",
+            "/hotels/hotel_hoian.png",
+            "/hotels/hotel_island_villa.png",
+            "/hotels/hotel_mountain_resort.png",
+            "/hotels/hotel_phuquoc.png",
+            "/hotels/hotel_riverside.png",
+            "/hotels/hotel_sapa.png",
+            "/hotels/jw_marriott_phuquoc.png",
+            "/hotels/renaissance_danang.png",
+            "/hotels/sheraton_saigon.png",
+            "/hotels/vinpearl_nhatrang.png"
         ]
 
         ROOM_IMAGES = [
-            "https://images.unsplash.com/photo-1596436889106-be35e843f97f?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&auto=format&fit=crop&q=80",
+            "/rooms/beach_villa_1769786630195.png",
+            "/rooms/deluxe_garden_view_1769786613988.png",
+            "/rooms/deluxe_ocean_view_1769786499296.png",
+            "/rooms/deluxe_river_view_1769786577151.png",
+            "/rooms/deluxe_room.png",
+            "/rooms/executive_suite_1769786549773.png",
+            "/rooms/family_room_1769786596501.png",
+            "/rooms/hanoi_colonial_suite.png",
+            "/rooms/hanoi_deluxe_garden.png",
+            "/rooms/hoian_riverside_suite.png",
+            "/rooms/ocean_suite_1769786517001.png",
+            "/rooms/standard_room.png",
+            "/rooms/suite_room.png",
+            "/rooms/superior_city_view_1769786533906.png",
+            "/rooms/superior_room.png"
         ]
 
+        # Use an index that we increment to ensure non-duplication instead of hotel.id which might gap
         updated_count = 0
 
         hotels = db.query(Hotel).all()
-        for hotel in hotels:
-            hotel_id = hotel.id or 0
-            new_img = HOTEL_IMAGES[hotel_id % len(HOTEL_IMAGES)]
+        for idx, hotel in enumerate(hotels):
+            new_img = HOTEL_IMAGES[idx % len(HOTEL_IMAGES)]
             hotel.images = [new_img]
             updated_count += 1
 
         rooms = db.query(Room).all()
-        for room in rooms:
-            room_id = room.id or 0
-            new_img = ROOM_IMAGES[room_id % len(ROOM_IMAGES)]
+        for idx, room in enumerate(rooms):
+            new_img = ROOM_IMAGES[idx % len(ROOM_IMAGES)]
             room.images = [new_img]
 
         db.commit()
