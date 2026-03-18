@@ -252,71 +252,102 @@ function HotelContent() {
         </div>
       </div>
 
-      {/* Rooms Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#0f4a73] px-4 py-10 md:px-8">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 20% 10%, rgba(255,255,255,.5) 0, rgba(255,255,255,0) 40%), linear-gradient(115deg, rgba(255,255,255,.16) 1px, transparent 1px)',
-            backgroundSize: 'auto, 34px 34px',
-          }}
-        />
+      {/* Rooms Section - Premium Gallery */}
+      <section className="py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          {/* Header */}
+          <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <p className="mb-2 text-sm font-bold uppercase tracking-widest text-orange-600">Khám phá các hạng phòng</p>
+              <h2 className="mb-2 text-4xl font-bold text-gray-900 md:text-5xl">Phòng Của Chúng Tôi</h2>
+              <p className="text-gray-600">Tìm kiếm một phòng lý tưởng với các lựa chọn đa dạng phù hợp với mọi nhu cầu và ngân sách</p>
+            </div>
+            <Link
+              href={`/search?location=${encodeURIComponent(hotel.city)}`}
+              className="inline-flex items-center rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl"
+            >
+              Xem toàn bộ →
+            </Link>
+          </div>
 
-        <div className="relative z-10 mb-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/70">ROOM COLLECTION</p>
-          <h2 className="mt-2 text-3xl font-semibold tracking-[0.15em] text-white md:text-4xl">HANG PHONG</h2>
-        </div>
+          {/* Gallery Grid */}
+          {rooms.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[160px]">
+              {rooms.map((room, index) => {
+                const meta = getRoomMeta(room);
+                const spanClass = getRoomLayoutClass(index);
+                return (
+                  <Link
+                    key={room.id}
+                    href={buildRoomHref(room.id)}
+                    className={`group relative min-h-[240px] overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 md:${spanClass}`}
+                  >
+                    {/* Background Image */}
+                    <img
+                      src={getRoomImageUrl(room.image_url)}
+                      alt={room.name}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = getRoomLocalFallback(room.id);
+                      }}
+                    />
 
-        {rooms.length > 0 ? (
-          <div className="relative z-10 grid grid-cols-1 gap-4 rounded-2xl bg-white/95 p-4 md:grid-cols-12 md:auto-rows-[132px] md:gap-3 md:p-3">
-            {rooms.map((room, index) => {
-              const meta = getRoomMeta(room);
-              return (
-                <Link
-                  key={room.id}
-                  href={buildRoomHref(room.id)}
-                  className={`group relative min-h-[220px] overflow-hidden rounded-xl ${getRoomLayoutClass(index)}`}
-                >
-                  <img
-                    src={getRoomImageUrl(room.image_url)}
-                    alt={room.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = getRoomLocalFallback(room.id);
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70 transition-opacity duration-300 group-hover:via-black/30 group-hover:to-black/80" />
 
-                  <div className="absolute bottom-3 left-3 right-3 text-white md:bottom-4 md:left-4 md:right-4">
-                    <h3 className="line-clamp-2 text-2xl font-semibold leading-tight drop-shadow md:text-4xl lg:text-5xl">
-                      {room.name}
-                    </h3>
+                    {/* Price Badge - Top Right */}
+                    <div className="absolute right-3 top-3 z-20 rounded-full bg-white/95 backdrop-blur px-3 py-1.5 shadow-md">
+                      <p className="text-xs font-semibold text-gray-700">từ</p>
+                      <p className="text-lg font-bold text-orange-600">{room.price_per_night.toLocaleString('vi-VN')}đ</p>
+                      <p className="text-xs text-gray-500">/đêm</p>
+                    </div>
 
-                    <div className="mt-2 grid grid-cols-3 gap-2 rounded-md bg-black/35 px-3 py-2 text-xs md:mt-3 md:text-sm">
-                      <div className="flex items-center gap-1">
-                        <span aria-hidden="true">🛏️</span>
-                        <span>{meta.bed}</span>
+                    {/* Content - Bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 z-10 p-3 md:p-4 lg:p-5 text-white">
+                      {/* Room Name */}
+                      <h3 className="mb-2 line-clamp-2 text-xl font-bold leading-tight drop-shadow-lg md:text-2xl lg:text-3xl">
+                        {room.name}
+                      </h3>
+
+                      {/* Meta Info - Icons */}
+                      <div className="flex flex-wrap gap-3 text-xs md:text-sm">
+                        <div className="inline-flex items-center gap-1.5 rounded-md bg-white/15 backdrop-blur px-2.5 py-1.5">
+                          <span aria-hidden="true">🛏️</span>
+                          <span className="font-medium">{meta.bed}</span>
+                        </div>
+                        <div className="inline-flex items-center gap-1.5 rounded-md bg-white/15 backdrop-blur px-2.5 py-1.5">
+                          <span aria-hidden="true">📐</span>
+                          <span className="font-medium">{meta.area}</span>
+                        </div>
+                        <div className="inline-flex items-center gap-1.5 rounded-md bg-white/15 backdrop-blur px-2.5 py-1.5">
+                          <span aria-hidden="true">👁️</span>
+                          <span className="font-medium">{meta.view}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span aria-hidden="true">🗖</span>
-                        <span>{meta.area}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span aria-hidden="true">👁️</span>
-                        <span>{meta.view}</span>
+
+                      {/* CTA Button - Hidden until Hover */}
+                      <div className="mt-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <button className="w-full rounded-lg bg-white/95 px-3 py-2 text-sm font-semibold text-gray-900 transition hover:bg-white">
+                          Chi tiết phòng →
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="relative z-10 rounded-2xl bg-white p-12 text-center text-gray-500">
-            Khong co phong nao kha dung cho khoang thoi gian nay.
-          </div>
-        )}
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+              <p className="text-gray-600">Không có phòng nào khả dụng cho khoảng thời gian này</p>
+              <Link
+                href="/search"
+                className="mt-4 inline-flex items-center text-orange-600 font-semibold hover:text-orange-700"
+              >
+                Tìm kiếm thêm →
+              </Link>
+            </div>
+          )}
+        </div>
       </section>
     </div>
   );
