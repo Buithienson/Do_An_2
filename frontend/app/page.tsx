@@ -244,74 +244,60 @@ export default function Home() {
       </section>
       
       {/* --- PHẦN 3: ROOM GALLERY (HANG PHONG) --- */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#0f4a73] mx-4 md:mx-8 my-16 px-4 py-10 md:px-8">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 20% 10%, rgba(255,255,255,.5) 0, rgba(255,255,255,0) 40%), linear-gradient(115deg, rgba(255,255,255,.16) 1px, transparent 1px)',
-            backgroundSize: 'auto, 34px 34px',
-          }}
-        />
-
-        <div className="relative z-10 mb-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/70">ROOM COLLECTION</p>
-          <h2 className="mt-2 text-3xl font-semibold tracking-[0.15em] text-white md:text-4xl">HANG PHONG</h2>
+      <section className="relative mx-auto max-w-7xl my-16 px-4 md:px-8">
+        <div className="mb-8 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[#0f4a73]">ROOM COLLECTION</p>
+          <h2 className="mt-2 text-3xl font-semibold tracking-[0.15em] text-gray-900 md:text-4xl">HẠNG PHÒNG</h2>
         </div>
 
         {roomsLoading ? (
-          <div className="relative z-10 rounded-2xl bg-white p-8 text-center">
+          <div className="rounded-2xl bg-white p-8 text-center shadow">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0f4a73] mx-auto"></div>
           </div>
         ) : rooms.length > 0 ? (
-          <div className="relative z-10 grid grid-cols-1 gap-4 rounded-2xl bg-white/95 p-4 md:grid-cols-12 md:auto-rows-[132px] md:gap-3 md:p-3">
-            {rooms.map((room, index) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {rooms.slice(0,8).map((room) => {
               const meta = getRoomMeta(room);
               return (
                 <Link
                   key={room.id}
                   href={`/rooms/${room.id}`}
-                  className={`group relative min-h-[220px] overflow-hidden rounded-xl ${getRoomLayoutClass(index)}`}
+                  className="group flex flex-col bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden border border-gray-100"
                 >
-                  <img
-                    src={getRoomImageUrl(room.images?.[0] || '')}
-                    alt={room.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = getRoomLocalFallback(room.id);
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-                  <div className="absolute bottom-3 left-3 right-3 text-white md:bottom-4 md:left-4 md:right-4">
-                    <h3 className="line-clamp-2 text-2xl font-semibold leading-tight drop-shadow md:text-4xl lg:text-5xl">
-                      {room.name}
-                    </h3>
-
-                    <div className="mt-2 grid grid-cols-3 gap-2 rounded-md bg-black/35 px-3 py-2 text-xs md:mt-3 md:text-sm">
-                      <div className="flex items-center gap-1">
-                        <span aria-hidden="true">🛏️</span>
-                        <span>{meta.bed}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span aria-hidden="true">🗖</span>
-                        <span>{meta.area}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span aria-hidden="true">👁️</span>
-                        <span>{meta.view}</span>
-                      </div>
+                  <div className="relative aspect-[16/9] bg-gray-100 overflow-hidden">
+                    <img
+                      src={getRoomImageUrl(room.images?.[0] || '')}
+                      alt={room.name}
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = getRoomLocalFallback(room.id);
+                      }}
+                    />
+                    <div className="absolute top-2 right-2 bg-white/80 text-[#0f4a73] text-xs font-bold rounded px-2 py-1 shadow">
+                      {room.base_price?.toLocaleString('vi-VN')}₫/đêm
                     </div>
+                  </div>
+                  <div className="flex-1 flex flex-col p-4">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{room.name}</h3>
+                    <div className="flex flex-wrap gap-2 text-xs text-gray-500 mb-3">
+                      <span className="flex items-center gap-1"><span aria-hidden="true">🛏️</span>{meta.bed}</span>
+                      <span className="flex items-center gap-1"><span aria-hidden="true">🗖</span>{meta.area}</span>
+                      <span className="flex items-center gap-1"><span aria-hidden="true">👁️</span>{meta.view}</span>
+                    </div>
+                    <Link href={`/rooms/${room.id}`} className="mt-auto inline-block text-sm font-semibold text-white bg-[#0f4a73] rounded px-4 py-2 hover:bg-[#1766a6] transition">Xem chi tiết</Link>
                   </div>
                 </Link>
               );
             })}
           </div>
         ) : (
-          <div className="relative z-10 rounded-2xl bg-white p-12 text-center text-gray-500">
-            Khong co phong nao.
+          <div className="rounded-2xl bg-white p-12 text-center text-gray-500 shadow">
+            Không có phòng nào.
           </div>
         )}
+        <div className="flex justify-center mt-8">
+          <Link href="/search" className="inline-block text-sm font-bold text-[#0f4a73] border border-[#0f4a73] rounded-full px-6 py-2 hover:bg-[#0f4a73] hover:text-white transition">Xem tất cả phòng</Link>
+        </div>
       </section>
 
 
