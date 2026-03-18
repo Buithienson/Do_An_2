@@ -30,6 +30,24 @@ const HOTEL_LOCAL_POOL = [
   '/hotels/vinpearl_nhatrang.png'
 ];
 
+const ROOM_LOCAL_POOL = [
+  '/rooms/beach_villa_1769786630195.png',
+  '/rooms/deluxe_garden_view_1769786613988.png',
+  '/rooms/deluxe_ocean_view_1769786499296.png',
+  '/rooms/deluxe_river_view_1769786577151.png',
+  '/rooms/deluxe_room.png',
+  '/rooms/executive_suite_1769786549773.png',
+  '/rooms/family_room_1769786596501.png',
+  '/rooms/hanoi_colonial_suite.png',
+  '/rooms/hanoi_deluxe_garden.png',
+  '/rooms/hoian_riverside_suite.png',
+  '/rooms/ocean_suite_1769786517001.png',
+  '/rooms/standard_room.png',
+  '/rooms/suite_room.png',
+  '/rooms/superior_city_view_1769786533906.png',
+  '/rooms/superior_room.png'
+];
+
 // Fallback local images for hotels and rooms
 const HOTEL_FALLBACK = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80';
 const ROOM_FALLBACK = 'https://images.unsplash.com/photo-1596436889106-be35e843f97f?w=800&auto=format&fit=crop&q=80';
@@ -78,14 +96,30 @@ export function getHotelImageUrl(url: string | undefined | null): string {
  * Get a valid, displayable image URL for a room image.
  */
 export function getRoomImageUrl(url: string | null | undefined): string {
-  // The original getHotelImageUrl doesn't take a second fallback argument.
-  // This function should probably use ROOM_FALLBACK if the URL is invalid.
   if (!url || typeof url !== 'string') {
     return ROOM_FALLBACK;
   }
-  // Re-using getHotelImageUrl logic, but ensuring ROOM_FALLBACK is used if getHotelImageUrl returns its default.
-  const imageUrl = getHotelImageUrl(url);
-  return imageUrl === HOTEL_FALLBACK ? ROOM_FALLBACK : imageUrl;
+
+  if (url.startsWith('/')) {
+    return url;
+  }
+
+  if (url.includes('images.unsplash.com')) {
+    if (!url.includes('?')) {
+      return url + UNSPLASH_PARAMS;
+    }
+    return url;
+  }
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.pathname.startsWith('/rooms/')) {
+      return parsed.pathname;
+    }
+    return url;
+  } catch {
+    return ROOM_FALLBACK;
+  }
 }
 
 /**
@@ -121,4 +155,17 @@ export function getHotelLocalFallback(seed: number | string): string {
 
   const index = Math.abs(numericSeed) % HOTEL_LOCAL_POOL.length;
   return HOTEL_LOCAL_POOL[index];
+}
+
+/**
+ * Deterministic local room fallback by seed (room id/name hash).
+ */
+export function getRoomLocalFallback(seed: number | string): string {
+  const numericSeed =
+    typeof seed === 'number'
+      ? seed
+      : Array.from(String(seed)).reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+
+  const index = Math.abs(numericSeed) % ROOM_LOCAL_POOL.length;
+  return ROOM_LOCAL_POOL[index];
 }

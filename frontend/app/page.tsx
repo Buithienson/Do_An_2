@@ -25,6 +25,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rooms, setRooms] = useState<Room[]>([]); // Chứa danh sách phòng
   const [loading, setLoading] = useState(true);   // Trạng thái đang tải
+  const [currentDestinationSlide, setCurrentDestinationSlide] = useState(0);
 
   // 3. Hàm gọi API
   useEffect(() => {
@@ -93,48 +94,124 @@ export default function Home() {
 
       {/* --- PHẦN 2: TRENDING DESTINATIONS --- */}
       <section className="mx-auto max-w-7xl px-8 py-24">
-        <div className="flex items-end justify-between mb-12">
-            <div>
-                <span className="text-orange-500 font-bold tracking-wider uppercase text-sm mb-2 block">Khám phá</span>
-                <h2 className="text-4xl font-serif font-bold text-gray-900">Điểm Đến Hot Hè 2026</h2>
-            </div>
-            <div className="hidden md:flex gap-2">
-                 {/* Fake Navigation Buttons */}
-                 <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition">&larr;</button>
-                 <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition">&rarr;</button>
-            </div>
+        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <span className="mb-2 block text-sm font-bold uppercase tracking-wider text-orange-500">Khám phá</span>
+            <h2 className="text-4xl font-serif font-bold text-gray-900">Điểm Đến Hot Hè 2026</h2>
+            <p className="mt-3 text-gray-600">
+              Từ biển đảo, cao nguyên đến phố cổ, những điểm đến được tìm kiếm nhiều nhất mùa hè này đã sẵn sàng cho chuyến đi tiếp theo của bạn.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-orange-50 px-4 py-2 text-xs font-semibold text-orange-700">Mùa đẹp nhất: Tháng 5 - 8</span>
+            <span className="rounded-full bg-sky-50 px-4 py-2 text-xs font-semibold text-sky-700">Ưu đãi đến 25%</span>
+            <Link href="/search" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-gray-900 hover:text-gray-900">
+              Xem toàn bộ điểm đến
+            </Link>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[400px]">
-             {/* Card 1 - Big */}
-             <div className="md:col-span-2 relative rounded-3xl overflow-hidden group cursor-pointer shadow-lg">
-                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Yosemite" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
-                    <h3 className="text-2xl font-bold">Hạ Long Bay</h3>
-                    <p className="text-gray-300">Kỳ quan thiên nhiên</p>
-                </div>
-             </div>
+        <div className="relative">
+          {/* Carousel Container */}
+          <div className="overflow-hidden">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+              {/* Slide visibility controlled by currentDestinationSlide */}
+              <div className={`md:col-span-6 md:row-span-2 md:h-[460px] ${currentDestinationSlide === 0 ? 'block' : 'hidden'}`}>
+                <Link href="/search?location=Hạ%20Long" className="group relative overflow-hidden rounded-3xl shadow-lg h-full block">
+                  <img
+                    src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    alt="Ha Long"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  <div className="absolute left-6 top-6 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-900">Top 1 tuần này</div>
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <h3 className="text-3xl font-bold">Hạ Long Bay</h3>
+                    <p className="mt-1 text-gray-200">Du thuyền hoàng hôn, nghỉ dưỡng sang trọng và trải nghiệm vịnh di sản.</p>
+                    <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium">
+                      <span className="rounded-full bg-white/20 px-3 py-1">Vịnh biển</span>
+                      <span className="rounded-full bg-white/20 px-3 py-1">Gia đình</span>
+                      <span className="rounded-full bg-white/20 px-3 py-1">Couple</span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
 
-             {/* Card 2 */}
-             <div className="relative rounded-3xl overflow-hidden group cursor-pointer shadow-lg">
-                <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?q=80&w=2128&auto=format&fit=crop" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Sapa" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
+              <div className={`md:col-span-3 md:h-[220px] ${currentDestinationSlide === 0 ? 'block' : 'hidden'}`}>
+                <Link href="/search?location=Sapa" className="group relative overflow-hidden rounded-3xl shadow-lg h-full block">
+                  <img
+                    src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?q=80&w=2128&auto=format&fit=crop"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    alt="Sapa"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-5 left-5 text-white">
                     <h3 className="text-xl font-bold">Sapa</h3>
-                    <p className="text-gray-300">Thành phố mây</p>
-                </div>
-             </div>
+                    <p className="text-gray-300">Săn mây - ruộng bậc thang</p>
+                  </div>
+                </Link>
+              </div>
 
-             {/* Card 3 */}
-             <div className="relative rounded-3xl overflow-hidden group cursor-pointer shadow-lg">
-                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Phu Quoc" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
+              <div className={`md:col-span-3 md:h-[220px] ${currentDestinationSlide === 0 ? 'block' : 'hidden'}`}>
+                <Link href="/search?location=Phú%20Quốc" className="group relative overflow-hidden rounded-3xl shadow-lg h-full block">
+                  <img
+                    src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    alt="Phu Quoc"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-5 left-5 text-white">
                     <h3 className="text-xl font-bold">Phú Quốc</h3>
-                    <p className="text-gray-300">Đảo ngọc</p>
+                    <p className="text-gray-300">Đảo ngọc nghỉ dưỡng</p>
+                  </div>
+                </Link>
+              </div>
+
+              <div className={`md:col-span-3 md:h-[220px] ${currentDestinationSlide === 0 ? 'block' : 'hidden'}`}>
+                <Link href="/search?location=Đà%20Nẵng" className="group relative overflow-hidden rounded-3xl shadow-lg h-full block">
+                  <img
+                    src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2070&auto=format&fit=crop"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    alt="Da Nang"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-5 left-5 text-white">
+                    <h3 className="text-xl font-bold">Đà Nẵng</h3>
+                    <p className="text-gray-300">Biển xanh - thành phố trẻ</p>
+                  </div>
+                </Link>
+              </div>
+
+              <div className={`rounded-3xl border border-gray-100 bg-gradient-to-br from-orange-50 via-white to-sky-50 p-6 shadow-sm md:col-span-3 md:h-[220px] ${currentDestinationSlide === 0 ? 'block' : 'hidden'}`}>
+                <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">Gợi ý nhanh</p>
+                <h3 className="mt-2 text-xl font-bold text-gray-900">Chọn theo phong cách du lịch</h3>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                  <span className="rounded-full bg-white px-3 py-1 text-gray-700">Nghỉ dưỡng</span>
+                  <span className="rounded-full bg-white px-3 py-1 text-gray-700">Phiêu lưu</span>
+                  <span className="rounded-full bg-white px-3 py-1 text-gray-700">Ẩm thực</span>
+                  <span className="rounded-full bg-white px-3 py-1 text-gray-700">Check-in</span>
                 </div>
-             </div>
+                <p className="mt-4 text-sm text-gray-600">Mỗi điểm đến đều có danh sách khách sạn phù hợp cho cặp đôi, gia đình và nhóm bạn.</p>
+                <Link href="/search" className="mt-4 inline-block text-sm font-bold text-orange-600 hover:text-orange-700">Khám phá ngay →</Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Dot Navigation */}
+          <div className="flex justify-center gap-2 mt-8">
+            {[0].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentDestinationSlide(index)}
+                className={`h-2.5 w-2.5 rounded-full transition-all ${
+                  currentDestinationSlide === index 
+                    ? 'bg-gray-900 w-8' 
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
       

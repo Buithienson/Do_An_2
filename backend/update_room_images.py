@@ -1,9 +1,12 @@
-"""
-Script để cập nhật hình ảnh cho tất cả các phòng theo hạng phòng
-Chạy: python update_room_images.py
+"""Update all room images with deterministic unique URLs.
+
+Run:
+    python update_room_images.py
 """
 
+import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent))
@@ -12,50 +15,54 @@ from app.database import SessionLocal
 from app.models import Room
 
 
-def update_room_images():
-    """
-    Cập nhật hình ảnh cho tất cả các phòng dựa trên room_type
-    """
+def _slugify(text: str) -> str:
+    if not text:
+        return "room"
+    text = text.lower().strip()
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+    text = re.sub(r"-+", "-", text).strip("-")
+    return text or "room"
+
+
+def _build_unique_room_image_url(room: Room) -> str:
+    """Create a deterministic unique image URL for each room record."""
+    room_type_seed = _slugify(room.room_type or "standard")
+    room_name_seed = _slugify(room.name or f"room-{room.id}")
+    seed = f"{room.id}-{room.hotel_id}-{room_type_seed}-{room_name_seed}"
+    return f"https://picsum.photos/seed/{seed}/1200/800"
+
+
+def update_room_images() -> None:
     db = SessionLocal()
 
     try:
-        # Mapping room types to images
-        room_type_images = {
-            "Standard": ["/rooms/standard_room.png"],
-            "Superior": ["/rooms/superior_room.png"],
-            "Deluxe": ["/rooms/deluxe_room.png"],
-            "Suite": ["/rooms/suite_room.png"],
-        }
+        rooms = db.query(Room).order_by(Room.id.asc()).all()
 
-        print("[*] Updating room images...")
+        if not rooms:
+            print("[INFO] No rooms found.")
+            return
 
-        updated_count = 0
-        for room_type, images in room_type_images.items():
-            # Update all rooms of this type
-            result = (
-                db.query(Room)
-                .filter(Room.room_type == room_type)
-                .update({"images": images})
-            )
-            updated_count += result
-            print(f"  [+] Updated {result} {room_type} rooms")
+        print(f"[*] Updating images for {len(rooms)} rooms...")
+
+        for room in rooms:
+            new_image = _build_unique_room_image_url(room)
+            room.images = [new_image]
 
         db.commit()
 
-        print(f"\n[SUCCESS] Updated {updated_count} rooms with images!")
+        first_images = [r.images[0] for r in rooms if r.images and len(r.images) > 0]
+        duplicate_counts = Counter(first_images)
+        duplicates = [img for img, count in duplicate_counts.items() if count > 1]
 
-        # Verify
-        print("\n[*] Verification:")
-        for room_type in room_type_images.keys():
-            sample = db.query(Room).filter(Room.room_type == room_type).first()
-            if sample:
-                print(f"  {room_type}: {sample.images}")
+        print(f"[SUCCESS] Updated {len(rooms)} rooms with unique images.")
+        print(f"[SUCCESS] Unique image URLs: {len(set(first_images))}/{len(first_images)}")
+        if duplicates:
+            print(f"[WARN] Duplicate image URLs found: {len(duplicates)}")
+        else:
+            print("[SUCCESS] No duplicate room image URL found.")
 
     except Exception as e:
         print(f"[ERROR] Error updating room images: {e}")
-        import traceback
-
-        traceback.print_exc()
         db.rollback()
         raise
     finally:
