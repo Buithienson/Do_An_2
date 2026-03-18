@@ -137,14 +137,27 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 # Configure CORS
 # Keep explicit allow-list in production; avoid wildcard subdomains with credentials.
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000").rstrip("/")
+frontend_origin_candidates = [
+    os.environ.get("FRONTEND_URL"),
+    os.environ.get("PUBLIC_FRONTEND_URL"),
+    os.environ.get("NEXT_PUBLIC_FRONTEND_URL"),
+]
+
+# Safety fallback for current Render frontend if env var is missing.
+if _is_production_env():
+    frontend_origin_candidates.append("https://do-an-2-1-xt7p.onrender.com")
+else:
+    frontend_origin_candidates.append("http://localhost:3000")
+
+frontend_origins = [origin.rstrip("/") for origin in frontend_origin_candidates if origin]
+
 extra_origins_raw = os.environ.get("CORS_EXTRA_ORIGINS", "")
 extra_origins = [origin.strip().rstrip("/") for origin in extra_origins_raw.split(",") if origin.strip()]
 
 allowed_origins = sorted(
     set(
         [
-            FRONTEND_URL,
+            *frontend_origins,
             "http://localhost:3000",
             "http://localhost:3001",
             "http://127.0.0.1:3000",
