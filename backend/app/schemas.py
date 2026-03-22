@@ -58,6 +58,9 @@ class UserUpdate(BaseModel):
     preferences: Optional[Dict[str, Any]] = None
 
 class UserResponse(UserBase):
+    # Keep response flexible for legacy data (e.g., seeded virtual users)
+    # to avoid failing entire endpoints due to strict email validation.
+    email: str
     id: int
     role: str
     avatar: Optional[str] = None
