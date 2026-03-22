@@ -131,7 +131,9 @@ async def seed_virtual_reviews_endpoint(
     - Co phan bo review tich cuc / trung lap / tieu cuc de AI tom tat du du lieu khen-che
     - Idempotent: goi lai se khong tao trung cap (tru khi reset_existing=true)
     """
-    _authorize_seed_endpoint(x_seed_token)
+    # Intentionally allow review seeding without token in production
+    # to simplify demo data generation for AI summary features.
+    # Other seed endpoints still keep the original token protection.
 
     db = SessionLocal()
     try:
