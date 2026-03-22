@@ -4,8 +4,10 @@ Visit: https://your-backend-url.onrender.com/seed-db
 """
 
 import os
+import random
 from typing import Optional
-from fastapi import APIRouter, HTTPException, Header, status
+from datetime import datetime, timedelta
+from fastapi import APIRouter, HTTPException, Header, Query, status
 from app.database import SessionLocal, Base, engine
 from app.models import User, Hotel, Room, Booking, Review
 from app.utils import hash_password
@@ -13,6 +15,88 @@ import json
 from pathlib import Path
 
 router = APIRouter()
+
+
+VIRTUAL_REVIEWER_NAMES = [
+    "Nguyen Minh Anh",
+    "Tran Quoc Bao",
+    "Le Thu Ha",
+    "Pham Gia Huy",
+    "Doan Ngoc Lan",
+    "Vu Tien Dat",
+    "Bui Thanh Nhan",
+    "Hoang Kim Oanh",
+    "Dang Phuong Linh",
+    "Duong Hoai Nam",
+    "Ngo Thu Trang",
+    "Ly Quang Vinh",
+    "Trinh Bao Chau",
+    "Nguyen Huu Phuc",
+    "Phan Nhat Minh",
+    "Cao Thao Vy",
+    "Vo Duc Manh",
+    "Mai My Duyen",
+    "Ta Thanh Tung",
+    "Huynh An Nhi",
+    "Nguyen Bao Khang",
+    "Tran Thu Quynh",
+    "Le Trung Kien",
+    "Pham Anh Thu",
+    "Dang Quoc Viet",
+    "Do Thi Yen",
+    "Vu Quynh Hoa",
+    "Bui Minh Tri",
+    "Hoang Thanh Tam",
+    "Ngo Xuan Bac",
+]
+
+POSITIVE_REVIEW_SNIPPETS = [
+    "Nhan vien than thien, ho tro rat nhiet tinh.",
+    "Phong sach se, tien nghi day du va hien dai.",
+    "Vi tri tot, di chuyen ra trung tam rat tien.",
+    "Bua sang ngon, thuc don da dang.",
+    "View dep, khong gian yen tinh de nghi duong.",
+    "Gia hop ly so voi chat luong dich vu.",
+]
+
+MIXED_REVIEW_SNIPPETS = [
+    "Phong kha on, vi tri tien loi nhung cach am chua tot.",
+    "Nhan vien lich su, tuy nhien wifi doi luc yeu.",
+    "Do an ngon nhung phong hoi nho vao gio cao diem.",
+    "Tong the hai long, co mot vai thiet bi hoi cu.",
+]
+
+NEGATIVE_REVIEW_SNIPPETS = [
+    "Phong hoi cu, co mui nhe va can cai thien ve sinh.",
+    "Wifi yeu va khong on dinh vao buoi toi.",
+    "Cach am kem, de bi on vao ban dem.",
+    "Gia hoi cao so voi trai nghiem nhan duoc.",
+]
+
+
+def _build_virtual_comment(bucket: str, hotel_name: str, city: str) -> str:
+    if bucket == "positive":
+        pick = random.sample(POSITIVE_REVIEW_SNIPPETS, k=2)
+    elif bucket == "mixed":
+        pick = random.sample(MIXED_REVIEW_SNIPPETS, k=1) + random.sample(
+            POSITIVE_REVIEW_SNIPPETS, k=1
+        )
+    else:
+        pick = random.sample(NEGATIVE_REVIEW_SNIPPETS, k=2)
+
+    return f"Khach san {hotel_name} tai {city}. " + " ".join(pick)
+
+
+def _build_rating_breakdown(overall: float) -> dict:
+    def _clamp(score: float) -> float:
+        return max(1.0, min(10.0, round(score, 1)))
+
+    return {
+        "cleanliness": _clamp(overall + random.uniform(-1.0, 0.8)),
+        "location": _clamp(overall + random.uniform(-0.8, 1.0)),
+        "service": _clamp(overall + random.uniform(-0.8, 1.0)),
+        "value": _clamp(overall + random.uniform(-1.2, 0.8)),
+    }
 
 
 def _is_production_env() -> bool:
@@ -31,6 +115,140 @@ def _authorize_seed_endpoint(token: Optional[str]) -> None:
 
     if expected and token != expected:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+
+
+@router.api_route("/seed/reviews", methods=["GET", "POST"])
+async def seed_virtual_reviews_endpoint(
+    reviewers_per_hotel: int = Query(30, ge=1, le=100),
+    reset_existing: bool = Query(False),
+    x_seed_token: Optional[str] = Header(default=None, alias="X-Seed-Token"),
+):
+    """
+    Seed danh gia ao cho tat ca khach san.
+
+    - Tao toi da `reviewers_per_hotel` user ao (mac dinh: 30)
+    - Moi user ao se review moi khach san toi da 1 lan
+    - Co phan bo review tich cuc / trung lap / tieu cuc de AI tom tat du du lieu khen-che
+    - Idempotent: goi lai se khong tao trung cap (tru khi reset_existing=true)
+    """
+    _authorize_seed_endpoint(x_seed_token)
+
+    db = SessionLocal()
+    try:
+        hotels = db.query(Hotel).all()
+        if not hotels:
+            raise HTTPException(status_code=404, detail="No hotels found")
+
+        reviewers_per_hotel = min(reviewers_per_hotel, len(VIRTUAL_REVIEWER_NAMES))
+
+        emails = [
+            f"virtual.reviewer.{idx + 1:03d}@aibooking.local"
+            for idx in range(reviewers_per_hotel)
+        ]
+
+        existing_virtual_users = (
+            db.query(User).filter(User.email.in_(emails)).all()
+        )
+        user_by_email = {u.email: u for u in existing_virtual_users}
+
+        created_users = 0
+        default_password_hash = hash_password("virtual123")
+
+        for idx, email in enumerate(emails):
+            if email in user_by_email:
+                continue
+
+            user = User(
+                email=email,
+                full_name=VIRTUAL_REVIEWER_NAMES[idx],
+                phone=None,
+                hashed_password=default_password_hash,
+                role="user",
+                email_verified=True,
+            )
+            db.add(user)
+            user_by_email[email] = user
+            created_users += 1
+
+        if created_users > 0:
+            db.flush()
+
+        virtual_users = [user_by_email[email] for email in emails]
+        virtual_user_ids = [u.id for u in virtual_users]
+
+        deleted_reviews = 0
+        if reset_existing and virtual_user_ids:
+            deleted_reviews = (
+                db.query(Review)
+                .filter(Review.user_id.in_(virtual_user_ids))
+                .delete(synchronize_session=False)
+            )
+            db.flush()
+
+        existing_pairs = set()
+        if virtual_user_ids:
+            rows = (
+                db.query(Review.hotel_id, Review.user_id)
+                .filter(Review.user_id.in_(virtual_user_ids))
+                .all()
+            )
+            existing_pairs = {(hotel_id, user_id) for hotel_id, user_id in rows}
+
+        created_reviews = 0
+        now = datetime.utcnow()
+
+        for hotel in hotels:
+            for idx, user in enumerate(virtual_users):
+                pair = (hotel.id, user.id)
+                if pair in existing_pairs:
+                    continue
+
+                bucket_idx = idx % 10
+                if bucket_idx <= 1:
+                    bucket = "negative"
+                    overall = round(random.uniform(3.5, 5.9), 1)
+                elif bucket_idx <= 3:
+                    bucket = "mixed"
+                    overall = round(random.uniform(6.0, 7.7), 1)
+                else:
+                    bucket = "positive"
+                    overall = round(random.uniform(8.0, 9.8), 1)
+
+                review = Review(
+                    user_id=user.id,
+                    hotel_id=hotel.id,
+                    booking_id=None,
+                    overall_rating=overall,
+                    ratings=_build_rating_breakdown(overall),
+                    comment=_build_virtual_comment(bucket, hotel.name, hotel.city),
+                    created_at=now - timedelta(days=random.randint(1, 240)),
+                )
+                db.add(review)
+                created_reviews += 1
+
+        db.commit()
+
+        total_reviews = db.query(Review).count()
+        return {
+            "status": "success",
+            "message": "Virtual reviews seeded successfully",
+            "reviewers_per_hotel": reviewers_per_hotel,
+            "hotels": len(hotels),
+            "virtual_users_created": created_users,
+            "virtual_users_total_used": len(virtual_users),
+            "reviews_created": created_reviews,
+            "reviews_deleted": deleted_reviews,
+            "total_reviews_in_db": total_reviews,
+            "note": "Call with reset_existing=true to regenerate all virtual reviews.",
+        }
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
 
 
 @router.api_route("/fix-images", methods=["GET", "POST"])
@@ -420,166 +638,5 @@ async def seed_database_endpoint(
 
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Seeding failed: {str(e)}")
-    finally:
-        db.close()
-
-
-# ── Seed Reviews ──────────────────────────────────────────────────────────────
-
-SEED_REVIEWS = [
-    # --- Tích cực ---
-    (9.0, "Phòng sạch sẽ, nhân viên rất thân thiện và chu đáo. Vị trí trung tâm rất tiện lợi."),
-    (9.5, "Khách sạn tuyệt vời! View đẹp, bữa sáng ngon. Sẽ quay lại lần sau chắc chắn!"),
-    (8.5, "Nhân viên nhiệt tình, phòng rộng và sạch sẽ. Tiện nghi đầy đủ, rất hài lòng với chuyến đi."),
-    (9.5, "Xuất sắc! Phục vụ chuyên nghiệp, phòng sang trọng và hiện đại. Đáng đồng tiền bỏ ra."),
-    (8.0, "Vị trí gần biển, ăn sáng ngon. Tôi khá hài lòng với chuyến đi lần này, sẽ giới thiệu cho bạn bè."),
-    (8.5, "Phòng ấm cúng, view đẹp nhìn ra phố. Nhân viên thân thiện, biết nói tiếng Anh nên rất tiện."),
-    (8.0, "Thoải mái, sạch sẽ, giá hợp lý. Bữa sáng đa dạng và ngon hơn tôi mong đợi."),
-    (9.0, "Khách sạn sang trọng, dịch vụ xuất sắc. Hồ bơi đẹp, nhà hàng ngon, view tuyệt vời."),
-    (7.5, "Phòng ổn, nhân viên thân thiện. Vị trí tốt gần trung tâm mua sắm và ăn uống."),
-    (9.0, "Rất thích! Phòng sạch, view đẹp, tiện nghi tốt. Nhân viên chu đáo và luôn sẵn sàng giúp đỡ."),
-    (9.5, "Phòng rộng, sạch, view biển cực đẹp. Dịch vụ tuyệt vời, nhân viên thân thiện, tôi rất hài lòng."),
-    (8.0, "Khách sạn hiện đại, thoải mái. Bữa sáng phong phú đủ món. Vị trí tiện lợi đi lại dễ dàng."),
-    (8.5, "Phòng sạch sẽ, có đầy đủ tiện nghi. Nhân viên nhiệt tình giúp đỡ mọi khi cần thiết."),
-    (10.0, "Tuyệt vời nhất từ trước tới nay! Phòng Suite rộng, view biển đẹp mê hồn. Bữa sáng ngon tuyệt vời."),
-    (8.0, "Yên tĩnh, thoải mái. Vị trí gần biển rất thuận tiện. Nhân viên chu đáo và thân thiện."),
-    (8.5, "Giá cả hợp lý so với chất lượng. Phòng sạch, tiện nghi đầy đủ. Sẽ quay lại lần sau."),
-    (9.0, "Dịch vụ 5 sao đúng nghĩa! Nhân viên nhớ tên khách, luôn chào hỏi thân thiện."),
-    (7.5, "Phòng tiêu chuẩn nhưng sạch và thoải mái. Bữa sáng phong phú. Giá hợp lý."),
-    (9.0, "Hồ bơi rất đẹp, không khí trong lành. Bia đặc sản tại bar của khách sạn rất ngon."),
-    (8.0, "Trải nghiệm thú vị! Kiến trúc khách sạn đẹp, phòng sạch, nhân viên nhiệt tình."),
-    # --- Trung hòa / Phàn nàn nhỏ ---
-    (6.5, "Phòng sạch nhưng hơi nhỏ. Wifi thỉnh thoảng chập chờn. Nhân viên nhìn chung ổn."),
-    (6.0, "Vị trí tốt nhưng phòng hơi cũ so với ảnh quảng cáo. Tiếng ồn từ ngoài đường vào hơi lớn."),
-    (5.5, "Không hài lòng lắm. Wifi yếu, phòng nhỏ hơn mô tả. Cần cải thiện thêm nhiều."),
-    (7.0, "Khách sạn ổn, nhưng hơi đắt so với chất lượng thực tế. Ăn sáng khá bình thường không có gì đặc biệt."),
-    (6.5, "Nhân viên thân thiện nhưng phòng chưa thực sự sạch sẽ lắm. Sẽ cân nhắc lại lần sau."),
-    (6.0, "Tiện nghi cơ bản, phòng hơi chật. Cách âm kém, ngủ không được vì tiếng ồn từ hành lang."),
-    (5.0, "Thất vọng với dịch vụ. Wifi yếu, điều hòa không lạnh. Giá cao không xứng với chất lượng."),
-    (7.0, "Vị trí trung tâm rất tốt, nhưng phòng hơi cũ kỹ. Bữa sáng khá ổn, không phàn nàn."),
-    (6.5, "Nhân viên nhiệt tình nhưng phòng nhỏ hơn so với ảnh chụp trên website. Tổng thể tạm ổn."),
-    (7.5, "Hài lòng với dịch vụ chăm sóc khách hàng. Vị trí tốt nhưng bãi đỗ xe hơi khó tìm."),
-    (6.0, "Phòng cũ, điều hòa hoạt động yếu. Nhân viên check-in khá chậm. Cần nâng cấp nhiều hơn."),
-    (7.0, "Ổn cho một chuyến đi công tác ngắn ngày. Wifi ổn định, giường thoải mái, vị trí thuận tiện."),
-    (6.5, "Bữa sáng ít món hơn mong đợi. Phòng sạch nhưng trang trí hơi đơn điệu so với giá tiền."),
-    (7.0, "Nhân viên lễ tân thân thiện nhưng tầng hầm xe hơi bẩn. Phòng tắm cần cải thiện vệ sinh."),
-    (5.5, "Phòng có mùi ẩm mốc nhẹ. Wifi chập chờn. Tuy nhiên nhân viên phục vụ rất cố gắng."),
-    (6.0, "Giá hơi cao so với chất lượng thực tế. Phòng view đẹp nhưng cách âm kém, ồn ào ban đêm."),
-    (7.5, "Trải nghiệm tương đối tốt. Hồ bơi sạch, nhân viên thân thiện. Nhưng bữa sáng cần phong phú hơn."),
-    (8.0, "Phòng view biển đẹp, nhân viên tốt bụng. Chỉ tiếc bữa sáng cần đa dạng món hơn một chút."),
-    (6.5, "Mọi thứ tạm ổn ngoại trừ điều hòa kêu ồn cả đêm. Đã báo nhưng khắc phục hơi chậm."),
-    (7.5, "Giá trị tốt cho số tiền bỏ ra. Phòng sạch, vị trí thuận tiện. Nhân viên nhiệt tình giúp đỡ."),
-]
-
-FAKE_NAMES_40 = [
-    "Minh Tuấn", "Thu Hương", "Quốc Huy", "Lan Anh", "Đức Khải",
-    "Phương Linh", "Văn Nam", "Bảo Châu", "Thế Anh", "Mỹ Linh",
-    "Hữu Nghĩa", "Thanh Tâm", "Trọng Khoa", "Diễm My", "Công Danh",
-    "Ngọc Hân", "Việt Cường", "Bích Ngọc", "Đăng Khoa", "Hồng Nhung",
-    "Quang Minh", "Thùy Dung", "Hoàng Long", "Kiều Oanh", "Dương Hùng",
-    "Thảo Nguyên", "Gia Bảo", "Yến Nhi", "Thanh Bình", "Hải Yến",
-    "Nhật Quang", "Cẩm Nhung", "Đình Dũng", "Mai Phương", "Tuấn Kiệt",
-    "Lệ Hằng", "Minh Khoa", "Trúc Ly", "Văn Hào", "Ngọc Trinh",
-]
-
-import random
-
-
-@router.api_route("/seed/reviews", methods=["GET", "POST"])
-async def seed_reviews_endpoint(
-    x_seed_token: Optional[str] = Header(default=None, alias="X-Seed-Token")
-):
-    """
-    Seed fake reviews cho tất cả khách sạn trong DB.
-    Tạo 40 fake users và 20 reviews ngẫu nhiên mỗi khách sạn.
-    Gọi lại sẽ bổ sung thêm cho các KS chưa đủ 20 reviews.
-    """
-    _authorize_seed_endpoint(x_seed_token)
-
-    db = SessionLocal()
-    try:
-        hotels = db.query(Hotel).all()
-        if not hotels:
-            return {"status": "skipped", "message": "Không có khách sạn nào. Hãy seed hotels trước."}
-
-        # Tạo 40 fake users
-        fake_users = []
-        for name in FAKE_NAMES_40:
-            email = f"{name.lower().replace(' ', '.').replace('ắ','a').replace('ế','e').replace('ị','i').replace('ổ','o').replace('ụ','u').replace('ư','u').replace('ơ','o').replace('đ','d')}_{len(name)}@gmail.com"
-            # Dùng một email đơn giản không có dấu
-            safe_name = ''.join(c for c in name if c.isascii() and (c.isalpha() or c == ' ')).strip()
-            if not safe_name:
-                safe_name = f"user{len(fake_users)}"
-            email = f"{safe_name.lower().replace(' ', '.')}@gmail.com"
-            fu = db.query(User).filter(User.email == email).first()
-            if not fu:
-                fu = User(
-                    email=email,
-                    full_name=name,
-                    hashed_password=hash_password("fakepass123"),
-                    role="user",
-                    email_verified=True,
-                )
-                db.add(fu)
-                db.flush()
-            fake_users.append(fu)
-
-        reviews_created = 0
-        reviews_skipped = 0
-
-        for hotel in hotels:
-            existing_count = db.query(Review).filter(Review.hotel_id == hotel.id).count()
-            target = 20  # 20 reviews mỗi khách sạn
-
-            if existing_count >= target:
-                reviews_skipped += existing_count
-                continue
-
-            # Shuffle để mỗi hotel có bộ reviewer khác nhau
-            shuffled_users = fake_users.copy()
-            random.shuffle(shuffled_users)
-            shuffled_reviews = SEED_REVIEWS.copy()
-            random.shuffle(shuffled_reviews)
-
-            needed = target - existing_count
-            added = 0
-            for i, (rating, comment) in enumerate(shuffled_reviews):
-                if added >= needed:
-                    break
-                reviewer = shuffled_users[i % len(shuffled_users)]
-                dup = db.query(Review).filter(
-                    Review.hotel_id == hotel.id,
-                    Review.user_id == reviewer.id,
-                ).first()
-                if dup:
-                    continue
-                db_review = Review(
-                    user_id=reviewer.id,
-                    hotel_id=hotel.id,
-                    overall_rating=rating,
-                    comment=comment,
-                    ratings={
-                        "cleanliness": min(10.0, round(rating + random.uniform(-0.5, 0.5), 1)),
-                        "service": min(10.0, round(rating + random.uniform(-0.5, 0.5), 1)),
-                        "location": min(10.0, round(rating + random.uniform(-0.3, 0.8), 1)),
-                    },
-                )
-                db.add(db_review)
-                reviews_created += 1
-                added += 1
-
-        db.commit()
-        return {
-            "status": "success",
-            "reviews_created": reviews_created,
-            "reviews_skipped": reviews_skipped,
-            "fake_users_ready": len(fake_users),
-            "hotels_processed": len(hotels),
-        }
-    except Exception as e:
-        db.rollback()
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Seed reviews failed: {str(e)}")
     finally:
         db.close()
