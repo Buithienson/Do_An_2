@@ -221,12 +221,20 @@ function HotelContent() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
 
+  // Auth – must use state so it reads localStorage AFTER hydration (not SSR)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   // Review form
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState('');
   const [reviewSuccess, setReviewSuccess] = useState('');
+
+  // Check login state after mount (localStorage is only available client-side)
+  useEffect(() => {
+    setIsLoggedIn(Boolean(getAuthToken()));
+  }, []);
 
   const buildRoomHref = (roomId: number) => {
     const p = new URLSearchParams();
@@ -272,6 +280,20 @@ function HotelContent() {
         }
 
         await fetchReviews();
+
+        // Auto-seed reviews nếu chưa có dữ liệu
+        // (gọi silent – không block UI, không cần auth)
+        try {
+          const countRes = await fetch(`${API_URL}/api/hotels/${hotelId}/reviews?limit=1`);
+          if (countRes.ok) {
+            const countData = await countRes.json();
+            if (Array.isArray(countData) && countData.length === 0) {
+              // Trigger seed silently, then reload reviews
+              await fetch(`${API_URL}/api/seed/reviews`, { method: 'POST' });
+              await fetchReviews();
+            }
+          }
+        } catch { /* seed failed silently */ }
 
         // Check wishlist status
         const token = getAuthToken();
@@ -383,7 +405,6 @@ function HotelContent() {
     );
   }
 
-  const isLoggedIn = Boolean(getAuthToken());
 
   return (
     <div className="mx-auto max-w-7xl px-8 py-12">

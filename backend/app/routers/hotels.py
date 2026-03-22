@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_
 from typing import List, Optional
 from datetime import datetime
@@ -248,6 +248,7 @@ def get_hotel_reviews(
     
     reviews = db.query(models.Review)\
         .filter(models.Review.hotel_id == hotel_id)\
+        .options(joinedload(models.Review.user))\
         .order_by(models.Review.created_at.desc())\
         .offset(skip)\
         .limit(limit)\
