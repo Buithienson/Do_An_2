@@ -201,9 +201,14 @@ export default function BookingPaymentPage() {
     }
 
     // Kiểm tra token trước khi gửi request
-    const token = getAccessToken();
+    // Nếu mất access token nhưng còn refresh token, thử làm mới phiên trước khi bắt login lại.
+    let token = getAccessToken();
     if (!token) {
-      alert('Vui lòng đăng nhập để đặt phòng');
+      const refreshed = await refreshToken();
+      token = refreshed;
+    }
+    if (!token) {
+      alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để đặt phòng.');
       window.location.href = '/login';
       return;
     }

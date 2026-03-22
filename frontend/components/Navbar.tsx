@@ -19,6 +19,7 @@ export default function Navbar({ variant = 'transparent' }: { variant?: 'transpa
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     setUser(null);
