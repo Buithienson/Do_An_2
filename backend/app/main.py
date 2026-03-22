@@ -10,6 +10,7 @@ from app.routers import (
     ai,
     seed_endpoint,
     admin as admin_router,
+    wishlists,
 )
 from app.cache import search_cache, availability_cache
 import os
@@ -54,7 +55,7 @@ def _ensure_default_admin():
         )
 
         if existing:
-            # Đảm bảo luôn là admin dù bị đổi trước đó
+           
             if existing.role != "admin":
                 existing.role = "admin"
                 db.commit()
@@ -88,10 +89,10 @@ def _ensure_default_admin():
 
 @asynccontextmanager
 async def lifespan(app):
-    # Startup: auto-create tables so backend doesn't crash on fresh DB
+
     Base.metadata.create_all(bind=engine)
 
-    # Auto-create default admin account if none exists
+
     _ensure_default_admin()
 
     yield
@@ -116,7 +117,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     Log validation errors (422) for debugging
     """
     logging.error(f"Validation error for {request.url}: {exc.errors()}")
-    # Return JSON with details - CORS middleware will catch this response
+    
     return JSONResponse(
         status_code=422,
         content={"detail": exc.errors(), "body": exc.body},
@@ -135,15 +136,14 @@ async def generic_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Configure CORS
-# Keep explicit allow-list in production; avoid wildcard subdomains with credentials.
+
 frontend_origin_candidates = [
     os.environ.get("FRONTEND_URL"),
     os.environ.get("PUBLIC_FRONTEND_URL"),
     os.environ.get("NEXT_PUBLIC_FRONTEND_URL"),
 ]
 
-# Safety fallback for current Render frontend if env var is missing.
+
 if _is_production_env():
     frontend_origin_candidates.append("https://do-an-2-1-xt7p.onrender.com")
 else:
@@ -167,7 +167,7 @@ allowed_origins = sorted(
     )
 )
 
-# Optional override for specific trusted regex (keep empty by default).
+
 allow_origin_regex = os.environ.get("CORS_ALLOW_ORIGIN_REGEX") or None
 
 
@@ -178,18 +178,18 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],  # Expose all headers to the frontend
+    expose_headers=["*"],  
 )
 
-# Include routers
 app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(hotels.router, prefix="/api")
 app.include_router(rooms.router, prefix="/api")
 app.include_router(bookings.router, prefix="/api")
 app.include_router(ai.router, prefix="/api")
-app.include_router(seed_endpoint.router, prefix="/api")  # Database seeding endpoint
-app.include_router(admin_router.router, prefix="/api")  # Admin management endpoints
+app.include_router(seed_endpoint.router, prefix="/api")  
+app.include_router(admin_router.router, prefix="/api")  
+app.include_router(wishlists.router, prefix="/api")  
 
 
 @app.get("/")

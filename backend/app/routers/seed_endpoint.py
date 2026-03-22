@@ -7,7 +7,7 @@ import os
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Header, status
 from app.database import SessionLocal, Base, engine
-from app.models import User, Hotel, Room, Booking
+from app.models import User, Hotel, Room, Booking, Review
 from app.utils import hash_password
 import json
 from pathlib import Path
@@ -420,5 +420,138 @@ async def seed_database_endpoint(
 
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Seeding failed: {str(e)}")
+    finally:
+        db.close()
+
+
+# ── Seed Reviews ──────────────────────────────────────────────────────────────
+
+SEED_REVIEWS = [
+    # --- Tích cực ---
+    (8.5, "Phòng sạch sẽ, nhân viên rất thân thiện và chu đáo. Vị trí trung tâm rất tiện lợi."),
+    (9.0, "Khách sạn tuyệt vời! View đẹp, bữa sáng ngon. Sẽ quay lại lần sau."),
+    (8.0, "Nhân viên nhiệt tình, phòng rộng và sạch. Tiện nghi đầy đủ, rất hài lòng."),
+    (9.5, "Xuất sắc! Phục vụ chuyên nghiệp, phòng sang trọng và hiện đại. Đáng đồng tiền."),
+    (7.5, "Vị trí gần biển, ăn sáng ngon. Tôi khá hài lòng với chuyến đi này."),
+    (8.5, "Phòng ấm cúng, view đẹp nhìn ra phố. Nhân viên thân thiện và biết nói tiếng Anh."),
+    (8.0, "Thoải mái, sạch sẽ, giá hợp lý. Bữa sáng đa dạng và ngon."),
+    (9.0, "Khách sạn sang trọng, dịch vụ xuất sắc. Hồ bơi đẹp, nhà hàng ngon."),
+    (7.0, "Phòng ổn, nhân viên thân thiện. Vị trí tốt gần trung tâm mua sắm."),
+    (8.5, "Rất thích! Phòng sạch, view đẹp, tiện nghi tốt. Nhân viên chu đáo hết mức."),
+    (9.0, "Phòng rộng, sạch, view biển cực đẹp. Dịch vụ tuyệt vời, nhân viên thân thiện."),
+    (7.5, "Khách sạn hiện đại, thoải mái. Bữa sáng phong phú. Vị trí tiện lợi."),
+    (8.0, "Phòng sạch sẽ, có đầy đủ tiện nghi. Nhân viên nhiệt tình giúp đỡ."),
+    (9.5, "Tuyệt vời! Phòng Suite rộng, view đẹp. Bữa sáng ngon nhất từ trước đến nay."),
+    (8.0, "Yên tĩnh, thoải mái. Vị trí gần biển. Nhân viên rất chu đáo và thân thiện."),
+    # --- Trung hòa / Phàn nàn nhỏ ---
+    (6.5, "Phòng sạch nhưng hơi nhỏ. Wifi thỉnh thoảng chập chờn. Nhân viên ổn."),
+    (6.0, "Vị trí tốt nhưng phòng hơi cũ. Tiếng ồn từ ngoài đường vào hơi lớn."),
+    (5.5, "Không hài lòng lắm. Wifi yếu, phòng nhỏ. Cần cải thiện thêm."),
+    (7.0, "Khách sạn ổn, nhưng hơi đắt so với chất lượng. Ăn sáng bình thường."),
+    (6.5, "Nhân viên thân thiện nhưng phòng chưa thực sự sạch sẽ. Sẽ cân nhắc lần sau."),
+    (6.0, "Tiện nghi cơ bản, phòng hơi chật. Cách âm kém, ngủ không được vì tiếng ồn."),
+    (5.0, "Thất vọng với dịch vụ. Wifi yếu, điều hòa không lạnh. Giá cao không xứng."),
+    (7.0, "Vị trí trung tâm, nhưng phòng hơi cũ kỹ. Bữa sáng khá ổn."),
+    (6.5, "Nhân viên nhiệt tình nhưng phòng nhỏ hơn ảnh. Tổng thể ổn."),
+    (7.5, "Hài lòng với dịch vụ. Vị trí tốt, nhưng bãi đỗ xe hơi khó."),
+]
+
+import random
+
+
+@router.api_route("/seed/reviews", methods=["GET", "POST"])
+async def seed_reviews_endpoint(
+    x_seed_token: Optional[str] = Header(default=None, alias="X-Seed-Token")
+):
+    """
+    Seed fake reviews cho tất cả khách sạn trong DB.
+    Idempotent: bỏ qua nếu đã có review từ seed user.
+    """
+    _authorize_seed_endpoint(x_seed_token)
+
+    db = SessionLocal()
+    try:
+        # Tạo / tìm seed user
+        seed_email = "seed.reviewer@aibooking.com"
+        seed_user = db.query(User).filter(User.email == seed_email).first()
+        if not seed_user:
+            seed_user = User(
+                email=seed_email,
+                full_name="Khách Du Lịch",
+                hashed_password=hash_password("seedpass123"),
+                role="user",
+                email_verified=True,
+            )
+            db.add(seed_user)
+            db.flush()
+
+        hotels = db.query(Hotel).all()
+        if not hotels:
+            return {"status": "skipped", "message": "Không có khách sạn nào. Hãy seed hotels trước."}
+
+        # Tạo thêm các fake user để reviews trông đa dạng hơn
+        fake_users = []
+        fake_names = [
+            "Minh Tuấn", "Thu Hương", "Quốc Huy", "Lan Anh", "Đức Khải",
+            "Phương Linh", "Văn Nam", "Bảo Châu", "Thế Anh", "Mỹ Linh",
+        ]
+        for name in fake_names:
+            email = f"{name.lower().replace(' ', '.')}@gmail.com"
+            fu = db.query(User).filter(User.email == email).first()
+            if not fu:
+                fu = User(
+                    email=email,
+                    full_name=name,
+                    hashed_password=hash_password("fakepass123"),
+                    role="user",
+                    email_verified=True,
+                )
+                db.add(fu)
+                db.flush()
+            fake_users.append(fu)
+
+        reviews_created = 0
+        reviews_skipped = 0
+
+        for hotel in hotels:
+            # Kiểm tra đã có review chưa (idempotent)
+            existing_count = db.query(Review).filter(Review.hotel_id == hotel.id).count()
+            if existing_count >= 10:
+                reviews_skipped += existing_count
+                continue
+
+            # Seed 15 reviews đa dạng từ nhiều user khác nhau
+            selected = random.sample(SEED_REVIEWS, min(15, len(SEED_REVIEWS)))
+            for i, (rating, comment) in enumerate(selected):
+                reviewer = fake_users[i % len(fake_users)]
+                # Tránh duplicate (cùng user + cùng hotel)
+                dup = db.query(Review).filter(
+                    Review.hotel_id == hotel.id,
+                    Review.user_id == reviewer.id,
+                ).first()
+                if dup:
+                    continue
+                db_review = Review(
+                    user_id=reviewer.id,
+                    hotel_id=hotel.id,
+                    overall_rating=rating,
+                    comment=comment,
+                    ratings={"cleanliness": rating - 0.5, "service": rating, "location": rating + 0.3},
+                )
+                db.add(db_review)
+                reviews_created += 1
+
+        db.commit()
+        return {
+            "status": "success",
+            "reviews_created": reviews_created,
+            "reviews_skipped": reviews_skipped,
+            "hotels_processed": len(hotels),
+        }
+    except Exception as e:
+        db.rollback()
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Seed reviews failed: {str(e)}")
     finally:
         db.close()

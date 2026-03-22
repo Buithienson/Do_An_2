@@ -18,9 +18,6 @@ from app.schemas import UserResponse
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
 
-# ─────────────────────────────────────────────
-# Schemas nội bộ cho admin
-# ─────────────────────────────────────────────
 
 from pydantic import BaseModel
 
@@ -68,9 +65,7 @@ class AdminBookingResponse(BaseModel):
         from_attributes = True
 
 
-# ─────────────────────────────────────────────
 # Dashboard
-# ─────────────────────────────────────────────
 
 
 @router.get("/dashboard", response_model=DashboardStats)
@@ -92,7 +87,7 @@ def get_dashboard_stats(
         or 0.0
     )
 
-    # Booking chờ thanh toán = payment_status pending và chưa hủy
+    # Booking chờ thanh toán 
     pending_bookings = (
         db.query(func.count(models.Booking.id))
         .filter(
@@ -102,7 +97,7 @@ def get_dashboard_stats(
         .scalar()
         or 0
     )
-    # Booking đã xác nhận thanh toán = payment_status paid
+    # Booking đã xác nhận thanh toán 
     confirmed_bookings = (
         db.query(func.count(models.Booking.id))
         .filter(models.Booking.payment_status == "paid")
@@ -120,9 +115,7 @@ def get_dashboard_stats(
     )
 
 
-# ─────────────────────────────────────────────
-# Quản lý User
-# ─────────────────────────────────────────────
+
 
 
 @router.get("/users", response_model=List[AdminUserResponse])
@@ -171,9 +164,6 @@ def delete_user(
     db.commit()
 
 
-# ─────────────────────────────────────────────
-# Quản lý Booking
-# ─────────────────────────────────────────────
 
 
 @router.get("/bookings", response_model=List[AdminBookingResponse])
@@ -347,9 +337,7 @@ def confirm_payment(
     }
 
 
-# ─────────────────────────────────────────────
-# Cập nhật role user
-# ─────────────────────────────────────────────
+
 
 
 @router.patch("/users/{user_id}/role")
@@ -386,9 +374,6 @@ def update_user_role(
     }
 
 
-# ─────────────────────────────────────────────
-# Quản lý Khách sạn & Phòng
-# ─────────────────────────────────────────────
 
 
 @router.get("/hotels")
@@ -488,9 +473,6 @@ def list_rooms_admin(
     return result
 
 
-# ─────────────────────────────────────────────
-# Báo cáo & Thống kê
-# ─────────────────────────────────────────────
 
 
 @router.get("/reports/revenue")

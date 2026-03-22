@@ -35,8 +35,7 @@ def suggest_booking(
     AI gợi ý phòng dựa trên tiêu chí.
     Lưu log AI vào DB.
     """
-    # 1. Simulate AI Logic (Simple Filter)
-    # Tìm khách sạn ở location
+   
     hotels_query = db.query(models.Hotel).filter(
         models.Hotel.city.ilike(f"%{request.location}%")
     )
@@ -82,7 +81,7 @@ def suggest_booking(
     return {"suggestion": response_text, "recommended_rooms": room_ids}
 
 
-# ─── Multi-turn Chat Endpoint ─────────────────────────────────────────────────
+
 
 
 class ChatMessage(BaseModel):
@@ -335,3 +334,129 @@ def ai_chat(request: ChatRequest, db: Session = Depends(get_db)):
         suggestions=suggestions if suggestions else None,
         step="result",
     )
+
+
+# ── AI Review Summary ─────────────────────────────────────────────────────────
+
+POSITIVE_KEYWORDS = [
+    "sạch", "tốt", "đẹp", "thân thiện", "tuyệt", "xuất sắc", "hài lòng",
+    "chuyên nghiệp", "nhanh", "tiện nghi", "rộng", "yên tĩnh", "view đẹp",
+    "vị trí tốt", "trung tâm", "ngon", "ấm cúng", "hiện đại", "sang trọng",
+    "nhiệt tình", "chu đáo", "ổn", "thoải mái", "thích", "hợp lý",
+]
+
+NEGATIVE_KEYWORDS = [
+    "bẩn", "tệ", "chậm", "ồn", "thiếu", "cũ", "hỏng", "không hài lòng",
+    "thất vọng", "kém", "nhỏ", "chật", "xa", "đắt", "wifi yếu", "mùi",
+    "tối", "lạnh", "nóng", "phàn nàn", "không ổn", "dơ", "không sạch",
+]
+
+HIGHLIGHT_MAP = {
+    "vị trí": ["trung tâm", "vị trí", "gần biển", "gần phố", "tiện lợi", "gần"],
+    "nhân viên": ["nhân viên", "thân thiện", "nhiệt tình", "chu đáo", "phục vụ"],
+    "phòng sạch": ["sạch", "phòng sạch", "sạch sẽ", "gọn", "tinh tươm"],
+    "tiện nghi tốt": ["tiện nghi", "hiện đại", "đầy đủ", "sang trọng", "cao cấp"],
+    "bữa sáng ngon": ["ăn sáng", "bữa sáng", "đồ ăn", "nhà hàng", "ngon"],
+    "view đẹp": ["view", "cảnh đẹp", "hướng biển", "hướng phố", "tầm nhìn"],
+}
+
+COMPLAINT_MAP = {
+    "Wifi yếu": ["wifi", "mạng", "internet", "wifi yếu", "chập chờn"],
+    "Cách âm kém": ["ồn", "tiếng ồn", "cách âm", "ngủ không được", "hàng xóm"],
+    "Phòng nhỏ": ["nhỏ", "chật", "không gian nhỏ", "chật chội"],
+    "Vệ sinh chưa tốt": ["bẩn", "dơ", "mùi", "không sạch", "chưa sạch"],
+    "Giá cao": ["đắt", "giá cao", "không xứng", "tiền cao", "quá đắt"],
+    "Phòng cũ": ["cũ", "xuống cấp", "hỏng", "cũ kỹ", "lỗi thời"],
+}
+
+
+def _analyze_reviews(reviews: list) -> dict:
+    """
+    Phân tích danh sách review và trả về bản tóm tắt có cấu trúc.
+    Dùng rule-based keyword matching.
+    """
+    if not reviews:
+        return {
+            "summary": "Chưa có đánh giá nào cho khách sạn này.",
+            "highlights": [],
+            "complaints": [],
+            "total_reviews": 0,
+            "average_rating": None,
+        }
+
+    total = len(reviews)
+    avg_rating = sum(r.overall_rating for r in reviews) / total
+    all_text = " ".join((r.comment or "") for r in reviews).lower()
+
+    # Đếm highlight scores
+    highlight_scores: dict[str, int] = {}
+    for label, keywords in HIGHLIGHT_MAP.items():
+        score = sum(all_text.count(kw) for kw in keywords)
+        if score > 0:
+            highlight_scores[label] = score
+
+    # Đếm complaint scores
+    complaint_scores: dict[str, int] = {}
+    for label, keywords in COMPLAINT_MAP.items():
+        score = sum(all_text.count(kw) for kw in keywords)
+        if score > 0:
+            complaint_scores[label] = score
+
+    # Lấy top 3 highlights
+    highlights = sorted(highlight_scores, key=lambda k: highlight_scores[k], reverse=True)[:3]
+
+    # Lấy top 2 complaints
+    complaints = sorted(complaint_scores, key=lambda k: complaint_scores[k], reverse=True)[:2]
+
+    # Tạo câu tóm tắt
+    positive_count = sum(any(kw in (r.comment or "").lower() for kw in POSITIVE_KEYWORDS) for r in reviews)
+    negative_count = sum(any(kw in (r.comment or "").lower() for kw in NEGATIVE_KEYWORDS) for r in reviews)
+
+    if avg_rating >= 8:
+        sentiment = "rất hài lòng"
+    elif avg_rating >= 6:
+        sentiment = "khá hài lòng"
+    elif avg_rating >= 4:
+        sentiment = "ở mức trung bình"
+    else:
+        sentiment = "chưa thực sự hài lòng"
+
+    hl_str = ", ".join(highlights) if highlights else "dịch vụ tổng thể"
+    summary = (
+        f"Qua {total} đánh giá (điểm trung bình {avg_rating:.1f}/10), "
+        f"khách hàng cảm thấy {sentiment} với khách sạn này. "
+        f"Điểm được đánh giá cao nhất là: {hl_str}."
+    )
+
+    return {
+        "summary": summary,
+        "highlights": highlights,
+        "complaints": complaints,
+        "total_reviews": total,
+        "average_rating": round(avg_rating, 1),
+    }
+
+
+@router.get("/hotels/{hotel_id}/summary")
+def get_ai_review_summary(hotel_id: int, db: Session = Depends(get_db)):
+    """
+    Trả về bản tóm tắt AI cho tất cả đánh giá của một khách sạn.
+    Phân tích bằng rule-based keyword matching (không cần Gemini API).
+    """
+    # Kiểm tra khách sạn tồn tại
+    hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
+    if not hotel:
+        raise HTTPException(status_code=404, detail="Hotel not found")
+
+    # Lấy tất cả reviews
+    reviews = (
+        db.query(models.Review)
+        .filter(models.Review.hotel_id == hotel_id)
+        .all()
+    )
+
+    result = _analyze_reviews(reviews)
+    result["hotel_id"] = hotel_id
+    result["hotel_name"] = hotel.name
+    return result
+

@@ -7,6 +7,7 @@ from urllib.parse import unquote
 from app.database import get_db
 from app import models, schemas
 from app.cache import search_cache, availability_cache
+from app.dependencies import get_current_user, get_current_user_optional
 import unicodedata
 
 router = APIRouter(prefix="/hotels", tags=["Hotels"])
@@ -270,6 +271,47 @@ def get_hotel_average_rating(hotel_id: int, db: Session = Depends(get_db)):
         "average_rating": round(result.average_rating, 1) if result.average_rating else None,
         "total_reviews": result.total_reviews
     }
+
+
+@router.post("/{hotel_id}/reviews", response_model=schemas.ReviewResponse, status_code=status.HTTP_201_CREATED)
+def create_hotel_review(
+    hotel_id: int,
+    review: schemas.ReviewCreate,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Gửi đánh giá cho khách sạn (yêu cầu đăng nhập).
+    Mỗi user chỉ có thể đánh giá 1 lần / khách sạn.
+    """
+    # Kiểm tra khách sạn tồn tại
+    hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
+    if not hotel:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Hotel not found")
+
+    # Kiểm tra user đã review chưa
+    existing = db.query(models.Review).filter(
+        models.Review.hotel_id == hotel_id,
+        models.Review.user_id == current_user.id,
+    ).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Bạn đã đánh giá khách sạn này rồi",
+        )
+
+    db_review = models.Review(
+        user_id=current_user.id,
+        hotel_id=hotel_id,
+        booking_id=review.booking_id,
+        overall_rating=review.overall_rating,
+        ratings=review.ratings,
+        comment=review.comment,
+    )
+    db.add(db_review)
+    db.commit()
+    db.refresh(db_review)
+    return db_review
 
 
 @router.post("/", response_model=schemas.HotelResponse, status_code=status.HTTP_201_CREATED)

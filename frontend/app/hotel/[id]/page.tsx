@@ -13,6 +13,8 @@ import {
   getRoomLocalFallback,
 } from '@/lib/imageUtils';
 
+// ── Interfaces ────────────────────────────────────────────────────────────────
+
 interface Hotel {
   id: number;
   name: string;
@@ -36,6 +38,24 @@ interface Room {
   images: string[];
   amenities: string[];
 }
+
+interface Review {
+  id: number;
+  overall_rating: number;
+  comment: string;
+  created_at: string;
+  user?: { full_name: string };
+}
+
+interface AISummary {
+  summary: string;
+  highlights: string[];
+  complaints: string[];
+  total_reviews: number;
+  average_rating: number | null;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 const ROOM_LAYOUT_CLASSES = [
   'md:col-span-3 md:row-span-2',
@@ -81,6 +101,108 @@ function getRoomMeta(room: Room): { bed: string; area: string; view: string } {
   return { bed, area, view };
 }
 
+function getAuthToken(): string | null {
+  try {
+    return localStorage.getItem('access_token');
+  } catch {
+    return null;
+  }
+}
+
+// ── Star Rating Component ─────────────────────────────────────────────────────
+
+function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const [hovered, setHovered] = useState(0);
+  const stars = [2, 4, 6, 8, 10];
+  return (
+    <div className="flex gap-1 items-center">
+      {stars.map((v) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => onChange(v)}
+          onMouseEnter={() => setHovered(v)}
+          onMouseLeave={() => setHovered(0)}
+          className="text-2xl transition-transform hover:scale-110"
+        >
+          <span className={(hovered || value) >= v ? 'text-yellow-400' : 'text-gray-300'}>★</span>
+        </button>
+      ))}
+      <span className="ml-2 text-sm text-gray-500 font-medium">{value}/10</span>
+    </div>
+  );
+}
+
+// ── AI Summary Card ───────────────────────────────────────────────────────────
+
+function AISummaryCard({ hotelId }: { hotelId: string }) {
+  const [summary, setSummary] = useState<AISummary | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/ai/hotels/${hotelId}/summary`)
+      .then((r) => r.json())
+      .then((data) => setSummary(data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [hotelId]);
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50 p-6 animate-pulse">
+        <div className="h-4 bg-amber-200 rounded w-1/3 mb-3" />
+        <div className="h-3 bg-amber-100 rounded w-full mb-2" />
+        <div className="h-3 bg-amber-100 rounded w-4/5" />
+      </div>
+    );
+  }
+
+  if (!summary || summary.total_reviews === 0) return null;
+
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-sm">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-xl">✨</span>
+        <h3 className="font-bold text-gray-900 text-lg">AI Tổng hợp ý kiến khách hàng</h3>
+        <span className="ml-auto text-sm text-amber-700 font-medium bg-amber-100 px-2 py-0.5 rounded-full">
+          {summary.total_reviews} đánh giá • {summary.average_rating}/10
+        </span>
+      </div>
+
+      <p className="text-gray-700 text-sm leading-relaxed mb-4">{summary.summary}</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {summary.highlights.length > 0 && (
+          <div className="bg-green-50 border border-green-100 rounded-xl p-3">
+            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">✅ Điểm nổi bật</p>
+            <ul className="space-y-1">
+              {summary.highlights.map((h) => (
+                <li key={h} className="text-sm text-green-800 flex items-center gap-1">
+                  <span className="text-green-400">•</span> {h}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {summary.complaints.length > 0 && (
+          <div className="bg-red-50 border border-red-100 rounded-xl p-3">
+            <p className="text-xs font-semibold text-red-700 uppercase tracking-wide mb-2">⚠️ Cần cải thiện</p>
+            <ul className="space-y-1">
+              {summary.complaints.map((c) => (
+                <li key={c} className="text-sm text-red-800 flex items-center gap-1">
+                  <span className="text-red-400">•</span> {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Main Content ──────────────────────────────────────────────────────────────
+
 function HotelContent() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -91,43 +213,76 @@ function HotelContent() {
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Wishlist
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  // Review form
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+  const [reviewSuccess, setReviewSuccess] = useState('');
+
   const buildRoomHref = (roomId: number) => {
-    const params = new URLSearchParams();
-    if (checkInDate) params.set('checkIn', checkInDate);
-    if (checkOutDate) params.set('checkOut', checkOutDate);
-    if (guests) params.set('guests', guests);
-    return `/rooms/${roomId}${params.toString() ? `?${params.toString()}` : ''}`;
+    const p = new URLSearchParams();
+    if (checkInDate) p.set('checkIn', checkInDate);
+    if (checkOutDate) p.set('checkOut', checkOutDate);
+    if (guests) p.set('guests', guests);
+    return `/rooms/${roomId}${p.toString() ? `?${p.toString()}` : ''}`;
   };
 
+  const fetchReviews = async () => {
+    const r = await fetch(`${API_URL}/api/hotels/${hotelId}/reviews?limit=50`);
+    if (r.ok) setReviews(await r.json());
+  };
+
+  // Initial load
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch hotel details
-        const hotelRes = await fetch(`${API_URL}/api/hotels/${hotelId}`);
+        const [hotelRes, roomRes] = await Promise.all([
+          fetch(`${API_URL}/api/hotels/${hotelId}`),
+          fetch(`${API_URL}/api/rooms/?hotel_id=${hotelId}`),
+        ]);
+
         if (!hotelRes.ok) throw new Error('Failed to fetch hotel');
         const hotelData = await hotelRes.json();
         setHotel(hotelData);
 
-        // Fetch rooms for this hotel
-        const roomRes = await fetch(`${API_URL}/api/rooms/?hotel_id=${hotelId}`);
-        if (!roomRes.ok) throw new Error('Failed to fetch rooms');
-        const roomData = await roomRes.json();
-        
-        const mappedRooms = roomData.map((item: any) => ({
-          id: item.id,
-          hotel_id: item.hotel_id,
-          name: item.name,
-          price_per_night: item.base_price,
-          location: `${hotelData.city}, ${hotelData.country}`,
-          image_url: item.images?.[0] || '',
-          images: item.images || [],
-          amenities: item.amenities || []
-        }));
+        if (roomRes.ok) {
+          const roomData = await roomRes.json();
+          setRooms(
+            roomData.map((item: any) => ({
+              id: item.id,
+              hotel_id: item.hotel_id,
+              name: item.name,
+              price_per_night: item.base_price,
+              location: `${hotelData.city}, ${hotelData.country}`,
+              image_url: item.images?.[0] || '',
+              images: item.images || [],
+              amenities: item.amenities || [],
+            }))
+          );
+        }
 
-        setRooms(mappedRooms);
+        await fetchReviews();
+
+        // Check wishlist status
+        const token = getAuthToken();
+        if (token) {
+          const wRes = await fetch(`${API_URL}/api/wishlists/check/${hotelId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (wRes.ok) {
+            const wData = await wRes.json();
+            setIsWishlisted(wData.is_wishlisted);
+          }
+        }
       } catch (error) {
         console.error(error);
       } finally {
@@ -137,6 +292,79 @@ function HotelContent() {
 
     fetchData();
   }, [hotelId]);
+
+  // Toggle wishlist
+  const handleWishlistToggle = async () => {
+    const token = getAuthToken();
+    if (!token) {
+      alert('Vui lòng đăng nhập để lưu yêu thích!');
+      return;
+    }
+    setWishlistLoading(true);
+    try {
+      if (isWishlisted) {
+        await fetch(`${API_URL}/api/wishlists/${hotelId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsWishlisted(false);
+      } else {
+        await fetch(`${API_URL}/api/wishlists/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ hotel_id: Number(hotelId) }),
+        });
+        setIsWishlisted(true);
+      }
+    } catch {}
+    setWishlistLoading(false);
+  };
+
+  // Submit review
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setReviewError('');
+    setReviewSuccess('');
+    if (reviewRating === 0) {
+      setReviewError('Vui lòng chọn số sao đánh giá.');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      setReviewError('Vui lòng nhập nội dung nhận xét.');
+      return;
+    }
+    const token = getAuthToken();
+    if (!token) {
+      setReviewError('Vui lòng đăng nhập để gửi đánh giá.');
+      return;
+    }
+    setReviewSubmitting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/hotels/${hotelId}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          hotel_id: Number(hotelId),
+          overall_rating: reviewRating,
+          comment: reviewComment.trim(),
+        }),
+      });
+      if (res.status === 400) {
+        const err = await res.json();
+        setReviewError(err.detail || 'Bạn đã đánh giá khách sạn này rồi.');
+      } else if (!res.ok) {
+        setReviewError('Gửi đánh giá thất bại. Vui lòng thử lại.');
+      } else {
+        setReviewSuccess('Cảm ơn bạn đã đánh giá! 🎉');
+        setReviewComment('');
+        setReviewRating(0);
+        await fetchReviews();
+      }
+    } catch {
+      setReviewError('Lỗi kết nối. Vui lòng thử lại.');
+    }
+    setReviewSubmitting(false);
+  };
 
   if (loading) {
     return (
@@ -153,6 +381,8 @@ function HotelContent() {
       </div>
     );
   }
+
+  const isLoggedIn = Boolean(getAuthToken());
 
   return (
     <div className="mx-auto max-w-7xl px-8 py-12">
@@ -198,7 +428,24 @@ function HotelContent() {
 
         {/* Hotel Info */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{hotel.name}</h1>
+          <div className="flex items-start justify-between mb-2 gap-2">
+            <h1 className="text-3xl font-bold text-gray-900">{hotel.name}</h1>
+            {/* Wishlist Button */}
+            <button
+              id="wishlist-toggle-btn"
+              onClick={handleWishlistToggle}
+              disabled={wishlistLoading}
+              title={isWishlisted ? 'Bỏ yêu thích' : 'Lưu yêu thích'}
+              className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-200 shadow-sm hover:scale-110 ${
+                isWishlisted
+                  ? 'border-red-400 bg-red-50 text-red-500'
+                  : 'border-gray-300 bg-white text-gray-400 hover:border-red-300 hover:text-red-400'
+              }`}
+            >
+              <span className="text-lg">{isWishlisted ? '❤️' : '🤍'}</span>
+            </button>
+          </div>
+
           <div className="flex items-center gap-2 mb-4">
             <div className="flex gap-1">
               {[...Array(hotel.star_rating)].map((_, i) => (
@@ -252,7 +499,7 @@ function HotelContent() {
         </div>
       </div>
 
-      {/* Rooms Section */}
+      {/* ── Rooms Section ──────────────────────────────────────── */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4">
           <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -320,9 +567,132 @@ function HotelContent() {
           )}
         </div>
       </section>
+
+      {/* ── Reviews Section ────────────────────────────────────── */}
+      <section className="py-8 border-t border-gray-100">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="mb-6">
+            <p className="text-sm font-semibold uppercase tracking-wider text-orange-600">Đánh Giá</p>
+            <h2 className="mt-1 text-2xl font-bold text-gray-900">Nhận Xét Của Khách Hàng</h2>
+          </div>
+
+          {/* AI Summary */}
+          <div className="mb-8">
+            <AISummaryCard hotelId={hotelId} />
+          </div>
+
+          {/* Review List */}
+          {reviews.length > 0 ? (
+            <div className="space-y-4 mb-10">
+              {reviews.slice(0, 10).map((review) => (
+                <div
+                  key={review.id}
+                  className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm hover:shadow-md transition"
+                >
+                  <div className="flex items-start gap-3">
+                    {/* Avatar */}
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-600 text-sm">
+                      {review.user?.full_name?.charAt(0)?.toUpperCase() || 'K'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <span className="font-semibold text-gray-900 text-sm">
+                          {review.user?.full_name || 'Khách ẩn danh'}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <span
+                              key={i}
+                              className={`text-sm ${
+                                i < Math.round(review.overall_rating / 2) ? 'text-yellow-400' : 'text-gray-200'
+                              }`}
+                            >
+                              ★
+                            </span>
+                          ))}
+                          <span className="text-xs font-bold text-gray-600 ml-1">
+                            {review.overall_rating}/10
+                          </span>
+                        </div>
+                      </div>
+                      <p className="mt-2 text-gray-700 text-sm leading-relaxed">{review.comment}</p>
+                      <p className="mt-1 text-xs text-gray-400">
+                        {new Date(review.created_at).toLocaleDateString('vi-VN')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-400 mb-8">
+              Chưa có đánh giá nào. Hãy là người đầu tiên! 🌟
+            </div>
+          )}
+
+          {/* Review Form */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 className="font-bold text-gray-900 text-lg mb-4">
+              {isLoggedIn ? '✍️ Viết Đánh Giá Của Bạn' : '🔒 Đăng nhập để gửi đánh giá'}
+            </h3>
+
+            {isLoggedIn ? (
+              <form onSubmit={handleReviewSubmit} id="review-form">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Điểm đánh giá</label>
+                  <StarRating value={reviewRating} onChange={setReviewRating} />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nhận xét</label>
+                  <textarea
+                    id="review-comment"
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    rows={4}
+                    placeholder="Chia sẻ trải nghiệm của bạn về khách sạn này..."
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-700 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none resize-none transition"
+                  />
+                </div>
+
+                {reviewError && (
+                  <div className="mb-3 p-3 rounded-lg bg-red-50 border border-red-100 text-red-600 text-sm">
+                    {reviewError}
+                  </div>
+                )}
+                {reviewSuccess && (
+                  <div className="mb-3 p-3 rounded-lg bg-green-50 border border-green-100 text-green-600 text-sm">
+                    {reviewSuccess}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  id="submit-review-btn"
+                  disabled={reviewSubmitting}
+                  className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {reviewSubmitting ? 'Đang gửi...' : 'Gửi Đánh Giá'}
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-gray-500 text-sm mb-3">Bạn cần đăng nhập để có thể gửi đánh giá</p>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 transition"
+                >
+                  Đăng nhập ngay
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
+// ── Page Export ───────────────────────────────────────────────────────────────
 
 export default function HotelPage() {
   return (
