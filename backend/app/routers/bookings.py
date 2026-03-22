@@ -3,10 +3,13 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 from typing import List, Optional
 from datetime import datetime, timedelta
+import asyncio
+import threading
 from app.database import get_db
 from app import models, schemas
 from app.dependencies import get_current_user
 from app.cache import availability_cache
+from app.services.email_service import send_booking_confirmation_email
 import pytz
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
@@ -411,5 +414,44 @@ def create_payment(
     db.add(db_payment)
     db.commit()
     db.refresh(db_payment)
+
+    # Send confirmation email after successful payment (best-effort, non-blocking for payment flow)
+    try:
+        hotel = db.query(models.Hotel).filter(models.Hotel.id == booking.hotel_id).first()
+        room = db.query(models.Room).filter(models.Room.id == booking.room_id).first()
+
+        customer_email = current_user.email
+        customer_name = current_user.full_name
+
+        metadata = payment.payment_metadata or {}
+        if isinstance(metadata, dict):
+            metadata_email = metadata.get("customer_email")
+            metadata_name = metadata.get("customer_name")
+            if isinstance(metadata_email, str) and "@" in metadata_email:
+                customer_email = metadata_email.strip()
+            if isinstance(metadata_name, str) and metadata_name.strip():
+                customer_name = metadata_name.strip()
+
+        booking_data = {
+            "booking_id": booking.id,
+            "customer_name": customer_name,
+            "hotel_name": hotel.name if hotel else "N/A",
+            "room_type": room.name if room else "N/A",
+            "check_in_date": booking.check_in_date.strftime("%d/%m/%Y"),
+            "check_out_date": booking.check_out_date.strftime("%d/%m/%Y"),
+            "payment_method": booking.payment_method or payment.payment_method,
+            "payment_status": "Đã thanh toán",
+            "total_price": int(payment.amount),
+        }
+
+        # Fire-and-forget email send to keep API response fast.
+        threading.Thread(
+            target=lambda: asyncio.run(
+                send_booking_confirmation_email(customer_email, booking_data)
+            ),
+            daemon=True,
+        ).start()
+    except Exception as e:
+        print(f"[Email] Failed to schedule confirmation email: {e}")
     
     return db_payment

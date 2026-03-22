@@ -268,7 +268,9 @@ export default function BookingPaymentPage() {
           payment_method: 'credit_card',
           payment_metadata: {
             card_last_4: formData.cardNumber.slice(-4),
-            card_name: formData.cardName
+            card_name: formData.cardName,
+            customer_email: formData.email,
+            customer_name: formData.name,
           }
         };
 

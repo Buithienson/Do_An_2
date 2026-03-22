@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
+
 # Email configuration
 conf = ConnectionConfig(
     MAIL_USERNAME=os.getenv("SMTP_USER", ""),
@@ -99,7 +101,7 @@ async def send_booking_confirmation_email(to_email: EmailStr, booking_data: dict
                 </ul>
                 
                 <center>
-                    <a href="http://localhost:3000/booking/history" class="button">Xem chi tiết đặt phòng</a>
+                    <a href="{FRONTEND_URL}/booking/history" class="button">Xem chi tiết đặt phòng</a>
                 </center>
                 
                 <p>Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ:</p>
