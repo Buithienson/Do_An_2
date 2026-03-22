@@ -144,7 +144,7 @@ async def seed_virtual_reviews_endpoint(
         reviewers_per_hotel = min(reviewers_per_hotel, len(VIRTUAL_REVIEWER_NAMES))
 
         emails = [
-            f"virtual.reviewer.{idx + 1:03d}@aibooking.local"
+            f"virtual.reviewer.{idx + 1:03d}@aibooking.example.com"
             for idx in range(reviewers_per_hotel)
         ]
 
@@ -179,12 +179,31 @@ async def seed_virtual_reviews_endpoint(
         virtual_user_ids = [u.id for u in virtual_users]
 
         deleted_reviews = 0
-        if reset_existing and virtual_user_ids:
-            deleted_reviews = (
-                db.query(Review)
-                .filter(Review.user_id.in_(virtual_user_ids))
-                .delete(synchronize_session=False)
+        deleted_legacy_users = 0
+        if reset_existing:
+            # Cleanup previous virtual users that used reserved .local domain.
+            legacy_users = (
+                db.query(User)
+                .filter(User.email.like("virtual.reviewer.%@aibooking.local"))
+                .all()
             )
+            legacy_user_ids = [u.id for u in legacy_users]
+
+            delete_user_ids = list(dict.fromkeys([*virtual_user_ids, *legacy_user_ids]))
+            if delete_user_ids:
+                deleted_reviews = (
+                    db.query(Review)
+                    .filter(Review.user_id.in_(delete_user_ids))
+                    .delete(synchronize_session=False)
+                )
+
+            if legacy_user_ids:
+                deleted_legacy_users = (
+                    db.query(User)
+                    .filter(User.id.in_(legacy_user_ids))
+                    .delete(synchronize_session=False)
+                )
+
             db.flush()
 
         existing_pairs = set()
@@ -240,6 +259,7 @@ async def seed_virtual_reviews_endpoint(
             "virtual_users_total_used": len(virtual_users),
             "reviews_created": created_reviews,
             "reviews_deleted": deleted_reviews,
+            "legacy_virtual_users_deleted": deleted_legacy_users,
             "total_reviews_in_db": total_reviews,
             "note": "Call with reset_existing=true to regenerate all virtual reviews.",
         }
