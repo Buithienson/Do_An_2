@@ -61,6 +61,10 @@ export default function BookingPaymentPage() {
     specialRequests: ''
   });
 
+  const getAccessToken = () => {
+    return localStorage.getItem('access_token') || localStorage.getItem('token');
+  };
+
   // Load query parameters on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -167,6 +171,7 @@ export default function BookingPaymentPage() {
       const data = await res.json();
       if (data.access_token) {
         localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('token', data.access_token);
         if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
         return data.access_token;
       }
@@ -196,7 +201,7 @@ export default function BookingPaymentPage() {
     }
 
     // Kiểm tra token trước khi gửi request
-    const token = localStorage.getItem('access_token');
+    const token = getAccessToken();
     if (!token) {
       alert('Vui lòng đăng nhập để đặt phòng');
       window.location.href = '/login';

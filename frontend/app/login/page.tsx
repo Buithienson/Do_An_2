@@ -51,8 +51,9 @@ export default function LoginPage() {
         throw new Error(errorDetail || 'Đăng nhập thất bại');
       }
 
-      // Lưu token vào localStorage
+      // Lưu cả 2 key để tương thích với các trang đang dùng key khác nhau
       localStorage.setItem('token', data.access_token);
+      localStorage.setItem('access_token', data.access_token);
       if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
