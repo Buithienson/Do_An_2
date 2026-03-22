@@ -136,17 +136,25 @@ function StarRating({ value, onChange }: { value: number; onChange: (v: number) 
 
 // ── AI Summary Card ───────────────────────────────────────────────────────────
 
-function AISummaryCard({ hotelId }: { hotelId: string }) {
+function AISummaryCard({ hotelId, hasReviews }: { hotelId: string; hasReviews: boolean }) {
   const [summary, setSummary] = useState<AISummary | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!hasReviews) {
+      setSummary(null);
+      setLoading(false);
+      return;
+    }
+
     fetch(`${API_URL}/api/ai/hotels/${hotelId}/summary`)
       .then((r) => r.json())
       .then((data) => setSummary(data))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [hotelId]);
+  }, [hotelId, hasReviews]);
+
+  if (!hasReviews) return null;
 
   if (loading) {
     return (
@@ -163,7 +171,6 @@ function AISummaryCard({ hotelId }: { hotelId: string }) {
   return (
     <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-xl">✨</span>
         <h3 className="font-bold text-gray-900 text-lg">AI Tổng hợp ý kiến khách hàng</h3>
         <span className="ml-auto text-sm text-amber-700 font-medium bg-amber-100 px-2 py-0.5 rounded-full">
           {summary.total_reviews} đánh giá • {summary.average_rating}/10
@@ -175,11 +182,11 @@ function AISummaryCard({ hotelId }: { hotelId: string }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {summary.highlights.length > 0 && (
           <div className="bg-green-50 border border-green-100 rounded-xl p-3">
-            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">✅ Điểm nổi bật</p>
-            <ul className="space-y-1">
+            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">Điểm nổi bật</p>
+            <ul className="space-y-1 list-disc pl-4">
               {summary.highlights.map((h) => (
-                <li key={h} className="text-sm text-green-800 flex items-center gap-1">
-                  <span className="text-green-400">•</span> {h}
+                <li key={h} className="text-sm text-green-800">
+                  {h}
                 </li>
               ))}
             </ul>
@@ -187,11 +194,11 @@ function AISummaryCard({ hotelId }: { hotelId: string }) {
         )}
         {summary.complaints.length > 0 && (
           <div className="bg-red-50 border border-red-100 rounded-xl p-3">
-            <p className="text-xs font-semibold text-red-700 uppercase tracking-wide mb-2">⚠️ Cần cải thiện</p>
-            <ul className="space-y-1">
+            <p className="text-xs font-semibold text-red-700 uppercase tracking-wide mb-2">Cần cải thiện</p>
+            <ul className="space-y-1 list-disc pl-4">
               {summary.complaints.map((c) => (
-                <li key={c} className="text-sm text-red-800 flex items-center gap-1">
-                  <span className="text-red-400">•</span> {c}
+                <li key={c} className="text-sm text-red-800">
+                  {c}
                 </li>
               ))}
             </ul>
@@ -600,7 +607,7 @@ function HotelContent() {
 
           {/* AI Summary */}
           <div className="mb-8">
-            <AISummaryCard hotelId={hotelId} />
+            <AISummaryCard hotelId={hotelId} hasReviews={reviews.length > 0} />
           </div>
 
           {/* Review List */}
@@ -648,14 +655,14 @@ function HotelContent() {
             </div>
           ) : (
             <div className="text-center py-8 text-gray-400 mb-8">
-              Chưa có đánh giá nào. Hãy là người đầu tiên! 🌟
+              Chưa có đánh giá nào. Hãy là người đầu tiên!
             </div>
           )}
 
           {/* Review Form */}
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="font-bold text-gray-900 text-lg mb-4">
-              {isLoggedIn ? '✍️ Viết Đánh Giá Của Bạn' : '🔒 Đăng nhập để gửi đánh giá'}
+              {isLoggedIn ? 'Viết đánh giá của bạn' : 'Đăng nhập để gửi đánh giá'}
             </h3>
 
             {isLoggedIn ? (

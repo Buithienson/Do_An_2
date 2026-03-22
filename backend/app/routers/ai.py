@@ -7,6 +7,9 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import json
 import re
+import os
+from urllib import request as urlrequest
+from urllib import error as urlerror
 
 router = APIRouter(prefix="/ai", tags=["AI Assistance"])
 
@@ -437,6 +440,97 @@ def _analyze_reviews(reviews: list) -> dict:
     }
 
 
+def _call_llm_review_summary(reviews: list, hotel_name: str) -> Optional[dict]:
+    """
+    Gọi LLM để phân tích toàn bộ bình luận theo ngữ cảnh tự nhiên.
+    Trả về None nếu không có API key hoặc lỗi mạng/parse.
+    """
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    if not api_key:
+        return None
+
+    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+
+    total = len(reviews)
+    avg_rating = round(sum(r.overall_rating for r in reviews) / total, 1) if total else None
+
+    lines = []
+    for idx, r in enumerate(reviews, start=1):
+        text = (r.comment or "").strip()
+        if not text:
+            text = "(không có nhận xét)"
+        lines.append(f"{idx}. rating={r.overall_rating}/10 | {text}")
+
+    comments_blob = "\n".join(lines)
+
+    system_prompt = (
+        "Bạn là chuyên gia phân tích phản hồi khách sạn. "
+        "Nhiệm vụ: đọc TOÀN BỘ bình luận và đưa nhận xét khách quan, chân thật, không phóng đại. "
+        "Bắt buộc trả về JSON hợp lệ với đúng schema:\n"
+        "{\n"
+        "  \"summary\": string,\n"
+        "  \"highlights\": string[],\n"
+        "  \"complaints\": string[]\n"
+        "}\n"
+        "Quy tắc: summary 2-4 câu tiếng Việt; highlights tối đa 3 ý; complaints tối đa 3 ý; "
+        "không dùng markdown, không thêm key khác."
+    )
+
+    user_prompt = (
+        f"Khách sạn: {hotel_name}\n"
+        f"Tổng số đánh giá: {total}\n"
+        f"Điểm trung bình: {avg_rating}/10\n\n"
+        "Danh sách bình luận cần phân tích:\n"
+        f"{comments_blob}"
+    )
+
+    payload = {
+        "model": model,
+        "temperature": 0.2,
+        "response_format": {"type": "json_object"},
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+    }
+
+    req = urlrequest.Request(
+        f"{base_url}/chat/completions",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urlrequest.urlopen(req, timeout=30) as resp:
+            raw = resp.read().decode("utf-8")
+            data = json.loads(raw)
+            content = data["choices"][0]["message"]["content"]
+            parsed = json.loads(content)
+
+            summary = str(parsed.get("summary", "")).strip()
+            highlights = [str(x).strip() for x in parsed.get("highlights", []) if str(x).strip()]
+            complaints = [str(x).strip() for x in parsed.get("complaints", []) if str(x).strip()]
+
+            if not summary:
+                return None
+
+            return {
+                "summary": summary,
+                "highlights": highlights[:3],
+                "complaints": complaints[:3],
+                "total_reviews": total,
+                "average_rating": avg_rating,
+                "source": "llm",
+            }
+    except (urlerror.URLError, TimeoutError, KeyError, ValueError, json.JSONDecodeError):
+        return None
+
+
 @router.get("/hotels/{hotel_id}/summary")
 def get_ai_review_summary(hotel_id: int, db: Session = Depends(get_db)):
     """
@@ -455,7 +549,12 @@ def get_ai_review_summary(hotel_id: int, db: Session = Depends(get_db)):
         .all()
     )
 
-    result = _analyze_reviews(reviews)
+    if not reviews:
+        result = _analyze_reviews(reviews)
+    else:
+        llm_result = _call_llm_review_summary(reviews, hotel.name)
+        result = llm_result if llm_result else _analyze_reviews(reviews)
+
     result["hotel_id"] = hotel_id
     result["hotel_name"] = hotel.name
     return result
