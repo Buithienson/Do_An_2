@@ -26,6 +26,7 @@ export default function AdminSidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     router.push('/login');

@@ -60,7 +60,7 @@ export default function BookingHistoryPage() {
   }, []);
 
   const fetchBookings = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token") || localStorage.getItem("token");
     
     if (!token) {
       toast.error("Vui lòng đăng nhập để xem lịch sử đặt phòng");
@@ -123,7 +123,7 @@ export default function BookingHistoryPage() {
   const handleCancelBooking = async () => {
     if (!selectedBooking) return;
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token") || localStorage.getItem("token");
     setCancellingId(selectedBooking.id);
 
     try {
