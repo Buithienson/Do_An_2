@@ -428,32 +428,58 @@ async def seed_database_endpoint(
 
 SEED_REVIEWS = [
     # --- Tích cực ---
-    (8.5, "Phòng sạch sẽ, nhân viên rất thân thiện và chu đáo. Vị trí trung tâm rất tiện lợi."),
-    (9.0, "Khách sạn tuyệt vời! View đẹp, bữa sáng ngon. Sẽ quay lại lần sau."),
-    (8.0, "Nhân viên nhiệt tình, phòng rộng và sạch. Tiện nghi đầy đủ, rất hài lòng."),
-    (9.5, "Xuất sắc! Phục vụ chuyên nghiệp, phòng sang trọng và hiện đại. Đáng đồng tiền."),
-    (7.5, "Vị trí gần biển, ăn sáng ngon. Tôi khá hài lòng với chuyến đi này."),
-    (8.5, "Phòng ấm cúng, view đẹp nhìn ra phố. Nhân viên thân thiện và biết nói tiếng Anh."),
-    (8.0, "Thoải mái, sạch sẽ, giá hợp lý. Bữa sáng đa dạng và ngon."),
-    (9.0, "Khách sạn sang trọng, dịch vụ xuất sắc. Hồ bơi đẹp, nhà hàng ngon."),
-    (7.0, "Phòng ổn, nhân viên thân thiện. Vị trí tốt gần trung tâm mua sắm."),
-    (8.5, "Rất thích! Phòng sạch, view đẹp, tiện nghi tốt. Nhân viên chu đáo hết mức."),
-    (9.0, "Phòng rộng, sạch, view biển cực đẹp. Dịch vụ tuyệt vời, nhân viên thân thiện."),
-    (7.5, "Khách sạn hiện đại, thoải mái. Bữa sáng phong phú. Vị trí tiện lợi."),
-    (8.0, "Phòng sạch sẽ, có đầy đủ tiện nghi. Nhân viên nhiệt tình giúp đỡ."),
-    (9.5, "Tuyệt vời! Phòng Suite rộng, view đẹp. Bữa sáng ngon nhất từ trước đến nay."),
-    (8.0, "Yên tĩnh, thoải mái. Vị trí gần biển. Nhân viên rất chu đáo và thân thiện."),
+    (9.0, "Phòng sạch sẽ, nhân viên rất thân thiện và chu đáo. Vị trí trung tâm rất tiện lợi."),
+    (9.5, "Khách sạn tuyệt vời! View đẹp, bữa sáng ngon. Sẽ quay lại lần sau chắc chắn!"),
+    (8.5, "Nhân viên nhiệt tình, phòng rộng và sạch sẽ. Tiện nghi đầy đủ, rất hài lòng với chuyến đi."),
+    (9.5, "Xuất sắc! Phục vụ chuyên nghiệp, phòng sang trọng và hiện đại. Đáng đồng tiền bỏ ra."),
+    (8.0, "Vị trí gần biển, ăn sáng ngon. Tôi khá hài lòng với chuyến đi lần này, sẽ giới thiệu cho bạn bè."),
+    (8.5, "Phòng ấm cúng, view đẹp nhìn ra phố. Nhân viên thân thiện, biết nói tiếng Anh nên rất tiện."),
+    (8.0, "Thoải mái, sạch sẽ, giá hợp lý. Bữa sáng đa dạng và ngon hơn tôi mong đợi."),
+    (9.0, "Khách sạn sang trọng, dịch vụ xuất sắc. Hồ bơi đẹp, nhà hàng ngon, view tuyệt vời."),
+    (7.5, "Phòng ổn, nhân viên thân thiện. Vị trí tốt gần trung tâm mua sắm và ăn uống."),
+    (9.0, "Rất thích! Phòng sạch, view đẹp, tiện nghi tốt. Nhân viên chu đáo và luôn sẵn sàng giúp đỡ."),
+    (9.5, "Phòng rộng, sạch, view biển cực đẹp. Dịch vụ tuyệt vời, nhân viên thân thiện, tôi rất hài lòng."),
+    (8.0, "Khách sạn hiện đại, thoải mái. Bữa sáng phong phú đủ món. Vị trí tiện lợi đi lại dễ dàng."),
+    (8.5, "Phòng sạch sẽ, có đầy đủ tiện nghi. Nhân viên nhiệt tình giúp đỡ mọi khi cần thiết."),
+    (10.0, "Tuyệt vời nhất từ trước tới nay! Phòng Suite rộng, view biển đẹp mê hồn. Bữa sáng ngon tuyệt vời."),
+    (8.0, "Yên tĩnh, thoải mái. Vị trí gần biển rất thuận tiện. Nhân viên chu đáo và thân thiện."),
+    (8.5, "Giá cả hợp lý so với chất lượng. Phòng sạch, tiện nghi đầy đủ. Sẽ quay lại lần sau."),
+    (9.0, "Dịch vụ 5 sao đúng nghĩa! Nhân viên nhớ tên khách, luôn chào hỏi thân thiện."),
+    (7.5, "Phòng tiêu chuẩn nhưng sạch và thoải mái. Bữa sáng phong phú. Giá hợp lý."),
+    (9.0, "Hồ bơi rất đẹp, không khí trong lành. Bia đặc sản tại bar của khách sạn rất ngon."),
+    (8.0, "Trải nghiệm thú vị! Kiến trúc khách sạn đẹp, phòng sạch, nhân viên nhiệt tình."),
     # --- Trung hòa / Phàn nàn nhỏ ---
-    (6.5, "Phòng sạch nhưng hơi nhỏ. Wifi thỉnh thoảng chập chờn. Nhân viên ổn."),
-    (6.0, "Vị trí tốt nhưng phòng hơi cũ. Tiếng ồn từ ngoài đường vào hơi lớn."),
-    (5.5, "Không hài lòng lắm. Wifi yếu, phòng nhỏ. Cần cải thiện thêm."),
-    (7.0, "Khách sạn ổn, nhưng hơi đắt so với chất lượng. Ăn sáng bình thường."),
-    (6.5, "Nhân viên thân thiện nhưng phòng chưa thực sự sạch sẽ. Sẽ cân nhắc lần sau."),
-    (6.0, "Tiện nghi cơ bản, phòng hơi chật. Cách âm kém, ngủ không được vì tiếng ồn."),
-    (5.0, "Thất vọng với dịch vụ. Wifi yếu, điều hòa không lạnh. Giá cao không xứng."),
-    (7.0, "Vị trí trung tâm, nhưng phòng hơi cũ kỹ. Bữa sáng khá ổn."),
-    (6.5, "Nhân viên nhiệt tình nhưng phòng nhỏ hơn ảnh. Tổng thể ổn."),
-    (7.5, "Hài lòng với dịch vụ. Vị trí tốt, nhưng bãi đỗ xe hơi khó."),
+    (6.5, "Phòng sạch nhưng hơi nhỏ. Wifi thỉnh thoảng chập chờn. Nhân viên nhìn chung ổn."),
+    (6.0, "Vị trí tốt nhưng phòng hơi cũ so với ảnh quảng cáo. Tiếng ồn từ ngoài đường vào hơi lớn."),
+    (5.5, "Không hài lòng lắm. Wifi yếu, phòng nhỏ hơn mô tả. Cần cải thiện thêm nhiều."),
+    (7.0, "Khách sạn ổn, nhưng hơi đắt so với chất lượng thực tế. Ăn sáng khá bình thường không có gì đặc biệt."),
+    (6.5, "Nhân viên thân thiện nhưng phòng chưa thực sự sạch sẽ lắm. Sẽ cân nhắc lại lần sau."),
+    (6.0, "Tiện nghi cơ bản, phòng hơi chật. Cách âm kém, ngủ không được vì tiếng ồn từ hành lang."),
+    (5.0, "Thất vọng với dịch vụ. Wifi yếu, điều hòa không lạnh. Giá cao không xứng với chất lượng."),
+    (7.0, "Vị trí trung tâm rất tốt, nhưng phòng hơi cũ kỹ. Bữa sáng khá ổn, không phàn nàn."),
+    (6.5, "Nhân viên nhiệt tình nhưng phòng nhỏ hơn so với ảnh chụp trên website. Tổng thể tạm ổn."),
+    (7.5, "Hài lòng với dịch vụ chăm sóc khách hàng. Vị trí tốt nhưng bãi đỗ xe hơi khó tìm."),
+    (6.0, "Phòng cũ, điều hòa hoạt động yếu. Nhân viên check-in khá chậm. Cần nâng cấp nhiều hơn."),
+    (7.0, "Ổn cho một chuyến đi công tác ngắn ngày. Wifi ổn định, giường thoải mái, vị trí thuận tiện."),
+    (6.5, "Bữa sáng ít món hơn mong đợi. Phòng sạch nhưng trang trí hơi đơn điệu so với giá tiền."),
+    (7.0, "Nhân viên lễ tân thân thiện nhưng tầng hầm xe hơi bẩn. Phòng tắm cần cải thiện vệ sinh."),
+    (5.5, "Phòng có mùi ẩm mốc nhẹ. Wifi chập chờn. Tuy nhiên nhân viên phục vụ rất cố gắng."),
+    (6.0, "Giá hơi cao so với chất lượng thực tế. Phòng view đẹp nhưng cách âm kém, ồn ào ban đêm."),
+    (7.5, "Trải nghiệm tương đối tốt. Hồ bơi sạch, nhân viên thân thiện. Nhưng bữa sáng cần phong phú hơn."),
+    (8.0, "Phòng view biển đẹp, nhân viên tốt bụng. Chỉ tiếc bữa sáng cần đa dạng món hơn một chút."),
+    (6.5, "Mọi thứ tạm ổn ngoại trừ điều hòa kêu ồn cả đêm. Đã báo nhưng khắc phục hơi chậm."),
+    (7.5, "Giá trị tốt cho số tiền bỏ ra. Phòng sạch, vị trí thuận tiện. Nhân viên nhiệt tình giúp đỡ."),
+]
+
+FAKE_NAMES_40 = [
+    "Minh Tuấn", "Thu Hương", "Quốc Huy", "Lan Anh", "Đức Khải",
+    "Phương Linh", "Văn Nam", "Bảo Châu", "Thế Anh", "Mỹ Linh",
+    "Hữu Nghĩa", "Thanh Tâm", "Trọng Khoa", "Diễm My", "Công Danh",
+    "Ngọc Hân", "Việt Cường", "Bích Ngọc", "Đăng Khoa", "Hồng Nhung",
+    "Quang Minh", "Thùy Dung", "Hoàng Long", "Kiều Oanh", "Dương Hùng",
+    "Thảo Nguyên", "Gia Bảo", "Yến Nhi", "Thanh Bình", "Hải Yến",
+    "Nhật Quang", "Cẩm Nhung", "Đình Dũng", "Mai Phương", "Tuấn Kiệt",
+    "Lệ Hằng", "Minh Khoa", "Trúc Ly", "Văn Hào", "Ngọc Trinh",
 ]
 
 import random
@@ -465,38 +491,26 @@ async def seed_reviews_endpoint(
 ):
     """
     Seed fake reviews cho tất cả khách sạn trong DB.
-    Idempotent: bỏ qua nếu đã có review từ seed user.
+    Tạo 40 fake users và 20 reviews ngẫu nhiên mỗi khách sạn.
+    Gọi lại sẽ bổ sung thêm cho các KS chưa đủ 20 reviews.
     """
     _authorize_seed_endpoint(x_seed_token)
 
     db = SessionLocal()
     try:
-        # Tạo / tìm seed user
-        seed_email = "seed.reviewer@aibooking.com"
-        seed_user = db.query(User).filter(User.email == seed_email).first()
-        if not seed_user:
-            seed_user = User(
-                email=seed_email,
-                full_name="Khách Du Lịch",
-                hashed_password=hash_password("seedpass123"),
-                role="user",
-                email_verified=True,
-            )
-            db.add(seed_user)
-            db.flush()
-
         hotels = db.query(Hotel).all()
         if not hotels:
             return {"status": "skipped", "message": "Không có khách sạn nào. Hãy seed hotels trước."}
 
-        # Tạo thêm các fake user để reviews trông đa dạng hơn
+        # Tạo 40 fake users
         fake_users = []
-        fake_names = [
-            "Minh Tuấn", "Thu Hương", "Quốc Huy", "Lan Anh", "Đức Khải",
-            "Phương Linh", "Văn Nam", "Bảo Châu", "Thế Anh", "Mỹ Linh",
-        ]
-        for name in fake_names:
-            email = f"{name.lower().replace(' ', '.')}@gmail.com"
+        for name in FAKE_NAMES_40:
+            email = f"{name.lower().replace(' ', '.').replace('ắ','a').replace('ế','e').replace('ị','i').replace('ổ','o').replace('ụ','u').replace('ư','u').replace('ơ','o').replace('đ','d')}_{len(name)}@gmail.com"
+            # Dùng một email đơn giản không có dấu
+            safe_name = ''.join(c for c in name if c.isascii() and (c.isalpha() or c == ' ')).strip()
+            if not safe_name:
+                safe_name = f"user{len(fake_users)}"
+            email = f"{safe_name.lower().replace(' ', '.')}@gmail.com"
             fu = db.query(User).filter(User.email == email).first()
             if not fu:
                 fu = User(
@@ -514,17 +528,25 @@ async def seed_reviews_endpoint(
         reviews_skipped = 0
 
         for hotel in hotels:
-            # Kiểm tra đã có review chưa (idempotent)
             existing_count = db.query(Review).filter(Review.hotel_id == hotel.id).count()
-            if existing_count >= 10:
+            target = 20  # 20 reviews mỗi khách sạn
+
+            if existing_count >= target:
                 reviews_skipped += existing_count
                 continue
 
-            # Seed 15 reviews đa dạng từ nhiều user khác nhau
-            selected = random.sample(SEED_REVIEWS, min(15, len(SEED_REVIEWS)))
-            for i, (rating, comment) in enumerate(selected):
-                reviewer = fake_users[i % len(fake_users)]
-                # Tránh duplicate (cùng user + cùng hotel)
+            # Shuffle để mỗi hotel có bộ reviewer khác nhau
+            shuffled_users = fake_users.copy()
+            random.shuffle(shuffled_users)
+            shuffled_reviews = SEED_REVIEWS.copy()
+            random.shuffle(shuffled_reviews)
+
+            needed = target - existing_count
+            added = 0
+            for i, (rating, comment) in enumerate(shuffled_reviews):
+                if added >= needed:
+                    break
+                reviewer = shuffled_users[i % len(shuffled_users)]
                 dup = db.query(Review).filter(
                     Review.hotel_id == hotel.id,
                     Review.user_id == reviewer.id,
@@ -536,16 +558,22 @@ async def seed_reviews_endpoint(
                     hotel_id=hotel.id,
                     overall_rating=rating,
                     comment=comment,
-                    ratings={"cleanliness": rating - 0.5, "service": rating, "location": rating + 0.3},
+                    ratings={
+                        "cleanliness": min(10.0, round(rating + random.uniform(-0.5, 0.5), 1)),
+                        "service": min(10.0, round(rating + random.uniform(-0.5, 0.5), 1)),
+                        "location": min(10.0, round(rating + random.uniform(-0.3, 0.8), 1)),
+                    },
                 )
                 db.add(db_review)
                 reviews_created += 1
+                added += 1
 
         db.commit()
         return {
             "status": "success",
             "reviews_created": reviews_created,
             "reviews_skipped": reviews_skipped,
+            "fake_users_ready": len(fake_users),
             "hotels_processed": len(hotels),
         }
     except Exception as e:

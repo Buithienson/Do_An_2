@@ -103,7 +103,8 @@ function getRoomMeta(room: Room): { bed: string; area: string; view: string } {
 
 function getAuthToken(): string | null {
   try {
-    return localStorage.getItem('access_token');
+    // Login page stores token under 'token' key
+    return localStorage.getItem('token') || localStorage.getItem('access_token');
   } catch {
     return null;
   }
